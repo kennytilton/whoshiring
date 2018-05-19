@@ -31,13 +31,12 @@ java -jar compiler.jar                         \
 	--js js/Matrix/Model.js                    \
     --js js/Matrix/mxXHR.js                    \
     --js js/Matrix/mxWeb.js                    \
-    --js js/examples/WhoIsHiring/jobListing.js        \
-        --js js/examples/WhoIsHiring/userAnnotation.js        \
-            --js js/examples/WhoIsHiring/filtering.js        \
-                --js js/examples/WhoIsHiring/app.js        \
-                    --externs js/extRouter.js                  \
+    --js js/jobListing.js        \
+    --js js/userAnnotation.js        \
+    --js js/filtering.js        \
+    --js js/app.js        \
     --dependency_mode strict                   \
-    --entry_point js/examples/WhoIsHiring/app.js               \
+    --entry_point js/app.js               \
 	--compilation_level SIMPLE_OPTIMIZATIONS   \
 	--formatting PRETTY_PRINT                  \
 	--js_output_file dist/whoishiring.js

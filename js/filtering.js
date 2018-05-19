@@ -166,17 +166,16 @@ function sortBar() {
 }
 
 function mkTitleRgx() {
-    return mkListingRgx('title', "Title Search", 'title')
+    return mkListingRgx('title', "Title Search", 'title', true)
 }
 
 function mkFullRgx() {
-    return mkListingRgx('listing', "Listing Search", 'title and listing', true)
+    return mkListingRgx('listing', "Listing Search", 'title and listing')
 }
 
-function mkListingRgx(prop, lbl, desc, autofocus = false) {
+function mkListingRgx(prop, lbl, desc) {
     return labeledRow(lbl, input({
-        autofocus: autofocus
-        , placeholder: `Regex for ${desc} search`
+        placeholder: `Regex for ${desc} search`
         , onkeypress: buildRgxTree
         , onchange: buildRgxTree
         , value: ''

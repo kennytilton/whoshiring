@@ -2267,7 +2267,7 @@ window.tag2html = tag2html;
 goog.exportSymbol("tag2html", tag2html);
 var isTag = function(c) {
   return c instanceof Tag;
-}, TagAttributesGlobal = new Set("accesskey autofocus checked class cols content contenteditable contextmenu data dir draggable dropzone for hidden href id itemid itemprop itemref itemscope itemtype lang max spellcheck src style tabindex title translate type value viewBox fill d".split(" ")), TagEvents = new Set("onabort onautocomplete onautocompleteerror onblur oncancel oncanplay oncanplaythrough onchange onclick onclose oncontextmenu oncuechange ondblclick ondrag ondragend ondragenter ondragexit ondragleave ondragover ondragstart ondrop ondurationchange onemptied onended onerror onfocus oninput oninvalid onkeydown onkeypress onkeyup onload onloadeddata onloadedmetadata onloadstart onmousedown onmouseenter onmouseleave onmousemove onmouseout onmouseover onmouseup onmousewheel onpause onplay onplaying onprogress onratechange onreset onresize onscroll onseeked onseeking onselect onshow onsort onstalled onsubmit onsuspend ontimeupdate ontoggle onvolumechange onwaiting".split(" "));
+}, TagAttributesGlobal = new Set("accesskey autofocus checked class cols content contenteditable contextmenu data dir draggable dropzone for hidden href id itemid itemprop itemref itemscope itemtype lang max name selected spellcheck src style tabindex title translate type value viewBox fill d".split(" ")), TagEvents = new Set("onabort onautocomplete onautocompleteerror onblur oncancel oncanplay oncanplaythrough onchange onclick onclose oncontextmenu oncuechange ondblclick ondrag ondragend ondragenter ondragexit ondragleave ondragover ondragstart ondrop ondurationchange onemptied onended onerror onfocus oninput oninvalid onkeydown onkeypress onkeyup onload onloadeddata onloadedmetadata onloadstart onmousedown onmouseenter onmouseleave onmousemove onmouseout onmouseover onmouseup onmousewheel onpause onplay onplaying onprogress onratechange onreset onresize onscroll onseeked onseeking onselect onshow onsort onstalled onsubmit onsuspend ontimeupdate ontoggle onvolumechange onwaiting".split(" "));
 function tagEventHandler(c, d) {
   var e = dom2mx(c.target, !0);
   e ? tagEventBubble(e, c, d) : clg("tagEventHandler unable to find mx from", dom);
@@ -8323,13 +8323,13 @@ function sortBar() {
   })));
 }
 function mkTitleRgx() {
-  return mkListingRgx("title", "Title Regex", "title");
+  return mkListingRgx("title", "Title Search", "title", !0);
 }
 function mkFullRgx() {
-  return mkListingRgx("listing", "Listing Regex", "title and listing", !0);
+  return mkListingRgx("listing", "Listing Search", "title and listing");
 }
-function mkListingRgx(c, d, e, f) {
-  return labeledRow(d, input({autofocus:void 0 === f ? !1 : f, placeholder:"Regex for " + e + " search", onkeypress:buildRgxTree, onchange:buildRgxTree, value:"", style:"min-width:72px;width:300px;font-size:1em"}, {name:c + "rgx", rgxTree:cI(null)}));
+function mkListingRgx(c, d, e) {
+  return labeledRow(d, input({placeholder:"Regex for " + e + " search", onkeypress:buildRgxTree, onchange:buildRgxTree, value:"", style:"min-width:72px;width:300px;font-size:1em"}, {name:c + "rgx", rgxTree:cI(null)}));
 }
 function labeledRow(c, d) {
   for (var e = [], f = 1; f < arguments.length; ++f) {
@@ -8366,8 +8366,22 @@ function buildRgxTree(c, d) {
   }
 }
 ;Hiring.jobListing = {};
+function pickAMonth() {
+  return div(div({style:"display:flex;margin-bottom:9px"}, b({style:cF(function(c) {
+    return "max-width:128px;background:red;" + displayStyle(null === c.md.fmUp("searchMonth").value);
+  })}, "Start here >>>"), select({name:"searchMonth", value:cI(null), onchange:function(c, d) {
+    c.value = d.target.value;
+  }}, option({value:"none", selected:"selected", disabled:"disabled"}, "Please pick a hiring month"), option({value:"16967543"}, "May, 2018"), option({value:"16735011"}, "April, 2018"), option({value:"16492994"}, "March, 2018"))), p({style:cF(function(c) {
+    return displayStyle(c.md.fmUp("searchMonth").value);
+  })}, i({content:cF(function(c) {
+    return "All jobs scraped from the <a href='https://news.ycombinator.com/item?id=" + c.md.fmUp("searchMonth").value + "'>original listing</a>. ";
+  })})));
+}
 function jobListingLoader() {
-  return div(iframe({src:"files/whoishiring-2018-05.html", style:"display: none; width:1000px; height:100px", onload:function(c) {
+  return div(iframe({src:cF(function(c) {
+    c = c.md.fmUp("searchMonth").value;
+    return "" === c ? "" : "files/" + c + ".html";
+  }), style:"display: none; width:1000px; height:100px", onload:function(c) {
     return jobsCollect(c);
   }}));
 }
@@ -8466,7 +8480,7 @@ function jobSpecExtend(c, d) {
 }
 ;var SLOT_CT = 5, hiringApp = new TagSession(null, "HiringSession", {jobs:cI([])}), tooManyJobsWarned = !1;
 function WhoIsHiring() {
-  return div({style:"margin:0px;padding:36px"}, div({style:hzFlexWrap}, span({style:"padding:4px;font-size:2em; margin-bottom:12px;background:orange"}, "Ask HN: Who Is Hiring?"), appHelpOption()), appHelp(), p(i("All jobs scraped from the original <a href='https://news.ycombinator.com/item?id=16967543'>May 2018 listing</a>. ")), jobListingLoader(), mkJobSelects(), mkTitleRgx(), mkFullRgx(), sortBar(), jobCount(), progress({max:cI(0), hidden:cI(null), value:cI(0)}, {name:"progress"}), jobList());
+  return div({style:"margin:0px;padding:36px"}, div({style:hzFlexWrap}, span({style:"padding:4px;font-size:2em; margin-bottom:12px;background:orange"}, "Ask HN: Who Is Hiring?"), appHelpOption()), appHelp(), pickAMonth(), jobListingLoader(), mkJobSelects(), mkTitleRgx(), mkFullRgx(), sortBar(), jobCount(), progress({max:cI(0), hidden:cI(null), value:cI(0)}, {name:"progress"}), jobList());
 }
 window.WhoIsHiring = WhoIsHiring;
 function resultMax() {

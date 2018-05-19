@@ -18,6 +18,20 @@ const hiringApp = new TagSession(null, 'HiringSession'
 
 var tooManyJobsWarned = false;
 
+function xhrJson( uri, options = {}) {
+    return new mxXHR( uri, Object.assign( {
+        send: true
+        , delay: 0
+        , responseType: 'json'
+    }, options))
+}
+
+const wihUrl = "https://hacker-news.firebaseio.com/v0/user/whoishiring.json"
+
+function hnItemUrl (id) {
+    return `https://hacker-news.firebaseio.com/v0/item/${id}.json`
+}
+
 function WhoIsHiring() {
     return div( {
             style: "margin:0px;padding:36px"
@@ -27,7 +41,102 @@ function WhoIsHiring() {
                 , "Ask HN: Who Is Hiring?")
             , appHelpOption())
         , appHelp()
-        , pickAMonth()
+        , controlPanel()
+
+        , div({
+            content: cF( c=> c.md.info)
+            },
+            {
+                whoishiring: cF(c => xhrJson(wihUrl))
+                , whsubmits: cF( c=> {
+                    let who = c.md.whoishiring.okResult;
+                    if (  who ) {
+                        clg('bam wh sub5 ', who.id, who.submitted.slice(0,5))
+                        who.submitted.slice(0,5).map( submit=> {
+                            return xhrJson( hnItemUrl(submit)
+                            , {okHandler: (s, xhr, r) => {
+                                    if (r && r.title
+                                        && r.title.match(new RegExp('hiring', 'i'))
+                                    //&& r.title.match( new RegExp('November 2016','i'))
+                                    ) {
+                                        clg("got ask!!!", r.id, r.by, r.title, r.kids && r.kids.length)
+                                        c.md.monthlyask = r
+
+                                    }
+                                } })
+                        })
+                    }})
+                , monthlyask: cI(null)
+                , listings: cF( c=> {
+                    if ( ask = c.md.monthlyask) {
+                        clg('ask!!!', ask.title, ask.kids.length)
+                        return xhrJson( hnItemUrl(ask.kids[0])
+                            , {okHandler: (s, xhr, r) => {
+                                if (r && r.text) {
+                                    clg("got job!!!", r.id, r.by, r.text)
+                                    c.md.info = r.text
+                                }
+                            }})
+                    } else {
+                        clg('no ask-zero yet')
+                    }
+            })
+
+                , info: cI("Hi mom")
+
+
+            })
+
+        //, jobList()
+    )
+}
+
+window['WhoIsHiring'] = WhoIsHiring;
+
+function processWhosHiring( s, m, j) {
+    if (!j) return;
+    let go = true;
+    clg( 'phow', j.id, j.submitted.length)
+    let cs = j.submitted.slice(0,300).map( cid=> {
+        if (!go) return;
+        return new mxXHR(`https://hacker-news.firebaseio.com/v0/item/${cid}.json`
+            , {
+                send: true
+                , delay: 0, responseType: 'json'
+                , okHandler: (s, xhr, r) => {
+                    if (r) {
+                        if (go && r.title
+                            && r.title.match( new RegExp('hiring','i'))
+                            //&& r.title.match( new RegExp('November 2016','i'))
+                            ) {
+                            //if (!r.kids)
+                            clg("resp", r.id, r.by, r.title, r.kids && r.kids.length)
+                            //go = false;
+                            // r.kids.slice(10).map( k=> processStory( k))
+                            //processWhosHiring( s, xhr, r)
+                        }
+                    }
+                }
+            })
+    })
+}
+
+function processStory( storyId) {
+    return new mxXHR(`https://hacker-news.firebaseio.com/v0/item/${storyId}.json`
+        , {
+            send: true
+            , delay: 0, responseType: 'json'
+            , okHandler: (s, xhr, r) => {
+                if (r) {
+                    clg("listing", Date.now() - xhr.recd, xhr.recd -xhr.sent, r.by, r.title)
+                }
+            }
+        })
+}
+
+function controlPanel() {
+    return div(
+        pickAMonth()
         , jobListingLoader()
         , mkJobSelects()
         , mkTitleRgx()
@@ -39,12 +148,8 @@ function WhoIsHiring() {
             , hidden: cI( null)
             , value: cI(0)
         }, {name: "progress"})
-
-        , jobList()
     )
 }
-
-window['WhoIsHiring'] = WhoIsHiring;
 
 function resultMax() {
     return div( {style: hzFlexWrap}

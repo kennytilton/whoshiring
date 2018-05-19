@@ -8,10 +8,12 @@ goog.provide('Hiring.jobListing')
 
 function pickAMonth() {
     return div(
-        select( {name: "searchMonth"
+        div ({style: "display:flex;margin-bottom:9px"}
+        , b({ style: cF( c=> "max-width:128px;background:red;" + displayStyle(c.md.fmUp("searchMonth").value === null))}
+            , "Start here >>>")
+        , select( {name: "searchMonth"
                 , value: cI(null) //"files/whoishiring-2018-04.html"
                 , onchange: (mx,e) => {
-                    clg('bam change', e.target.value)
                     mx.value = e.target.value
                 }}
             , option( {value: "none"
@@ -20,30 +22,13 @@ function pickAMonth() {
                 , "Please pick a hiring month")
             , option( {value: "16967543"}, "May, 2018")
             , option( {value: "16735011"}, "April, 2018")
-            , option( {value: "16492994"}, "March, 2018"))
-        // , p(i( { content: cF( c=> {
-        //     let searchMo = c.md.fmUp("searchMonth").value
-        //         , url = "\"https://news.ycombinator.com/item?id=" +
-        //                     searchMo + "\"";
-        //
-        //     clg('url', url)
-        //     clg('search', searchMo )
-        //
-        //     return "All jobs scraped from the original " +
-        //         "<a href=" + url +">AskHN listing</a>. "
-        //
-        // })}))
-        // , p(i( { content: "All jobs scraped from the original " +
-        //     "<a href='https://news.ycombinator.com/item?id=16967543'>May 2018 listing</a>. "}))
-        // , p(i( { content: "All jobs scraped from the original " +
-        // "<a href='https://news.ycombinator.com/item?id=" +
-        // "16967543" +
-        // "'>May 2018 listing</a>. "}))
-        , p(i( { content: cF( c=> "All jobs scraped from the " +
-        "<a href='https://news.ycombinator.com/item?id=" +
-            c.md.fmUp("searchMonth").value +
-        "'>original listing</a>. ")}))
-    )
+            , option( {value: "16492994"}, "March, 2018")))
+
+        , p({style: cF( c=> displayStyle(c.md.fmUp("searchMonth").value))}
+            , i( { content: cF( c=> "All jobs scraped from the " +
+                "<a href='https://news.ycombinator.com/item?id=" +
+                c.md.fmUp("searchMonth").value +
+                "'>original listing</a>. ")})))
 }
 
 
@@ -62,8 +47,6 @@ function jobListingLoader() {
 const PARSE_CHUNK_SIZE = 20
 
 function jobsCollect(md) {
-    clg('loading month!!!!', md.src)
-
     if (md.dom.contentDocument) { // FF
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
         let chunkSize = 20
@@ -99,15 +82,15 @@ function parseListings( listing, tempJobs, chunkSize, progressBar) {
                 }
             }
             progressBar.value = progressBar.value + 1
-            //window.requestAnimationFrame(() => chunker( offset + jct))
+            window.requestAnimationFrame(() => chunker( offset + jct))
 
-            if (tempJobs.length < 5) //(progressBar.value < 10)
-                window.requestAnimationFrame(() => chunker( offset + jct))
-            else {
-                //alert('Stopping after 200 jobs found')
-                progressBar.hidden = true
-                hiringApp.jobs = tempJobs
-            }
+            // if (tempJobs.length < 5) //(progressBar.value < 10)
+            //     window.requestAnimationFrame(() => chunker( offset + jct))
+            // else {
+            //     //alert('Stopping after 200 jobs found')
+            //     progressBar.hidden = true
+            //     hiringApp.jobs = tempJobs
+            // }
         } else {
             progressBar.hidden = true
             hiringApp.jobs = tempJobs

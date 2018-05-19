@@ -7,7 +7,7 @@ class mxXHR extends Model {
             {
                 uri: cI( uri),
                 xhr: cI( null), // returned by XhrIO.send
-                okResult: cI( null)
+                okResult: cI( null, {observer: options.okHandler})
             });
 
         this.responseType = options.responseType;
@@ -19,16 +19,24 @@ class mxXHR extends Model {
     }
 
     send( delay) {
+        //clg('send',this.uri)
         let mxx = this
-            , go = ()=> goog.net.XhrIo.send( mxx.uri, function(e) {
+            , go = ()=> {
+            mxx.sent = Date.now()
+            goog.net.XhrIo.send( mxx.uri, function(e) {
+
                 let xhr = e.target
-                //clg('send setting xhr:', mxx.uri)
-                mxx.xhr = xhr;
+                mxx.xhr = xhr
+                mxx.recd = Date.now()
+
+                if (mxx.verbose)
+                    clg('xhr responded after', Date.now() - mxx.sent)
 
                 if ( xhr.isSuccess()) {
                     //clg('send sees OK')
                     if ( mxx.responseType === 'json') {
                         mxx.okResult = xhr.getResponseJson()
+                        //clg('okres',mxx.okResult.id)
                     } else if ( mxx.responseType === 'xml'){
                         mxx.okResult = xhr.getResponseXML()
                     } else if ( mxx.responseType === 'test'){
@@ -41,6 +49,7 @@ class mxXHR extends Model {
                     throw 'getXHR xhr last error: '+xhr.getLastError();
                 }
             });
+        }
 
         if (delay)
             setTimeout( go, delay);
