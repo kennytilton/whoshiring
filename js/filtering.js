@@ -198,12 +198,12 @@ function labeledRow(label, ...children) {
         , {helping: cI(false)}
         , span({style: "min-width:104px"}, label)
         , children
-        , i({
-            class: "material-icons"
-            , style: "cursor:pointer; margin-left:6px"
-            , onclick: mx => mx.par.helping = !mx.par.helping
-            , content: cF( c=> c.md.par.helping? "help":"help_outline")
-        })
+        , b({ style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"
+                , onclick: mx => mx.par.helping = !mx.par.helping
+                , title: "Show/hide help"
+                , content: cF( c=> c.md.par.helping? "_":"?")
+            })
+
         , ul( {
                 class: cF( c=> slideInRule(c, c.md.par.helping))
                 ,style: cF( c=> "display:" + (c.md.par.helping? "block":"none"))

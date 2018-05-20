@@ -169,33 +169,55 @@ function jobListItem(c, j) {
 }
 
 function moreOrLess () {
-    return i({
-        class: "listing-toggle material-icons"
-        , style: "cursor:pointer;color:#888"
-        , onclick: mx => {
-            mx.onOff = !mx.onOff
-        }
-        , title: "Show/hide full listing"
-        , content: cF( c=> c.md.onOff? "arrow_drop_down":"arrow_right")
-    }, {
-        name: "showListing"
-        , onOff: cFI( c=> {
-            let expander = c.md.fmUp("expander")
-            return expander.expanded
-        })
-    })
+    return toggleChar( "showListing", "Show/hide full listing"
+    , "-", "+", { class: "listing-toggle"}
+    ,{ onOff: cFI( c=> {
+        let expander = c.md.fmUp("expander")
+        return expander.expanded
+    })}
+    , "margin-right:9px;")
+    // return i({
+    //     class: "listing-toggle"
+    //     , style: "cursor:pointer;color:#888"
+    //     , onclick: mx => {
+    //         mx.onOff = !mx.onOff
+    //     }
+    //     , title: "Show/hide full listing"
+    //     , content: cF( c=> c.md.onOff? "_":"+")
+    // }, {
+    //     name: "showListing"
+    //     , onOff: cFI( c=> {
+    //         let expander = c.md.fmUp("expander")
+    //         return expander.expanded
+    //     })
+    // })
 }
 
+function toggleChar ( name, title, onChar, offChar, attrs={}, locals={},style="") {
+    return b( Object.assign( {
+            style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"+style
+            , onclick: mx => mx.onOff = !mx.onOff
+            , title: title
+            , content: cF( c=> c.md.onOff? onChar:offChar)
+        }, attrs)
+        , Object.assign( {
+            name: name
+            , onOff: false
+        }, locals))
+}
 // --- app help ----------------------------------------------
 
 function appHelpOption () {
-    return i({
-            class: "material-icons", style: "cursor:pointer; margin-left:9px"
+    return helpOption( "appHelpOption", "Show/hide app help")
+}
+
+function helpOption ( name, title) {
+    return b({ style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"
             , onclick: mx => mx.onOff = !mx.onOff
-            , title: "Show/hide app help"
-            , content: cF( c=> c.md.onOff? "help":"help_outline")
+            , title: title
+            , content: cF( c=> c.md.onOff? "_":"?")
         }
-        , { name: "appHelpOption"
+        , { name: name
             , onOff: cI( false)})
 }
 

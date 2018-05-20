@@ -80,17 +80,18 @@ function displayStyle( visible, notVisValue = "none") {
 function noteToggle(j) {
     let unote = UNote.dict[j.hnId]
 
-    return i({
-            class: "material-icons"
-            , style: cF(c => {
+    return span({
+            style: cF(c => {
                 let c1 = ( unote.notes && unote.notes.length > 0) ? "cyan" : "#000"
 
-                return "margin-left:18px; cursor:pointer;color:" + ( unote.notes && unote.notes.length > 0 ? "#f00" : "#000")
+                return "margin-left:18px; cursor:pointer;color:" +
+                    ( unote.notes && unote.notes.length > 0 ? "#f00" : "#000")
 
             })
+            , title: "Show/hide editor for your own notes"
             , onclick: mx => mx.editing = !mx.editing
-            , content: "note_add"
-        }, {name: "note-toggle", editing: cI( (unote.notes||"").length > 0 )})
+        }, {name: "note-toggle", editing: cI( (unote.notes||"").length > 0 )}
+        , "Memo")
 }
 
 function noteEditor (j) {
@@ -119,22 +120,19 @@ function jobStars(j) {
                 , unote = UNote.dict[j.hnId];
             //clg('starring', j.hnId, j.company)
             for (let n = 0; n < MAX_STARS; ++n)
-                stars.push(i({
-                        class: "material-icons"
-                        , style: cF(c => {
-                            return "font-size:1em; cursor:pointer; color:" + ( unote.stars >= c.md.starN ? "#000" : "#eee")
-                        })
-                        , onclick: mx => {
-                            let li = mx.fmUp("job-listing")
-                            clg('onclick!!!', li.id, unote.stars, j.hnId, j.company)
-                            unote.stars = (unote.stars === mx.starN ? 0 : mx.starN);
-                        }
-                    }
-                    , {starN: n + 1}
-                    , "grade"))
+                stars.push( img({
+                    src: cF( c=> unote.stars >= c.md.starN ? "dist/star32.png":"dist/star32off.png")
+                    , style: "cursor:pointer;"
+                    , onclick: mx => {
+                        let li = mx.fmUp("job-listing")
+                        clg('onclick!!!', li.id, unote.stars, j.hnId, j.company)
+                        unote.stars = (unote.stars === mx.starN ? 0 : mx.starN);
+                }}
+                , {starN: n + 1}))
             return stars
         })
 }
+
 
 // --- applied -----------------------------------------------
 

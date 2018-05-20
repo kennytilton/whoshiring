@@ -12,7 +12,7 @@ function pickAMonth() {
         , b({ style: cF( c=> "max-width:128px;background:red;" + displayStyle(c.md.fmUp("searchMonth").value === null))}
             , "Start here >>>")
         , select( {name: "searchMonth"
-                , value: cI("16967543") //"files/whoishiring-2018-04.html"
+                , value: cI(null) // "16967543") //"files/whoishiring-2018-04.html"
                 , onchange: (mx,e) => {
                     mx.value = e.target.value
                 }}
@@ -84,7 +84,7 @@ function parseListings( listing, tempJobs, chunkSize, progressBar) {
             progressBar.value = progressBar.value + 1
             //window.requestAnimationFrame(() => chunker( offset + jct))
 
-            if (tempJobs.length < 5)
+            if (tempJobs.length < 5000)
                 window.requestAnimationFrame(() => chunker( offset + jct))
             else {
                 progressBar.hidden = true

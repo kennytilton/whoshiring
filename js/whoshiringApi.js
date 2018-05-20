@@ -19,7 +19,7 @@ function whoshiringTester () {
                                 ) {
                                     let cre = new Date( r.time * 1000);
                                      if (cre.getFullYear()===2018 && cre.getMonth()===4) {
-                                         clg('got feb 2018!!!!!!!!!!!')
+                                         clg('got feb 2018!!!!!!!!!!!', r.id)
                                          c.md.monthlyask = r
                                      }
                                 }
@@ -41,7 +41,7 @@ function whoshiringTester () {
 
                                     if (p1 === -1) clg("no p")
                                     else {
-                                        clg("got job!!!", r.id, r.by) //, r.text.substring(0, p1))
+                                        clg("got job!!!", r.id, r.by, p1)
                                         //c.md.info = r.text
                                     }
                                 }
@@ -62,14 +62,22 @@ function whoshiringTester () {
 
             , info: cF( c=> {
                 if ( c.md.fini) {
-                    return c.md.listings.map( lgxhr => div( { content: lgxhr.okResult.text}))
-                } else {
-                    return "loading..."
+                    //return c.md.listings.map( lgxhr => div( { content: lgxhr.okResult.text}))
+                    clg('info!', c.md.listings[0].okResult.text)
+                    return c.md.listings // [0].okResult.text
                 }
+                // else {
+                //     return ["loading..."]
+                // }
 
         })
 
 
-        }, c => c.md.info)
+        }, c=> {
+            if (c.md.info)
+            return c.md.info.map( lg=> div({content: lg.okResult.text}))
+            else
+        return i("loading...")
+        })
 }
 
