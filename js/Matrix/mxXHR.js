@@ -34,19 +34,23 @@ class mxXHR extends Model {
 
                 if ( xhr.isSuccess()) {
                     //clg('send sees OK')
-                    if ( mxx.responseType === 'json') {
+                    if (mxx.responseType === 'json') {
                         mxx.okResult = xhr.getResponseJson()
                         //clg('okres',mxx.okResult.id)
-                    } else if ( mxx.responseType === 'xml'){
+                    } else if (mxx.responseType === 'xml') {
                         mxx.okResult = xhr.getResponseXML()
-                    } else if ( mxx.responseType === 'test'){
+                    } else if (mxx.responseType === 'test') {
                         mxx.okResult = xhr.getResponseText()
                     } else {
-                        throw("Invalid XHR responseType="+mxx.responseType)
+                        throw("Invalid XHR responseType=" + mxx.responseType)
                     }
+                } else if ( xhr.isActive()) {
+                    clg('xhr still active', mxx.uri)
+                } else if ( xhr.isComplete()) {
+                    clg('xhr complete', mxx.uri, xhr.getLastError())
                 } else {
-                    //clg('send XHR NG');
-                    throw 'getXHR xhr last error: '+xhr.getLastError();
+                    clg('send XHR uh-oh', mxx.uri);
+                    throw `getXHR error ${xhr.getLastError()} on xhr ${mxx.uri}`;
                 }
             });
         }

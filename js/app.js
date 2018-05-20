@@ -16,8 +16,7 @@ const hiringApp = new TagSession(null, 'HiringSession'
 
 // --- main ---------------------------------------
 
-var tooManyJobsWarned = false;
-
+// todo move to mxXHR
 function xhrJson( uri, options = {}) {
     return new mxXHR( uri, Object.assign( {
         send: true
@@ -42,97 +41,13 @@ function WhoIsHiring() {
             , appHelpOption())
         , appHelp()
         , controlPanel()
-
-        , div({
-            content: cF( c=> c.md.info)
-            },
-            {
-                whoishiring: cF(c => xhrJson(wihUrl))
-                , whsubmits: cF( c=> {
-                    let who = c.md.whoishiring.okResult;
-                    if (  who ) {
-                        clg('bam wh sub5 ', who.id, who.submitted.slice(0,5))
-                        who.submitted.slice(0,5).map( submit=> {
-                            return xhrJson( hnItemUrl(submit)
-                            , {okHandler: (s, xhr, r) => {
-                                    if (r && r.title
-                                        && r.title.match(new RegExp('hiring', 'i'))
-                                    //&& r.title.match( new RegExp('November 2016','i'))
-                                    ) {
-                                        clg("got ask!!!", r.id, r.by, r.title, r.kids && r.kids.length)
-                                        c.md.monthlyask = r
-
-                                    }
-                                } })
-                        })
-                    }})
-                , monthlyask: cI(null)
-                , listings: cF( c=> {
-                    if ( ask = c.md.monthlyask) {
-                        clg('ask!!!', ask.title, ask.kids.length)
-                        return xhrJson( hnItemUrl(ask.kids[0])
-                            , {okHandler: (s, xhr, r) => {
-                                if (r && r.text) {
-                                    clg("got job!!!", r.id, r.by, r.text)
-                                    c.md.info = r.text
-                                }
-                            }})
-                    } else {
-                        clg('no ask-zero yet')
-                    }
-            })
-
-                , info: cI("Hi mom")
-
-
-            })
-
-        //, jobList()
+        //, whoshiringTester()
+        , jobList()
     )
 }
 
 window['WhoIsHiring'] = WhoIsHiring;
 
-function processWhosHiring( s, m, j) {
-    if (!j) return;
-    let go = true;
-    clg( 'phow', j.id, j.submitted.length)
-    let cs = j.submitted.slice(0,300).map( cid=> {
-        if (!go) return;
-        return new mxXHR(`https://hacker-news.firebaseio.com/v0/item/${cid}.json`
-            , {
-                send: true
-                , delay: 0, responseType: 'json'
-                , okHandler: (s, xhr, r) => {
-                    if (r) {
-                        if (go && r.title
-                            && r.title.match( new RegExp('hiring','i'))
-                            //&& r.title.match( new RegExp('November 2016','i'))
-                            ) {
-                            //if (!r.kids)
-                            clg("resp", r.id, r.by, r.title, r.kids && r.kids.length)
-                            //go = false;
-                            // r.kids.slice(10).map( k=> processStory( k))
-                            //processWhosHiring( s, xhr, r)
-                        }
-                    }
-                }
-            })
-    })
-}
-
-function processStory( storyId) {
-    return new mxXHR(`https://hacker-news.firebaseio.com/v0/item/${storyId}.json`
-        , {
-            send: true
-            , delay: 0, responseType: 'json'
-            , okHandler: (s, xhr, r) => {
-                if (r) {
-                    clg("listing", Date.now() - xhr.recd, xhr.recd -xhr.sent, r.by, r.title)
-                }
-            }
-        })
-}
 
 function controlPanel() {
     return div(
@@ -172,7 +87,7 @@ function jobCount() {
         , span({ content: cF(c => {
             let pgr = c.md.fmUp("progress")
             return pgr.hidden ? "Jobs found: " + c.md.fmUp("job-list").selectedJobs.length
-                : "Comments parsed: "+ 20 * c.md.fmUp("progress").value})})
+                : "Comments parsed: "+ PARSE_CHUNK_SIZE * c.md.fmUp("progress").value})})
         , button({
                 style: cF(c=> {
                     let pgr = c.md.fmUp("progress")
@@ -189,17 +104,6 @@ function jobCount() {
             , { name: "expander", expanded: cI(true)}))
 }
 
-function appHelpOption () {
-    return i({
-            class: "material-icons", style: "cursor:pointer; margin-left:9px"
-            , onclick: mx => mx.onOff = !mx.onOff
-            , title: "Show/hide app help"
-            , content: cF( c=> c.md.onOff? "help":"help_outline")
-        }
-        , { name: "appHelpOption"
-            , onOff: cI( false)})
-}
-
 function jobList () {
     return ul({style: "list-style-type: none; background-color:#eee; padding:0"}
         , {
@@ -214,23 +118,6 @@ function jobList () {
             , kidFactory: jobListItem
         }
         , c => c.kidValuesKids())
-}
-
-const appHelpEntry = [
-    "All filters are ANDed."
-    , "RFEs welcome and can be raised " +
-    "<a href='https://github.com/kennytilton/matrix/issues'>here</a>. "
-    , "GitHub source can be " +
-    "<a href='https://github.com/kennytilton/kennytilton.github.io/tree/master/whoishiring'>" +
-    "found here</a>."
-]
-
-function appHelp () {
-    return ul({
-            class: cF( c=> slideInRule(c, c.md.fmUp("appHelpOption").onOff))
-            , style: cF( c=> "display:" + (c.md.fmUp("appHelpOption").onOff? "block":"none"))
-        }
-        , appHelpEntry.map( e=> li(e)))
 }
 
 // --- jobListItem ---------------------------------------------------------
@@ -298,4 +185,36 @@ function moreOrLess () {
         })
     })
 }
+
+// --- app help ----------------------------------------------
+
+function appHelpOption () {
+    return i({
+            class: "material-icons", style: "cursor:pointer; margin-left:9px"
+            , onclick: mx => mx.onOff = !mx.onOff
+            , title: "Show/hide app help"
+            , content: cF( c=> c.md.onOff? "help":"help_outline")
+        }
+        , { name: "appHelpOption"
+            , onOff: cI( false)})
+}
+
+const appHelpEntry = [
+    "All filters are ANDed."
+    , "RFEs welcome and can be raised " +
+    "<a href='https://github.com/kennytilton/matrix/issues'>here</a>. "
+    , "GitHub source can be " +
+    "<a href='https://github.com/kennytilton/kennytilton.github.io/tree/master/whoishiring'>" +
+    "found here</a>."
+]
+
+function appHelp () {
+    return ul({
+            class: cF( c=> slideInRule(c, c.md.fmUp("appHelpOption").onOff))
+            , style: cF( c=> "display:" + (c.md.fmUp("appHelpOption").onOff? "block":"none"))
+        }
+        , appHelpEntry.map( e=> li(e)))
+}
+
+
 

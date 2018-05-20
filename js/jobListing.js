@@ -12,7 +12,7 @@ function pickAMonth() {
         , b({ style: cF( c=> "max-width:128px;background:red;" + displayStyle(c.md.fmUp("searchMonth").value === null))}
             , "Start here >>>")
         , select( {name: "searchMonth"
-                , value: cI(null) //"files/whoishiring-2018-04.html"
+                , value: cI("16967543") //"files/whoishiring-2018-04.html"
                 , onchange: (mx,e) => {
                     mx.value = e.target.value
                 }}
@@ -44,12 +44,12 @@ function jobListingLoader() {
         }))
 }
 
-const PARSE_CHUNK_SIZE = 20
+const PARSE_CHUNK_SIZE = 100
 
 function jobsCollect(md) {
     if (md.dom.contentDocument) { // FF
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
-        let chunkSize = 20
+        let chunkSize = PARSE_CHUNK_SIZE
             , listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'))
             , tempJobs = []
             , progressBar = md.fmUp("progress");
@@ -75,22 +75,21 @@ function parseListings( listing, tempJobs, chunkSize, progressBar) {
                 if (spec.OK) {
                     let hnId = spec.hnId;
 
-                    if (!UJob.dict[hnId]) {
-                        UJob.dict[hnId] = new UserNotes({hnId: hnId});
+                    if (!UNote.dict[hnId]) {
+                        UNote.dict[hnId] = new UserNotes({hnId: hnId});
                     }
                     tempJobs.push(spec)
                 }
             }
             progressBar.value = progressBar.value + 1
-            window.requestAnimationFrame(() => chunker( offset + jct))
+            //window.requestAnimationFrame(() => chunker( offset + jct))
 
-            // if (tempJobs.length < 5) //(progressBar.value < 10)
-            //     window.requestAnimationFrame(() => chunker( offset + jct))
-            // else {
-            //     //alert('Stopping after 200 jobs found')
-            //     progressBar.hidden = true
-            //     hiringApp.jobs = tempJobs
-            // }
+            if (tempJobs.length < 5)
+                window.requestAnimationFrame(() => chunker( offset + jct))
+            else {
+                progressBar.hidden = true
+                hiringApp.jobs = tempJobs
+            }
         } else {
             progressBar.hidden = true
             hiringApp.jobs = tempJobs

@@ -21,9 +21,9 @@ function jobListFilter(mx, jobs) {
     return jobs.filter(j => !remoteok || j.remote)
         .filter(j => !visaok || j.visa)
         .filter(j => !internok || j.intern)
-        .filter(j => !applied || UJob.dict[j.hnId].applied)
-        .filter(j => !starred || UJob.dict[j.hnId].stars > 0)
-        .filter(j => !noted || UJob.dict[j.hnId].notes)
+        .filter(j => !applied || UNote.dict[j.hnId].applied)
+        .filter(j => !starred || UNote.dict[j.hnId].stars > 0)
+        .filter(j => !noted || UNote.dict[j.hnId].notes)
 
         .filter(j => !titleRgx || rgxTreeMatch(j.titlesearch, titleRgx))
         .filter(j => !listingRgx
@@ -127,7 +127,7 @@ function jobCompanyKey(j) {
 }
 
 function jobStarsKey(j) {
-    let uj = UJob.dict[j.hnId];
+    let uj = UNote.dict[j.hnId];
     return (uj && uj.stars) || 0;
 }
 

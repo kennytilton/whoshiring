@@ -760,7 +760,6 @@ function tagStyleString(md) {
     return ss;
 }
 
-
 //-------------------------------------------------------------------------------
 //--- Persistence via window.localStorage ---------------------------------------
 
@@ -768,9 +767,10 @@ class MXStorable extends Model {
     // this constructor can create a new storable (in window.localStorage
     // as well as the matrix), or load a storable into the matrix
 
-    constructor( icslots) {
+    constructor( icslots, force = false, extras = true) {
         let islots = icslots || {},
-            netSlots = Object.assign(
+            netSlots = !extras ? islots :
+                Object.assign(
                 // these first two will be overridden when loading fro localStorage
                 { id: (islots.lsPrefix || "MXSTOR_ANON")  + uuidv4(),
                     created: Date.now()},
@@ -781,7 +781,7 @@ class MXStorable extends Model {
 
         super(null, null, netSlots, false);
 
-        if (!icslots.id) {// presence in icslots implies new of class from LS reloaded obj
+        if (force || !icslots.id) {// presence in icslots implies new of class from LS reloaded obj
             //clg('MXSTorable stores', icslots.id, this.id, this.hnId)
             this.store()
         }

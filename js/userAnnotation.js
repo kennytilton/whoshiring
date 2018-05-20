@@ -8,14 +8,14 @@ goog.provide('Hiring.usernote')
 //
 // ---- model / persistence --------------------
 
-const JOB_LS_PREFIX = "whoishiring.";
+const UNOTE = "whoishiring.unote.";
 
-// MXStorable.removeAllItems(JOB_LS_PREFIX);
+// MXStorable.removeAllItems(UNOTE);
 
 class UserNotes extends MXStorable {
     constructor(islots) {
         super(Object.assign({
-                lsPrefix: JOB_LS_PREFIX
+                lsPrefix: UNOTE
             },
             islots,
             {
@@ -23,7 +23,7 @@ class UserNotes extends MXStorable {
                 , stars: cI(islots.stars) // null OK
                 , hidden: cI(islots.hidden || false)
                 , applied: cI(islots.applied || false)
-                , notes: cI(islots.notes)
+                , notes: cI(islots.notes) // a little confusing since object is naned Notes
             }))
     }
 
@@ -37,8 +37,8 @@ class UserNotes extends MXStorable {
             , {
                 dict: cF(c => {
                     let jd = {}
-                        , jobs = MXStorable.loadAllItems(UserNotes, JOB_LS_PREFIX) || [];
-                    //clg('ujobs found', WhoIsHiring.length)
+                        , jobs = MXStorable.loadAllItems(UserNotes, UNOTE) || [];
+                    //clg('UNotes found', WhoIsHiring.length)
                     for (let jn = 0; jn < jobs.length; ++jn) {
                         let j = jobs[jn]
                         //clg('job Storage->dict', j.hnId)
@@ -51,7 +51,7 @@ class UserNotes extends MXStorable {
     }
 }
 
-const UJob = UserNotes.loadFromStorage();
+const UNote = UserNotes.loadFromStorage();
 
 // ------ user annotations u/x --------------------------------------
 
@@ -78,32 +78,32 @@ function displayStyle( visible, notVisValue = "none") {
 // --- notes ---------------------------------------------
 
 function noteToggle(j) {
-    let ujob = UJob.dict[j.hnId]
+    let unote = UNote.dict[j.hnId]
 
     return i({
             class: "material-icons"
             , style: cF(c => {
-                let c1 = ( ujob.notes && ujob.notes.length > 0) ? "cyan" : "#000"
+                let c1 = ( unote.notes && unote.notes.length > 0) ? "cyan" : "#000"
 
-                return "margin-left:18px; cursor:pointer;color:" + ( ujob.notes && ujob.notes.length > 0 ? "#f00" : "#000")
+                return "margin-left:18px; cursor:pointer;color:" + ( unote.notes && unote.notes.length > 0 ? "#f00" : "#000")
 
             })
             , onclick: mx => mx.editing = !mx.editing
             , content: "note_add"
-        }, {name: "note-toggle", editing: cI( (ujob.notes||"").length > 0 )})
+        }, {name: "note-toggle", editing: cI( (unote.notes||"").length > 0 )})
 }
 
 function noteEditor (j) {
-    let ujob = UJob.dict[j.hnId]
+    let unote = UNote.dict[j.hnId]
     return textarea({
             class: cF( c=> slideInRule(c, c.md.fmUp("note-toggle").editing))
             , style: cF(c => "padding:8px;margin-left:12px;margin-right:12px;"
         + "display:" + (c.md.fmUp("note-toggle").editing ? "flex":"none"))
             // , cols: 20
             , placeholder: "Your notes here"
-            , onchange: (mx, e) => ujob.notes = e.target.value
+            , onchange: (mx, e) => unote.notes = e.target.value
         }
-        , ujob.notes || "")
+        , unote.notes || "")
 }
 
 
@@ -116,18 +116,18 @@ function jobStars(j) {
     return div({style: "margin-left:6px; display:flex; flex-wrap:wrap"}
         , c => {
             let stars = []
-                , ujob = UJob.dict[j.hnId];
+                , unote = UNote.dict[j.hnId];
             //clg('starring', j.hnId, j.company)
             for (let n = 0; n < MAX_STARS; ++n)
                 stars.push(i({
                         class: "material-icons"
                         , style: cF(c => {
-                            return "font-size:1em; cursor:pointer; color:" + ( ujob.stars >= c.md.starN ? "#000" : "#eee")
+                            return "font-size:1em; cursor:pointer; color:" + ( unote.stars >= c.md.starN ? "#000" : "#eee")
                         })
                         , onclick: mx => {
                             let li = mx.fmUp("job-listing")
-                            clg('onclick!!!', li.id, ujob.stars, j.hnId, j.company)
-                            ujob.stars = (ujob.stars === mx.starN ? 0 : mx.starN);
+                            clg('onclick!!!', li.id, unote.stars, j.hnId, j.company)
+                            unote.stars = (unote.stars === mx.starN ? 0 : mx.starN);
                         }
                     }
                     , {starN: n + 1}
@@ -146,13 +146,13 @@ function applied(j) {
                 id: "applied?"+j.hnId
                 , type: "checkbox", style: "margin-left:18px"
                 , checked: cF(c => {
-                    let ujob = UJob.dict[j.hnId];
-                    return ujob.applied || false
+                    let unote = UNote.dict[j.hnId];
+                    return unote.applied || false
                 })
                 , onclick: mx => {
-                    let ujob = UJob.dict[j.hnId]
-                        , newv = !ujob.applied;
-                    ujob.applied = newv
+                    let unote = UNote.dict[j.hnId]
+                        , newv = !unote.applied;
+                    unote.applied = newv
                 }
 
             }
