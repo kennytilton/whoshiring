@@ -15,7 +15,7 @@
     <script src="js/userAnnotation.js"></script>
     <script src="js/jobListing.js"></script>
     <script src="js/filtering.js"></script>
-    <script src="js/whoshiringApi.js"></script>
+    <!-- script src="js/whoshiringApi.js"></script -->
     <script src="js/app.js"></script>
 
     <!-- script src="dist/whoishiring.js"></script -->
@@ -32,25 +32,12 @@
             animation-direction: reverse;
         }
         @keyframes slideFadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 100%;
-            }
+            from { opacity: 0; }
+            to { opacity: 100%; }
         }
         @keyframes fazeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-        .fazer {
-            animation-duration: 2s;
-            animation-name: fazeIn;
-            animation-fill-mode: forwards;
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
     </STYLE>
 </head>
@@ -59,6 +46,11 @@
 <p>Was the google closure compilation clean? If so...</p>
 <p>...please check the browser console for diagnostics.</p>
 <script>
+    var gMonthlies = [
+    { hnId: "16967543", desc: "May, 2018"}
+    , { hnId: "16735011", desc: "April, 2018"}
+    , { hnId: "16492994", desc: "March, 2018"}
+    ]
     document.body.innerHTML = tag2html( window.WhoIsHiring());
 </script>
 </body>

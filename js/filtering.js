@@ -75,17 +75,45 @@ function onOffCheckbox( nameTooltip) {
 
 }
 
-const jSelects = [["REMOTE", "Does regex search of title for remote jobs"]
+const titleSelects = [["REMOTE", "Does regex search of title for remote jobs"]
     , ["INTERN", "Does regex search of title for internships"]
-    , ["VISA", "Does regex search of title for Visa sponsors"]
-    , ["Starred", "Show only jobs you have rated with stars"]
+    , ["VISA", "Does regex search of title for Visa sponsors"]]
+
+const userSelects = [["Starred", "Show only jobs you have rated with stars"]
     , ["Applied", "Show only jobs you have marked as applied to"]
     , ["Noted", "Show only jobs on which you have made a note"]]
 
-function mkJobSelects() {
+function mkTitleSelects() {
+    return mkJobSelects("Title selects", titleSelects)
+    // return div({ style: hzFlexWrap}
+    //     , span({style: "min-width:80px"},
+    //         "Selects")
+    //     , div( { style: hzFlexWrap}
+    //         , jSelects.map( info => div(
+    //             input({
+    //                     id: info[0]+"ID"
+    //                     , type: "checkbox"
+    //                     , style: "margin-left:18px"
+    //                     , checked: cF(c => c.md.onOff)
+    //                     , title: info[1]
+    //                     , onclick: mx => {
+    //                         mx.onOff = !mx.onOff
+    //                     }
+    //                 }
+    //                 , {name: info[0], onOff: cI(false)})
+    //             , label( {
+    //                 for: info[0]+"ID"
+    //                 , title: info[1]
+    //             }, info[0])))))
+}
+function mkUserSelects() {
+    return mkJobSelects("User selects", userSelects)
+}
+
+function mkJobSelects( lbl, jSelects) {
     return div({ style: hzFlexWrap}
         , span({style: "min-width:80px"},
-            "Selects")
+            lbl)
         , div( { style: hzFlexWrap}
             , jSelects.map( info => div(
                 input({
@@ -220,7 +248,7 @@ function slideInRule( c, show) {
 }
 
 const regexHelp = [
-    "Separate JS RegExp-legal terms with <b>||</b> or " +
+    "Separate <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions'>JS RegExp-legal</a> terms with <b>||</b> or " +
     "<b>&&</b> (higher priority) to combine expressions."
     , "Press <kbd style='font-size:1.4em'>Enter</kbd> or <kbd style='font-size:1.4em'>Tab</kbd> to activate, including after clearing."
     , "Supply RegExp options after a comma. e.g. <b>taipei,i</b> for case-insensitive search."]

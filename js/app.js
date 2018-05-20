@@ -53,7 +53,8 @@ function controlPanel() {
     return div(
         pickAMonth()
         , jobListingLoader()
-        , mkJobSelects()
+        , mkTitleSelects()
+        , mkUserSelects()
         , mkTitleRgx()
         , mkFullRgx()
         , sortBar()
@@ -72,11 +73,10 @@ function resultMax() {
         , input({
                 value: cF( c=> c.md.results)
                 , style:"max-width:24px;margin-left:6px;margin-right:6px"
-                , onchange: (mx,e) => {
-                    clg('macchag', e.target.value)
-                    mx.results = parseInt( e.target.value)
-                }}
-            , {name: "resultmax"
+                , onchange: (mx,e) => mx.results = parseInt( e.target.value)
+            }
+            , {
+                name: "resultmax"
                 , results: cI( 42)}))
 }
 
@@ -87,7 +87,7 @@ function jobCount() {
         , span({ content: cF(c => {
             let pgr = c.md.fmUp("progress")
             return pgr.hidden ? "Jobs found: " + c.md.fmUp("job-list").selectedJobs.length
-                : "Comments parsed: "+ PARSE_CHUNK_SIZE * c.md.fmUp("progress").value})})
+                : "Comments parsed: "+ PARSE_CHUNK_SIZE * pgr.value})})
         , button({
                 style: cF(c=> {
                     let pgr = c.md.fmUp("progress")
@@ -136,6 +136,14 @@ function jobListItem(c, j) {
         , { name: "job-listing", job: j}
         , div( { style: "cursor:pointer;display:flex"}
             , moreOrLess( )
+            , img( {src: "dist/star32.png"
+                    , style: cF( c=> {
+                let un = UNote.dict[j.hnId]
+                    , mol = c.md.fmUp("showListing");
+                return "max-height:16px;margin-right:9px; display:" +
+                    ( (mol.onOff || (un && un.stars) === 0)? "none":"block") // || (un && un.stars===0)
+                })})
+
             , span({onclick: mx=> {
                 let mol = mx.fmUp("showListing")
                 mol.onOff = !mol.onOff
@@ -170,27 +178,12 @@ function jobListItem(c, j) {
 
 function moreOrLess () {
     return toggleChar( "showListing", "Show/hide full listing"
-    , "-", "+", { class: "listing-toggle"}
+    , "--", "+", { class: "listing-toggle"}
     ,{ onOff: cFI( c=> {
         let expander = c.md.fmUp("expander")
         return expander.expanded
     })}
     , "margin-right:9px;")
-    // return i({
-    //     class: "listing-toggle"
-    //     , style: "cursor:pointer;color:#888"
-    //     , onclick: mx => {
-    //         mx.onOff = !mx.onOff
-    //     }
-    //     , title: "Show/hide full listing"
-    //     , content: cF( c=> c.md.onOff? "_":"+")
-    // }, {
-    //     name: "showListing"
-    //     , onOff: cFI( c=> {
-    //         let expander = c.md.fmUp("expander")
-    //         return expander.expanded
-    //     })
-    // })
 }
 
 function toggleChar ( name, title, onChar, offChar, attrs={}, locals={},style="") {
@@ -226,7 +219,7 @@ const appHelpEntry = [
     , "RFEs welcome and can be raised " +
     "<a href='https://github.com/kennytilton/matrix/issues'>here</a>. "
     , "GitHub source can be " +
-    "<a href='https://github.com/kennytilton/kennytilton.github.io/tree/master/whoishiring'>" +
+    "<a href='https://github.com/kennytilton/whoshiring'>" +
     "found here</a>."
 ]
 

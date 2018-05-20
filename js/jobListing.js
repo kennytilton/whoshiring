@@ -9,20 +9,18 @@ goog.provide('Hiring.jobListing')
 function pickAMonth() {
     return div(
         div ({style: "display:flex;margin-bottom:9px"}
-        , b({ style: cF( c=> "max-width:128px;background:red;" + displayStyle(c.md.fmUp("searchMonth").value === null))}
-            , "Start here >>>")
-        , select( {name: "searchMonth"
-                , value: cI(null) // "16967543") //"files/whoishiring-2018-04.html"
-                , onchange: (mx,e) => {
-                    mx.value = e.target.value
-                }}
-            , option( {value: "none"
-                    , selected: "selected"
-                    , disabled: "disabled"}
-                , "Please pick a hiring month")
-            , option( {value: "16967543"}, "May, 2018")
-            , option( {value: "16735011"}, "April, 2018")
-            , option( {value: "16492994"}, "March, 2018")))
+            , b({ style: cF( c=> "max-width:128px;background:red;" + displayStyle(c.md.fmUp("searchMonth").value === null))}
+                , "Start here >>>")
+            , select( {name: "searchMonth"
+                    , value: cI("16967543") //"files/whoishiring-2018-04.html"
+                    , onchange: (mx,e) => {
+                        mx.value = e.target.value
+                    }}
+                , option( {value: "none"
+                        , selected: "selected"
+                        , disabled: "disabled"}
+                    , "Please pick a hiring month")
+                , gMonthlies.map( m=> option( {value: m.hnId}, m.desc))))
 
         , p({style: cF( c=> displayStyle(c.md.fmUp("searchMonth").value))}
             , i( { content: cF( c=> "All jobs scraped from the " +
