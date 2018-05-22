@@ -81,3 +81,11 @@ function whoshiringTester () {
         })
 }
 
+
+
+const wihUrl = "https://hacker-news.firebaseio.com/v0/user/whoishiring.json"
+
+function hnItemUrl (id) {
+    return `https://hacker-news.firebaseio.com/v0/item/${id}.json`
+}
+

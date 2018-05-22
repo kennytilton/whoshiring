@@ -1,3 +1,8 @@
+goog.require('Matrix.Cells')
+goog.require('Matrix.Model')
+goog.require('Matrix.mxWeb')
+goog.provide('Hiring.Job')
+
 //--- persistence ------------------------------------------------------
 
 const JOB_LS_PREFIX = "whoishiring.job.";

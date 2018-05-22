@@ -79,6 +79,14 @@ function getXHR_JSON( datau ) {
     });
 }
 
+function xhrJson( uri, options = {}) {
+    return new mxXHR( uri, Object.assign( {
+        send: true
+        , delay: 0
+        , responseType: 'json'
+    }, options))
+}
+
 //getXHR_JSON( "https://api.fda.gov/drug/event.json?search=patient.drug.openfda.brand_name:chevy&limit=3");
 
 function testXHR () {

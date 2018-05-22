@@ -31,12 +31,15 @@ java -jar compiler.jar                         \
 	--js js/Matrix/Model.js                    \
     --js js/Matrix/mxXHR.js                    \
     --js js/Matrix/mxWeb.js                    \
-    --js js/jobListing.js        \
-    --js js/userAnnotation.js        \
-    --js js/filtering.js        \
-    --js js/app.js        \
+    --js js/userAnnotation.js                  \
+    --js js/jobLoader.js                       \
+    --js js/filtering.js                       \
+    --js js/jobListItem.js                     \
+    --js js/controlPanel.js                    \
+    --js js/regexSearch.js                     \
+    --js js/app.js                             \
     --dependency_mode strict                   \
-    --entry_point js/app.js               \
+    --entry_point js/app.js                    \
 	--compilation_level SIMPLE_OPTIMIZATIONS   \
 	--formatting PRETTY_PRINT                  \
 	--js_output_file dist/whoishiring.js

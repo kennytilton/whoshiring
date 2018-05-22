@@ -2,38 +2,15 @@ goog.require('Matrix.Cells')
 goog.require('Matrix.Model')
 goog.require('Matrix.mxWeb')
 goog.require('Hiring.usernote')
-goog.provide('Hiring.jobListing')
+goog.provide('Hiring.jobLoader')
 
 // --- loading job data -----------------------------------------
-
-function pickAMonth() {
-    return div(
-        div ({style: "display:flex;margin-bottom:9px"}
-            , b({ style: cF( c=> "max-width:128px;background:red;" + displayStyle(c.md.fmUp("searchMonth").value === null))}
-                , "Start here >>>")
-            , select( {name: "searchMonth"
-                    , value: cI("16967543") //"files/whoishiring-2018-04.html"
-                    , onchange: (mx,e) => {
-                        mx.value = e.target.value
-                    }}
-                , option( {value: "none"
-                        , selected: "selected"
-                        , disabled: "disabled"}
-                    , "Please pick a hiring month")
-                , gMonthlies.map( m=> option( {value: m.hnId}, m.desc))))
-
-        , p({style: cF( c=> displayStyle(c.md.fmUp("searchMonth").value))}
-            , i( { content: cF( c=> "All jobs scraped from the " +
-                "<a href='https://news.ycombinator.com/item?id=" +
-                c.md.fmUp("searchMonth").value +
-                "'>original listing</a>. ")})))
-}
-
 
 function jobListingLoader() {
     return div(
         iframe({
-            src: cF( c=> {
+            sandbox: ""
+            , src: cF( c=> {
                 let searchMo = c.md.fmUp("searchMonth").value;
                 return searchMo ===""? "" : "files/" + searchMo + ".html"
             })
