@@ -69,3 +69,13 @@ const hzFlexWrap = {
     , flex_wrap: "wrap"
 }
 
+function helpToggle ( name, title) {
+    return b({ style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"
+            , onclick: mx => mx.onOff = !mx.onOff
+            , title: title
+            , content: cF( c=> c.md.onOff? "_":"?")
+        }
+        , { name: name
+            , onOff: cI( false)})
+}
+

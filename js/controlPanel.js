@@ -17,21 +17,46 @@ function controlPanel() {
 window['controlPanel'] = controlPanel;
 
 function pickAMonth() {
-    return div ({style: "display:flex;margin:0px 0px 9px 24px"}
-            , select( {name: "searchMonth"
-                    , value: cI(null) // "16967543") //"files/whoishiring-2018-04.html"
-                    , onchange: (mx,e) => {
-                        mx.value = e.target.value
-                    }}
-                , option( {value: "none"
-                        , selected: "selected"
-                        , disabled: "disabled"}
-                    , "Pick a month. Any month.")
-                , gMonthlies.map( m=> option( {value: m.hnId}, m.desc)))
-            , p({style: cF( c=> "margin-left:24px;" + displayStyle(c.md.fmUp("searchMonth").value))}
-                , i( { content: cF( c=> "<a href='https://news.ycombinator.com/item?id=" +
+    return div ({style: merge( hzFlexWrap, {
+            align_items: "center"
+            , margin: "0px 0px 9px 24px"})}
+        , select( {
+                name: "searchMonth"
+                , style: "min-width:128px;margin:0 12px 6px 0;"
+                , value: cI( null) // gMonthlies[0].hnId) //"files/whoishiring-2018-04.html"
+                , onchange: (mx,e) => {
+                    mx.value = e.target.value
+                }}
+            , option( {value: "none"
+                    , selected: "selected"
+                    , disabled: "disabled"}
+                , "Pick a month. Any month.")
+            , gMonthlies.map( (m,x) => option( {
+                    value: m.hnId
+                    , selected: x===0? null:null}
+                , m.desc)))
+
+        , div( {style: merge( hzFlexWrap)}
+            , i( { style: cF( c=> displayStyle(c.md.fmUp("searchMonth").value))
+                , content: cF( c=> "<a href='https://news.ycombinator.com/item?id=" +
                     c.md.fmUp("searchMonth").value +
-                    "'>View on HN</a>")})))
+                    "'>View on HN</a>")})
+
+            , span({
+                style: "margin-left:12px"
+                , hidden: cF( c=> !c.md.fmUp("searchMonth").value)
+                , content: cF(c => {
+                    let pgr = c.md.fmUp("progress")
+                    return pgr.hidden ? "Jobs found: " + c.md.fmUp("job-list").selectedJobs.length
+                        : "Parsing: "+ PARSE_CHUNK_SIZE * pgr.value})})
+
+            , progress({
+                max: cI(0)
+                , hidden: cI( true)
+                , value: cI(0)
+            }, {name: "progress"})
+
+        ))
 }
 
 function sortBar() {
@@ -63,24 +88,17 @@ function sortBar() {
 
 
 function jobListingControlBar() {
-    return div({style: "display:flex;max-height:16px;align-items:center; background:lightgoldenrodyellow"}
+    return div({style: merge( hzFlexWrap, {
+            margin:"6px 0 0 24px"
+            // , max_height: "16px"
+            , align_items: "center"})}
         , resultMax()
-        , div(
-            span({ content: cF(c => {
-                let pgr = c.md.fmUp("progress")
-                return pgr.hidden ? "Jobs found: " + c.md.fmUp("job-list").selectedJobs.length
-                    : "Comments parsed: "+ PARSE_CHUNK_SIZE * pgr.value})})
-
-            , progress({
-                max: cI(0)
-                , hidden: cI( true)
-                , value: cI(0)
-            }, {name: "progress"}))
-
+        , span({ content: cF(c => {
+            return "jobs of " + c.md.fmUp("job-list").selectedJobs.length + " after filtering."})})
         , button({
                 style: cF(c=> {
                     let pgr = c.md.fmUp("progress")
-                    return "max-height:16px; margin-left:24px;display:"+ (pgr.hidden? "block":"none")
+                    return "margin-left:24px;display:"+ (pgr.hidden? "block":"none")
                 })
                 , onclick: mx => {
                     let all = document.getElementsByClassName('listing-toggle');
@@ -95,7 +113,7 @@ function jobListingControlBar() {
 
 function resultMax() {
     return div( {style: hzFlexWrap}
-        , span("Display limit")
+        , span("Display")
         , input({
                 value: cF( c=> c.md.results)
                 , style:"max-width:24px;margin-left:6px;margin-right:6px"

@@ -27,12 +27,8 @@ function merge(...maps) {
 function WhoIsHiring() {
     return div( {
             style: "margin:0px;padding:36px;"
-        },
-        div( {style: hzFlexWrap}
-            , span({style: "padding:4px;font-size:2em; margin-bottom:12px;background:orange"}
-                , "Ask HN: Who Is Hiring?")
-            , appHelpToggle())
-        , appHelp()
+        }
+        , appHeader()
         , jobListingLoader() // hidden iFrame where we load HN page for scraping
         , pickAMonth()
         , div( { class: cF( c=> slideInRule(c, c.md.fmUp("searchMonth").value))
@@ -45,37 +41,17 @@ function WhoIsHiring() {
 
 window['WhoIsHiring'] = WhoIsHiring;
 
-function jobList () {
-    return ul({style: "list-style-type: none; background-color:#eee; padding:0"}
-        , {
-            name: "job-list"
-            , selectedJobs: cF(c => jobListFilter(c.md, hiringApp.jobs) || [])
-            , kidValues: cF(c => {
-                let jsort = jobListSort(c.md, c.md.selectedJobs) || []
-                    , mxlim = c.md.fmUp("resultmax");
-                return jsort.slice(0,mxlim.results)
-            })
-            , kidKey: li => li.job
-            , kidFactory: jobListItem
-        }
-        , c => c.kidValuesKids())
+// --- app header ---------------------------------------------
+
+function appHeader () {
+    return div( {style: hzFlexWrap}
+        , span({style: "padding:4px;font-size:2em; margin-bottom:12px;background:orange"}
+            , "Ask HN: Who Is Hiring?")
+        , helpToggle( "appHelpToggle", "Show/hide app help")
+        , appHelp())
 }
 
 // --- app help ----------------------------------------------
-
-function appHelpToggle () {
-    return helpToggle( "appHelpToggle", "Show/hide app help")
-}
-
-function helpToggle ( name, title) {
-    return b({ style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"
-            , onclick: mx => mx.onOff = !mx.onOff
-            , title: title
-            , content: cF( c=> c.md.onOff? "_":"?")
-        }
-        , { name: name
-            , onOff: cI( false)})
-}
 
 const appHelpEntry = [
     "All filters are ANDed."

@@ -63,7 +63,7 @@ function userAnnotations(j) {
             , applied(j)
             , noteToggle(j)
             , a({
-                    style: "margin-left:6px"
+                    style: "margin-left:12px"
                     , href: `https://news.ycombinator.com/item?id=${j.hnId}`
                     , title: "View listing on the HN site"}
                 , img({ src: "dist/hn24.jpg"})))

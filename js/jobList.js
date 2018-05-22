@@ -2,6 +2,25 @@ goog.require('Matrix.Cells')
 goog.require('Matrix.Model')
 goog.require('Matrix.mxWeb')
 goog.provide('Hiring.jobListItem')
+
+// --- jobList ------------------------
+
+function jobList () {
+    return ul({style: "list-style-type: none; background-color:#eee; padding:0"}
+        , {
+            name: "job-list"
+            , selectedJobs: cF(c => jobListFilter(c.md, hiringApp.jobs) || [])
+            , kidValues: cF(c => {
+                let jsort = jobListSort(c.md, c.md.selectedJobs) || []
+                    , mxlim = c.md.fmUp("resultmax");
+                return jsort.slice(0,mxlim.results)
+            })
+            , kidKey: li => li.job
+            , kidFactory: jobListItem
+        }
+        , c => c.kidValuesKids())
+}
+
 // --- jobListItem ---------------------------------------------------------
 
 function jobListItem(c, j) {
