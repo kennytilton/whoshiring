@@ -215,7 +215,7 @@ class Tag extends Model {
             if (mxDom[this.id] === this) {
                 clg('double load!!!!!')
             } else {
-                clg('WARNING: dup DOM id: '
+                clgx('WARNING: dup DOM id: '
                     , this.id, attrs.id, this.name, mxDom[this.id])
             }
         }

@@ -30,6 +30,7 @@ function jobsCollect(md) {
             , progressBar = md.fmUp("progress");
 
         ast(progressBar);
+        progressBar.hidden = false
 
         if (listing.length > 0) {
             progressBar.max = Math.floor( listing.length / PARSE_CHUNK_SIZE)+""

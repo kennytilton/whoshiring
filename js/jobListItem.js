@@ -77,7 +77,7 @@ function jobDetails (j) {
 
 function toggleFullListing() {
     return toggleChar("showDetails", "Show/hide full listing"
-        , "--", "+"
+        , false, "--", "+"
         , {class: "listing-toggle"}
         , {
             // cFI starts out formulaic to compute the initial value, but then
@@ -87,15 +87,3 @@ function toggleFullListing() {
         , "margin-right:9px;")
 }
 
-function toggleChar ( name, title, onChar, offChar, attrs={}, locals={},style="") {
-    return b( Object.assign( {
-            style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"+style
-            , onclick: mx => mx.onOff = !mx.onOff
-            , title: title
-            , content: cF( c=> c.md.onOff? onChar:offChar)
-        }, attrs)
-        , Object.assign( {
-            name: name
-            , onOff: false
-        }, locals))
-}

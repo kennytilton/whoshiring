@@ -31,6 +31,7 @@ java -jar compiler.jar                         \
 	--js js/Matrix/Model.js                    \
     --js js/Matrix/mxXHR.js                    \
     --js js/Matrix/mxWeb.js                    \
+    --js js/utility.js                         \
     --js js/userAnnotation.js                  \
     --js js/jobLoader.js                       \
     --js js/filtering.js                       \

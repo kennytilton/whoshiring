@@ -1,6 +1,7 @@
 goog.require('Matrix.Cells')
 goog.require('Matrix.Model')
 goog.require('Matrix.mxWeb')
+goog.require('Hiring.utility')
 goog.require('Hiring.usernote')
 goog.provide('Hiring.filtering')
 
@@ -39,40 +40,12 @@ function rgxTreeMatch(s, ors) {
 
 const uDefault = [["udshowDetails", "Expand listings", "Show full listing or just the title"]]
 
-const hzFlexWrap = {
-    display: "flex"
-    , flex_wrap: "wrap"
-}
-
 function mkUserDefaults() {
     return div({ style: hzFlexWrap}
         , span({style: "min-width:80px"},
             "Defaults")
         , div( { style: hzFlexWrap}
             , uDefault.map( info => onOffCheckbox(info))))
-}
-
-function onOffCheckbox( nameTooltip) {
-    let [ mxName, labelText, tooltip] = nameTooltip
-        , uniq = Math.randomInt(100000);
-    return div(
-        input({
-                id: mxName+"ID"+uniq
-                , type: "checkbox"
-                , style: "margin-left:18px"
-                , checked: cF(c => c.md.onOff)
-                , title: tooltip
-                , onclick: mx => mx.onOff = !mx.onOff
-            }
-            , {
-                name: mxName
-                , onOff: cI(false)
-            })
-        , label( {
-            for: name+"ID"+uniq
-            , title: tooltip
-        }, labelText))
-
 }
 
 const titleSelects = [["REMOTE", "Does regex search of title for remote jobs"]
@@ -91,10 +64,7 @@ function mkUserSelects() {
 }
 
 function mkJobSelects( lbl, jSelects, styling = {}) {
-    return div({ style: merge( hzFlexWrap, {"align-items": "center", "min-height":"28px"}, styling)}
-        , span({class: "selector"},
-            lbl)
-        , div( { style: hzFlexWrap}
+    return div( { style: merge( hzFlexWrap, {margin_left: "24px"})}
             , jSelects.map( info => div( {style: "margin-right:18px"}
                 , input({
                         id: info[0]+"ID"
@@ -110,7 +80,7 @@ function mkJobSelects( lbl, jSelects, styling = {}) {
                 , label( {
                     for: info[0]+"ID"
                     , title: info[1]
-                }, info[0])))))
+                }, info[0]))))
 }
 
 // --- sorting ------------------------------------------------------

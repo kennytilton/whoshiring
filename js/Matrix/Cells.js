@@ -3,7 +3,10 @@ goog.provide('Matrix.Cells');
 function clg(...args) {
     console.log(Array.from(args).join(","));
 }
+function clgx(...args) {
+}
 window['clg'] = clg;
+window['clgx'] = clgx;
 
 function ast (test, msg="anon", ...mas) {
     console.assert(test, msg, ...mas);

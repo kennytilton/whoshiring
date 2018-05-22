@@ -5,11 +5,11 @@ goog.require('Hiring.usernote')
 goog.provide('Hiring.regexSearch')
 
 function mkTitleRgx() {
-    return mkListingRgx('title', "Title Search", 'title', true)
+    return mkListingRgx('title', "Title Only", 'title', true)
 }
 
 function mkFullRgx() {
-    return mkListingRgx('listing', "Listing Search", 'title and listing')
+    return mkListingRgx('listing', "Full Listing", 'title and listing')
 }
 
 function mkListingRgx(prop, lbl, desc) {
@@ -30,12 +30,12 @@ function labeledRow(label, ...children) {
             style: {
                 display: "flex"
                 , flex_wrap: "wrap"
-                , "margin-top" : "9px"
+                , "margin" : "9px 0px 0px 24px"
                 , "align-items": "center"
             }
         }
         , {helping: cI(false)}
-        , span({class: "selector", style: "min-width:104px"}, label)
+        , span({style: "min-width:104px"}, label)
         , children
         , b({ style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"
             , onclick: mx => mx.par.helping = !mx.par.helping
@@ -48,14 +48,6 @@ function labeledRow(label, ...children) {
                 ,style: cF( c=> "display:" + (c.md.par.helping? "block":"none"))
             }
             , regexHelp.map( h=> li(h))))
-}
-
-function slideInRule( c, show) {
-    if (c.pv === kUnbound) {
-        return show ? "slideIn" : ""
-    } else {
-        return show ? "slideIn" : "slideOut"
-    }
 }
 
 const regexHelp = [

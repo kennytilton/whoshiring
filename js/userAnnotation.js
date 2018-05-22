@@ -71,10 +71,6 @@ function userAnnotations(j) {
         , noteEditor(j))
 }
 
-function displayStyle( visible, notVisValue = "none") {
-    return "display:" + (visible ? "block" : notVisValue) + ";"
-}
-
 // --- notes ---------------------------------------------
 
 function noteToggle(j) {

@@ -1,31 +1,23 @@
 goog.require('Matrix.Cells')
 goog.require('Matrix.Model')
 goog.require('Matrix.mxWeb')
+goog.require('Hiring.utility')
 goog.provide('Hiring.controlPanel')
 
 function controlPanel() {
     return div(
-        pickAMonth()
-        , mkTitleSelects()
-        , mkTitleRgx()
-        , mkFullRgx()
-        , mkUserSelects()
-        , sortBar()
-        , jobListingControlBar()
-        , progress({
-            max: cI(0)
-            , hidden: cI( null)
-            , value: cI(0)
-        }, {name: "progress"})
+        openShutCase("os-filters", "filters", mkTitleSelects, mkUserSelects)
+        , openShutCase("rgx-filters", "search", mkTitleRgx, mkFullRgx)
+        , openShutCase("job-sorts", "sorting", sortBar)
+        , openShutCase("listing-controls", "view options", jobListingControlBar)
     )
 }
+
 
 window['controlPanel'] = controlPanel;
 
 function pickAMonth() {
-    return div(
-        div ({style: "display:flex;margin-bottom:9px"}
-            , span( {class: "selector"}, "Start here!!")
+    return div ({style: "display:flex;margin:0px 0px 9px 24px"}
             , select( {name: "searchMonth"
                     , value: cI(null) // "16967543") //"files/whoishiring-2018-04.html"
                     , onchange: (mx,e) => {
@@ -34,21 +26,17 @@ function pickAMonth() {
                 , option( {value: "none"
                         , selected: "selected"
                         , disabled: "disabled"}
-                    , "Please pick a hiring month")
+                    , "Pick a month. Any month.")
                 , gMonthlies.map( m=> option( {value: m.hnId}, m.desc)))
-
-        , p({style: cF( c=> "margin-left:24px;" + displayStyle(c.md.fmUp("searchMonth").value))}
-            , i( { content: cF( c=> "<a href='https://news.ycombinator.com/item?id=" +
+            , p({style: cF( c=> "margin-left:24px;" + displayStyle(c.md.fmUp("searchMonth").value))}
+                , i( { content: cF( c=> "<a href='https://news.ycombinator.com/item?id=" +
                     c.md.fmUp("searchMonth").value +
-                    "'>View on HN</a>")}))))
+                    "'>View on HN</a>")})))
 }
 
 function sortBar() {
-    return div({style: merge( hzFlexWrap, {"align-items": "center"})}
-        , span({ class: "selector"}
-            , "Sort by")
-        , ul({
-                style: merge(hzFlexWrap, { padding:0})
+    return ul({
+                style: merge(hzFlexWrap, { padding:0, margin_left: "24px"})
             }
             , {
                 name: "sortby"
@@ -70,18 +58,24 @@ function sortBar() {
                 }, {
                     keyFn: keyFn
                     , selected: cF(c => c.md.fmUp("sortby").selection.keyFn === keyFn)
-                }))))
+                })))
 }
 
 
 function jobListingControlBar() {
     return div({style: "display:flex;max-height:16px;align-items:center; background:lightgoldenrodyellow"}
         , resultMax()
+        , div(
+            span({ content: cF(c => {
+                let pgr = c.md.fmUp("progress")
+                return pgr.hidden ? "Jobs found: " + c.md.fmUp("job-list").selectedJobs.length
+                    : "Comments parsed: "+ PARSE_CHUNK_SIZE * pgr.value})})
 
-        , span({ content: cF(c => {
-            let pgr = c.md.fmUp("progress")
-            return pgr.hidden ? "Jobs found: " + c.md.fmUp("job-list").selectedJobs.length
-                : "Comments parsed: "+ PARSE_CHUNK_SIZE * pgr.value})})
+            , progress({
+                max: cI(0)
+                , hidden: cI( true)
+                , value: cI(0)
+            }, {name: "progress"}))
 
         , button({
                 style: cF(c=> {

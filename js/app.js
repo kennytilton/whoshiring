@@ -2,6 +2,7 @@ goog.require('Matrix.Cells')
 goog.require('Matrix.Model')
 goog.require('Matrix.mxWeb')
 goog.require('Matrix.mxXHR')
+goog.require('Hiring.utility')
 goog.require('Hiring.usernote')
 goog.require('Hiring.filtering')
 goog.require('Hiring.jobLoader')
@@ -33,9 +34,12 @@ function WhoIsHiring() {
             , appHelpToggle())
         , appHelp()
         , jobListingLoader() // hidden iFrame where we load HN page for scraping
-        , controlPanel()
-        //, whoshiringTester()
-        , jobList()
+        , pickAMonth()
+        , div( { class: cF( c=> slideInRule(c, c.md.fmUp("searchMonth").value))
+                , style: cF( c=> "display:" + (c.md.fmUp("searchMonth").value? "block":"none"))}
+            , controlPanel()
+            //, whoshiringTester()
+            , jobList())
     )
 }
 
