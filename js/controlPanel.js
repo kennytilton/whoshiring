@@ -11,30 +11,29 @@ function controlPanel() {
             // , c=> c.md.fmUp("os-filters-toggle").onOff ? "filters":"filters-mass"
             , i({style: "margin-left:12px"
                 , content: cF( c=> {
-                clg("echo runs",c.md.fmUp("os-filters-toggle").onOff)
+                //clg("echo runs",c.md.fmUp("os-filters-toggle").onOff)
                 if (c.md.fmUp("os-filters-toggle").onOff) {
-                    clg('echo off')
                     return ""
                 } else {
-                    clg('echo looks for stuff')
                     let titles = document.getElementsByClassName('title-jSelect')
-                        , users = document.getElementsByClassName('title-jSelect')
-                        , ons = [];
-                    Array.prototype.map.call(titles, tog => {
-                        clg('title!!!', dom2mx(tog).name, tog.id)
-                        if (tog.checked) ons.push(dom2mx(tog).name)
-                    })
-                    Array.prototype.map.call(users, tog => {
-                        if (tog.onOff) ons.push(tog.name)
-                    })
-                    clg('ons length', ons.length, ons[0])
+                        , users = document.getElementsByClassName('user-jSelect')
+                        , ons = []
+                        , echosChecked = doms => {
+                        Array.prototype.map.call(doms, tog => {
+                            clg('title!!!', dom2mx(tog).name, tog.id)
+                            if (tog.checked) ons.push(dom2mx(tog).name)
+                        })
+
+                    };
+                    echosChecked( titles)
+                    echosChecked( users)
                     return ons.join(' ')
                 }
             })})
             , mkTitleSelects, mkUserSelects )
-        , openShutCase("rgx-filters", "search", span("rsn"), mkTitleRgx, mkFullRgx)
-        , openShutCase("job-sorts", "sorting", span("rsn"), sortBar)
-        , openShutCase("listing-controls", span("rsn"), "view options", jobListingControlBar)
+        , openShutCase("rgx-filters", "search", span(""), mkTitleRgx, mkFullRgx)
+        , openShutCase("job-sorts", "sorting", span(""), sortBar)
+        , openShutCase("listing-controls", span(""), "view options", jobListingControlBar)
     )
 }
 
@@ -62,11 +61,7 @@ function pickAMonth() {
                 , m.desc)))
 
         , div( {style: merge( hzFlexWrap)}
-            , i( { style: cF( c=> displayStyle(c.md.fmUp("searchMonth").value))
-                , content: cF( c=> "<a href='https://news.ycombinator.com/item?id=" +
-                    c.md.fmUp("searchMonth").value +
-                    "'>View on HN</a>")})
-
+            , viewOnHN( )
             , span({
                 style: "margin-left:12px"
                 , hidden: cF( c=> !c.md.fmUp("searchMonth").value)
@@ -104,7 +99,14 @@ function sortBar() {
                                 {keyFn: mx.keyFn, order: -currSel.order}
                                 : {keyFn: mx.keyFn, order: 1});
                     }
-                    , content: lbl
+                    , content: cF( c=> {
+                        let currSel = c.md.fmUp("sortby").selection;;
+                        if (currSel.keyFn === c.md.keyFn) {
+                            return lbl+" "+ (currSel.order===-1 ? "&#x25bc;":"&#x25b2;")
+                        } else {
+                            return lbl
+                        }
+                    })
                 }, {
                     keyFn: keyFn
                     , selected: cF(c => c.md.fmUp("sortby").selection.keyFn === keyFn)

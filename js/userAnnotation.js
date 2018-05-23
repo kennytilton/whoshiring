@@ -62,14 +62,12 @@ function userAnnotations(j) {
             , jobStars(j)
             , applied(j)
             , noteToggle(j)
-            , a({
-                    style: "margin-left:12px"
-                    , href: `https://news.ycombinator.com/item?id=${j.hnId}`
-                    , title: "View listing on the HN site"}
-                , img({ src: "dist/hn24.jpg"})))
+            , viewOnHN(`https://news.ycombinator.com/item?id=${j.hnId}`))
         // beneath that
         , noteEditor(j))
 }
+
+
 
 // --- notes ---------------------------------------------
 

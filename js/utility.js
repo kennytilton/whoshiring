@@ -33,7 +33,7 @@ function openShutCase( name, title, echo, ...cases) {
     let toggleName = name+"-toggle";
     return div(
         div({class: "selector", style: hzFlexWrap}
-            , toggleChar( toggleName, "Show/hide "+title, false, "--", "+")
+            , toggleChar( toggleName, "Show/hide "+title, title==="sorting", "--", "+")
             , span( {style: "margin-left:9px"}, title)
             , echo)
         , div( {
@@ -80,3 +80,11 @@ function helpToggle ( name, title) {
             , onOff: cI( false)})
 }
 
+function viewOnHN ( uri) {
+    return a({
+            style: "margin-left:12px"
+            , href: uri
+            , title: "View listing on the HN site"
+        }
+        , img({ src: "dist/hn24.jpg"}))
+}
