@@ -109,7 +109,7 @@ function toggleFullListing() {
 // --- sorting ------------------------------------------------------
 
 function jobListSort(mx, jobs) {
-    let sortBy = mx.fmUp("sortby").selection
+    let sortBy = mx.fmUp("sortby").sortSpec
 
     return jobs.sort((j, k) => {
         let keyFn = sortBy.keyFn

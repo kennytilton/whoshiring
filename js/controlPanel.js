@@ -107,40 +107,45 @@ function pickAMonth() {
         ))
 }
 
+const jobSorts = [
+    {title: "Creation", keyFn: jobHnIdKey}
+    , {title: "Stars", compFn: jobStarsCompare}
+    , {title: "Company", keyFn: jobCompanyKey}
+    ]
+
 function sortBar() {
-    // todo: break out sorts into dictionary then selection becomes [keyToDict, dir]
     return ul({
-                style: merge(hzFlexWrap, { padding:0, margin_left: "24px"})
+            style: merge(hzFlexWrap, { padding:0, margin_left: "24px"})
+        }
+        , {
+            name: "sortby"
+            , order: cI( 1)
+            , selection: cI( jobSorts[0])
+            , sortSpec: cF( c=> merge( c.md.selection, {order: c.md.order}))
+        }
+        , jobSorts.map(js => button({
+            selected: cF(c => c.md.par.selection.title === js.title)
+            , style: cF(c => "margin-right:9px;min-width:72px;" + (c.md.selected ? "background:#ddf" : ""))
+            , onclick: mx => {
+                let currSel = mx.par.selection;
+                clg('setting selection', currSel.title , js.title);
+                if ( currSel.title === js.title ) {
+                    clg('sort dir chg!');
+                    mx.par.order = -mx.par.order;
+                } else {
+                    mx.par.selection = js
+                }
             }
-            , {
-                name: "sortby"
-                , selection: cI({title: "Creation", keyFn: jobHnIdKey, order: 1})
-            }
-            , [["Creation", jobHnIdKey], ["Stars", null, jobStarsCompare]
-                , ["Company", jobCompanyKey]]
-                .map(([lbl, keyFn, compFn]) => button({
-                    style: cF(c => "margin-right:9px;min-width:72px;" + (c.md.selected ? "background:#ddf" : ""))
-                    , onclick: mx => {
-                        let currSel = mx.fmUp("sortby").selection;
-                        clg('setting selection', mx.selection);
-                        mx.fmUp("sortby").selection =
-                            (currSel.keyFn === mx.keyFn ?
-                                { title: lbl, keyFn: mx.keyFn, compFn: mx.compFn, order: -currSel.order}
-                                : { title: lbl, keyFn: mx.keyFn, compFn: mx.compFn, order: 1});
-                    }
-                    , content: cF( c=> {
-                        let currSel = c.md.fmUp("sortby").selection;;
-                        if (currSel.keyFn === c.md.keyFn) {
-                            return lbl+" "+ (currSel.order===-1 ? "&#x2798":"&#x279a")//"&#x25bc;":"&#x25b2;")
-                        } else {
-                            return lbl
-                        }
-                    })
-                }, { // todo down here we just keep key to dict
-                    keyFn: keyFn
-                    , compFn: compFn
-                    , selected: cF(c => c.md.fmUp("sortby").selection.keyFn === keyFn)
-                })))
+            , content: cF( c=> {
+                let spec = c.md.par.sortSpec;;
+                if (spec.title === js.title) {
+                    clg('using order', spec.order)
+                    return js.title + " sort " + (spec.order===-1 ? "&#x2798":"&#x279a")//"&#x25bc;":"&#x25b2;")
+                } else {
+                    return js.title
+                }
+            })
+        })))
 }
 
 function jobListingControlBar() {
