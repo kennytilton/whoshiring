@@ -6,10 +6,35 @@ goog.provide('Hiring.controlPanel')
 
 function controlPanel() {
     return div(
-        openShutCase("os-filters", "filters", mkTitleSelects, mkUserSelects)
-        , openShutCase("rgx-filters", "search", mkTitleRgx, mkFullRgx)
-        , openShutCase("job-sorts", "sorting", sortBar)
-        , openShutCase("listing-controls", "view options", jobListingControlBar)
+        openShutCase("os-filters", "filters"
+            // , "bingo"
+            // , c=> c.md.fmUp("os-filters-toggle").onOff ? "filters":"filters-mass"
+            , i({style: "margin-left:12px"
+                , content: cF( c=> {
+                clg("echo runs",c.md.fmUp("os-filters-toggle").onOff)
+                if (c.md.fmUp("os-filters-toggle").onOff) {
+                    clg('echo off')
+                    return ""
+                } else {
+                    clg('echo looks for stuff')
+                    let titles = document.getElementsByClassName('title-jSelect')
+                        , users = document.getElementsByClassName('title-jSelect')
+                        , ons = [];
+                    Array.prototype.map.call(titles, tog => {
+                        clg('title!!!', dom2mx(tog).name, tog.id)
+                        if (tog.checked) ons.push(dom2mx(tog).name)
+                    })
+                    Array.prototype.map.call(users, tog => {
+                        if (tog.onOff) ons.push(tog.name)
+                    })
+                    clg('ons length', ons.length, ons[0])
+                    return ons.join(' ')
+                }
+            })})
+            , mkTitleSelects, mkUserSelects )
+        , openShutCase("rgx-filters", "search", span("rsn"), mkTitleRgx, mkFullRgx)
+        , openShutCase("job-sorts", "sorting", span("rsn"), sortBar)
+        , openShutCase("listing-controls", span("rsn"), "view options", jobListingControlBar)
     )
 }
 
@@ -23,17 +48,17 @@ function pickAMonth() {
         , select( {
                 name: "searchMonth"
                 , style: "min-width:128px;margin:0 12px 6px 0;"
-                , value: cI( null) // gMonthlies[0].hnId) //"files/whoishiring-2018-04.html"
+                , value: cI( gMonthlies[0].hnId)
                 , onchange: (mx,e) => {
                     mx.value = e.target.value
                 }}
             , option( {value: "none"
-                    , selected: "selected"
+                    // , selected: "selected"
                     , disabled: "disabled"}
                 , "Pick a month. Any month.")
             , gMonthlies.map( (m,x) => option( {
                     value: m.hnId
-                    , selected: x===0? null:null}
+                    , selected: x===0? "selected":null}
                 , m.desc)))
 
         , div( {style: merge( hzFlexWrap)}
@@ -85,7 +110,6 @@ function sortBar() {
                     , selected: cF(c => c.md.fmUp("sortby").selection.keyFn === keyFn)
                 })))
 }
-
 
 function jobListingControlBar() {
     return div({style: merge( hzFlexWrap, {

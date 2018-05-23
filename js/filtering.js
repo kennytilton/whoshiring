@@ -57,30 +57,29 @@ const userSelects = [["Starred", "Show only jobs you have rated with stars"]
     , ["Noted", "Show only jobs on which you have made a note"]]
 
 function mkTitleSelects() {
-    return mkJobSelects("Title selects", titleSelects)
+    return mkJobSelects("title", "Title selects", titleSelects)
 }
 function mkUserSelects() {
-    return mkJobSelects("User selects", userSelects, {"margin-top":"8px"})
+    return mkJobSelects("user", "User selects", userSelects, {"margin-top":"8px"})
 }
 
-function mkJobSelects( lbl, jSelects, styling = {}) {
+function mkJobSelects( key, lbl, jSelects, styling = {}) {
     return div( { style: merge( hzFlexWrap, {margin_left: "24px"})}
-            , jSelects.map( info => div( {style: "margin-right:18px"}
-                , input({
-                        id: info[0]+"ID"
+        , jSelects.map( info => div( {style: "margin-right:18px"}
+            , input({
+                    id: info[0]+"ID"
+                    , class: key + "-jSelect"
                     , style: "margin-right:6px"
-                        , type: "checkbox"
-                        , checked: cF(c => c.md.onOff)
-                        , title: info[1]
-                        , onclick: mx => {
-                            mx.onOff = !mx.onOff
-                        }
-                    }
-                    , {name: info[0], onOff: cI(false)})
-                , label( {
-                    for: info[0]+"ID"
+                    , type: "checkbox"
+                    , checked: cF(c => c.md.onOff)
                     , title: info[1]
-                }, info[0]))))
+                    , onclick: mx => mx.onOff = !mx.onOff
+                }
+                , {name: info[0], onOff: cI(false)})
+            , label( {
+                for: info[0]+"ID"
+                , title: info[1]
+            }, info[0]))))
 }
 
 // --- sorting ------------------------------------------------------
