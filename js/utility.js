@@ -62,12 +62,17 @@ function onOffCheckbox( nameTooltip) {
             for: name+"ID"+uniq
             , title: tooltip
         }, labelText))
-
 }
 
 const hzFlexWrap = {
     display: "flex"
     , flex_wrap: "wrap"
+}
+
+const hzFlexWrapCentered = {
+    display: "flex"
+    , flex_wrap: "wrap"
+    , align_items: "center"
 }
 
 function helpToggle ( name, title) {
@@ -80,11 +85,11 @@ function helpToggle ( name, title) {
             , onOff: cI( false)})
 }
 
-function viewOnHN ( uri) {
-    return a({
+function viewOnHN ( uri, attrs={}) {
+    return a( merge({
             style: "margin-left:12px"
             , href: uri
-            , title: "View listing on the HN site"
-        }
+            , title: "View on the HN site"
+        }, attrs)
         , img({ src: "dist/hn24.jpg"}))
 }

@@ -106,3 +106,44 @@ function toggleFullListing() {
         , "margin-right:9px;")
 }
 
+// --- sorting ------------------------------------------------------
+
+function jobListSort(mx, jobs) {
+    let sortBy = mx.fmUp("sortby").selection
+
+    return jobs.sort((j, k) => {
+        let keyFn = sortBy.keyFn
+            , compFn = sortBy.compFn
+            , dir = sortBy.order;
+        return compFn? compFn( dir, j, k) :
+            dir * (keyFn(j) < keyFn(k) ? -1 : 1)
+    });
+}
+
+function jobHnIdKey(j) {
+    return j.hnId
+}
+
+function jobCompanyKey(j) {
+    return (j.company || '')
+}
+
+function jobStarsCompare( dir, j, k) {
+    let uj = UNote.dict[j.hnId]
+        , uk = UNote.dict[k.hnId];
+    if ( uj.stars > 0) {
+        if ( uk.stars > 0) {
+            clg('starcompare', j.company, k.company)
+            return dir * (uj.stars < uk.stars ? -1 : 1)
+        } else {
+            clg('hard less on ujplus, ukzero', j.company, k.company)
+            return -1;
+        }
+    } else if ( uk.stars > 0) {
+        clg('hard GT on ujzero, ukplus', j.company, k.company)
+        return 1;
+    } else {
+        return uj.hnId < uk.hnId ? -1 : 1
+    }
+}
+

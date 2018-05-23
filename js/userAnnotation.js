@@ -20,7 +20,7 @@ class UserNotes extends MXStorable {
             islots,
             {
                 hnId: islots.hnId
-                , stars: cI(islots.stars) // null OK
+                , stars: cI(islots.stars || 0)
                 , hidden: cI(islots.hidden || false)
                 , applied: cI(islots.applied || false)
                 , notes: cI(islots.notes) // a little confusing since object is naned Notes
@@ -114,12 +114,13 @@ function jobStars(j) {
                 , unote = UNote.dict[j.hnId];
             //clg('starring', j.hnId, j.company)
             for (let n = 0; n < MAX_STARS; ++n)
-                stars.push( img({
-                    src: cF( c=> unote.stars >= c.md.starN ? "dist/star32.png":"dist/star32off.png")
-                    , style: "cursor:pointer;"
+                stars.push( span({
+                    content: "&#x2b51"
+                    , style: cF( c=> "cursor:pointer;color:" +
+                        (unote.stars >= c.md.starN ? "red;":"gray;"))
                     , onclick: mx => {
                         let li = mx.fmUp("job-listing")
-                        clg('onclick!!!', li.id, unote.stars, j.hnId, j.company)
+                        // clg('onclick!!!', li.id, unote.stars, j.hnId, j.company)
                         unote.stars = (unote.stars === mx.starN ? 0 : mx.starN);
                 }}
                 , {starN: n + 1}))

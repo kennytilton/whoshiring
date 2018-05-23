@@ -82,29 +82,3 @@ function mkJobSelects( key, lbl, jSelects, styling = {}) {
             }, info[0]))))
 }
 
-// --- sorting ------------------------------------------------------
-
-function jobListSort(mx, jobs) {
-    let sortBy = mx.fmUp("sortby").selection
-
-    return jobs.sort((j, k) => {
-        let keyFn = sortBy.keyFn
-            , rawComp = (keyFn(j) < keyFn(k) ? -1 : 1);
-        return sortBy.order * rawComp
-    });
-
-}
-
-function jobHnIdKey(j) {
-    return j.hnId
-}
-
-function jobCompanyKey(j) {
-    return (j.company || '')
-}
-
-function jobStarsKey(j) {
-    let uj = UNote.dict[j.hnId];
-    return (uj && uj.stars) || 0;
-}
-

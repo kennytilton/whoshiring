@@ -60,10 +60,11 @@ function pickAMonth() {
                     , selected: x===0? "selected":null}
                 , m.desc)))
 
-        , div( {style: merge( hzFlexWrap)}
-            , viewOnHN( )
+        , div( {style: hzFlexWrapCentered}
+            , viewOnHN( cF( c=> `https://news.ycombinator.com/item?id=${c.md.fmUp("searchMonth").value}`)
+                , { hidden: cF( c=> !c.md.fmUp("searchMonth").value)})
             , span({
-                style: "margin-left:12px"
+                style: "margin: 0 12px 0 12px"
                 , hidden: cF( c=> !c.md.fmUp("searchMonth").value)
                 , content: cF(c => {
                     let pgr = c.md.fmUp("progress")
@@ -80,6 +81,7 @@ function pickAMonth() {
 }
 
 function sortBar() {
+    // todo: break out sorts into dictionary then selection becomes [keyToDict, dir]
     return ul({
                 style: merge(hzFlexWrap, { padding:0, margin_left: "24px"})
             }
@@ -87,17 +89,17 @@ function sortBar() {
                 name: "sortby"
                 , selection: cI({keyFn: jobHnIdKey, order: -1})
             }
-            , [["Creation", jobHnIdKey], ["Stars", jobStarsKey]
+            , [["Creation", jobHnIdKey], ["Stars", null, jobStarsCompare]
                 , ["Company", jobCompanyKey]]
-                .map(([lbl, keyFn]) => button({
+                .map(([lbl, keyFn, compFn]) => button({
                     style: cF(c => "margin-right:9px;min-width:72px;" + (c.md.selected ? "background:#ddf" : ""))
                     , onclick: mx => {
                         let currSel = mx.fmUp("sortby").selection;
                         clg('setting selection', mx.selection);
                         mx.fmUp("sortby").selection =
                             (currSel.keyFn === mx.keyFn ?
-                                {keyFn: mx.keyFn, order: -currSel.order}
-                                : {keyFn: mx.keyFn, order: 1});
+                                {keyFn: mx.keyFn, compFn: mx.compFn, order: -currSel.order}
+                                : {keyFn: mx.keyFn, compFn: mx.compFn, order: 1});
                     }
                     , content: cF( c=> {
                         let currSel = c.md.fmUp("sortby").selection;;
@@ -107,8 +109,9 @@ function sortBar() {
                             return lbl
                         }
                     })
-                }, {
+                }, { // todo down here we just keep key to dict
                     keyFn: keyFn
+                    , compFn: compFn
                     , selected: cF(c => c.md.fmUp("sortby").selection.keyFn === keyFn)
                 })))
 }
