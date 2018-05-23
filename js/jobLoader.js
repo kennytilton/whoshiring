@@ -19,7 +19,7 @@ function jobListingLoader() {
         }))
 }
 
-const PARSE_CHUNK_SIZE = 20
+const PARSE_CHUNK_SIZE = 100
 
 function jobsCollect(md) {
     if (md.dom.contentDocument) { // FF

@@ -15,6 +15,7 @@ function mkFullRgx() {
 function mkListingRgx(prop, lbl, desc) {
     return labeledRow(lbl, input({
         placeholder: `Regex for ${desc} search`
+        , class: "listing-regex"
         , onkeypress: buildRgxTree
         , onchange: buildRgxTree
         , value: ''
@@ -23,6 +24,22 @@ function mkListingRgx(prop, lbl, desc) {
         name: prop + "rgx"
         , rgxTree: cI(null)
     }))
+}
+
+function mkRgxHelp () {
+    return div({style: merge( hzFlexWrap, {margin_left: "18px"})}
+        , {helping: cI(false)}
+        , b({
+            style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"
+            , onclick: mx => mx.par.helping = !mx.par.helping
+            , title: "Show/hide help"
+            , content: cF(c => c.md.par.helping ? "_" : "?")
+        })
+        , ul({
+                class: cF(c => slideInRule(c, c.md.par.helping))
+                , style: cF(c => "display:" + (c.md.par.helping ? "block" : "none"))
+            }
+            , regexHelp.map(h => li(h))))
 }
 
 function labeledRow(label, ...children) {
@@ -34,20 +51,9 @@ function labeledRow(label, ...children) {
                 , "align-items": "center"
             }
         }
-        , {helping: cI(false)}
         , span({style: "min-width:104px"}, label)
         , children
-        , b({ style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"
-            , onclick: mx => mx.par.helping = !mx.par.helping
-            , title: "Show/hide help"
-            , content: cF( c=> c.md.par.helping? "_":"?")
-        })
-
-        , ul( {
-                class: cF( c=> slideInRule(c, c.md.par.helping))
-                ,style: cF( c=> "display:" + (c.md.par.helping? "block":"none"))
-            }
-            , regexHelp.map( h=> li(h))))
+    )
 }
 
 const regexHelp = [

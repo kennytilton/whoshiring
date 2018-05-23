@@ -20,7 +20,6 @@ function controlPanel() {
                         , ons = []
                         , echosChecked = doms => {
                         Array.prototype.map.call(doms, tog => {
-                            clg('title!!!', dom2mx(tog).name, tog.id)
                             if (tog.checked) ons.push(dom2mx(tog).name)
                         })
 
@@ -31,9 +30,37 @@ function controlPanel() {
                 }
             })})
             , mkTitleSelects, mkUserSelects )
-        , openShutCase("rgx-filters", "search", span(""), mkTitleRgx, mkFullRgx)
-        , openShutCase("job-sorts", "sorting", span(""), sortBar)
-        , openShutCase("listing-controls", span(""), "view options", jobListingControlBar)
+        , openShutCase("rgx-filters", "search"
+            , i({style: "margin-left:12px"
+                , content: cF( c=> {
+                    if (c.md.fmUp("rgx-filters-toggle").onOff) {
+                        return ""
+                    } else {
+                        let rgxs = document.getElementsByClassName("listing-regex")
+                            , ons = [];
+                        Array.prototype.map.call(rgxs, rgx => {
+                            let mx = dom2mx(rgx);
+                            ast(mx);
+                            clg('rgxs', rgx.value)
+                            if ( rgx.value) ons.push( rgx.value)
+                        });
+
+                        return ons.join(' and ')
+                    }
+                })})
+            , mkTitleRgx, mkFullRgx, mkRgxHelp)
+        , openShutCase("job-sorts", "sorting"
+            , i({style: "margin-left:12px"
+                , content: cF( c=> {
+                    if (c.md.fmUp("job-sorts-toggle").onOff) {
+                        return ""
+                    } else {
+                        let s = c.md.fmUp("sortby").selection;
+                        return s.title + " " + (s.order === -1? "&#x2798":"&#x279a") //"&#x25bc;":"&#x25b2;")
+                    }
+                })})
+            , sortBar)
+        , jobListingControlBar
     )
 }
 
@@ -87,7 +114,7 @@ function sortBar() {
             }
             , {
                 name: "sortby"
-                , selection: cI({keyFn: jobHnIdKey, order: -1})
+                , selection: cI({title: "Creation", keyFn: jobHnIdKey, order: 1})
             }
             , [["Creation", jobHnIdKey], ["Stars", null, jobStarsCompare]
                 , ["Company", jobCompanyKey]]
@@ -98,13 +125,13 @@ function sortBar() {
                         clg('setting selection', mx.selection);
                         mx.fmUp("sortby").selection =
                             (currSel.keyFn === mx.keyFn ?
-                                {keyFn: mx.keyFn, compFn: mx.compFn, order: -currSel.order}
-                                : {keyFn: mx.keyFn, compFn: mx.compFn, order: 1});
+                                { title: lbl, keyFn: mx.keyFn, compFn: mx.compFn, order: -currSel.order}
+                                : { title: lbl, keyFn: mx.keyFn, compFn: mx.compFn, order: 1});
                     }
                     , content: cF( c=> {
                         let currSel = c.md.fmUp("sortby").selection;;
                         if (currSel.keyFn === c.md.keyFn) {
-                            return lbl+" "+ (currSel.order===-1 ? "&#x25bc;":"&#x25b2;")
+                            return lbl+" "+ (currSel.order===-1 ? "&#x2798":"&#x279a")//"&#x25bc;":"&#x25b2;")
                         } else {
                             return lbl
                         }
@@ -123,7 +150,7 @@ function jobListingControlBar() {
             , align_items: "center"})}
         , resultMax()
         , span({ content: cF(c => {
-            return "jobs of " + c.md.fmUp("job-list").selectedJobs.length + " after filtering."})})
+            return "jobs of " + c.md.fmUp("job-list").selectedJobs.length + " matches."})})
         , button({
                 style: cF(c=> {
                     let pgr = c.md.fmUp("progress")

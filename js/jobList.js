@@ -131,16 +131,16 @@ function jobCompanyKey(j) {
 function jobStarsCompare( dir, j, k) {
     let uj = UNote.dict[j.hnId]
         , uk = UNote.dict[k.hnId];
+
+    // regardless of sort direction,
+    // force unstarred to end, in creation order
     if ( uj.stars > 0) {
         if ( uk.stars > 0) {
-            clg('starcompare', j.company, k.company)
             return dir * (uj.stars < uk.stars ? -1 : 1)
         } else {
-            clg('hard less on ujplus, ukzero', j.company, k.company)
             return -1;
         }
     } else if ( uk.stars > 0) {
-        clg('hard GT on ujzero, ukplus', j.company, k.company)
         return 1;
     } else {
         return uj.hnId < uk.hnId ? -1 : 1

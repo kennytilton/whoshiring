@@ -33,8 +33,8 @@ function openShutCase( name, title, echo, ...cases) {
     let toggleName = name+"-toggle";
     return div(
         div({class: "selector", style: hzFlexWrap}
-            , toggleChar( toggleName, "Show/hide "+title, title==="sorting", "--", "+")
-            , span( {style: "margin-left:9px"}, title)
+            , toggleChar( toggleName, "Show/hide "+title, title==="sorting", "&#x25be", "&#x25b8")//"--", "+")
+            , span( {style: "margin-left:9px;min-width:48px"}, title)
             , echo)
         , div( {
                 class: cF( c=> slideInRule(c, c.md.fmUp(toggleName).onOff))
@@ -79,7 +79,7 @@ function helpToggle ( name, title) {
     return b({ style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"
             , onclick: mx => mx.onOff = !mx.onOff
             , title: title
-            , content: cF( c=> c.md.onOff? "_":"?")
+            , content: cF( c=> c.md.onOff? "&#x00bf":"&#xfe56")
         }
         , { name: name
             , onOff: cI( false)})
