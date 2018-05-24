@@ -22,26 +22,42 @@ function mkListingRgx(prop, lbl, desc) {
         , style: "min-width:72px;width:300px;font-size:1em"
     }, {
         name: prop + "rgx"
+        , rgxRaw: cI(null)
         , rgxTree: cI(null)
     }))
 }
 
-function mkRgxHelp () {
-    return div({style: merge( hzFlexWrap, {margin_left: "18px"})}
-        , {helping: cI(false)}
-        , b({
-            style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"
-            , onclick: mx => mx.par.helping = !mx.par.helping
-            , title: "Show/hide help"
-            , content: cF(c => c.md.par.helping ? "_" : "?")
-        })
+function mkRgxOptions () {
+    return div(
+        div({style: merge( hzFlexWrapCentered, {margin: "4px 96px 20px 12px"})}
+            , helpToggle( "rgxHelpToggle", "Show/hide app help")
+            , mkRgxMatchCase())
+
         , ul({
-                class: cF(c => slideInRule(c, c.md.par.helping))
-                , style: cF(c => "display:" + (c.md.par.helping ? "block" : "none"))
+                class: cF(c => slideInRule(c, c.md.fmUp("rgxHelpToggle").onOff))
+                , style: cF(c => "display:" + (c.md.fmUp("rgxHelpToggle").onOff ? "block" : "none"))
             }
             , regexHelp.map(h => li(h))))
 }
 
+function mkRgxMatchCase() {
+    return div({
+            style: "margin-left:88px; display:flex; flex-wrap: wrap; align-items:center"
+        }
+        , input({
+                id: "rgxMatchCase"
+                , type: "checkbox"
+                , onclick: mx => mx.value = !mx.value
+                , onchange: rebuildRgxTrees
+            }
+            , {
+                name: "rgxMatchCase"
+                , value: cI( false)
+            }),
+        label({for: "rgxMatchCase"}, "match case"))
+}
+
+// todo lose this breakout
 function labeledRow(label, ...children) {
     return div({
             style: {
@@ -59,23 +75,39 @@ function labeledRow(label, ...children) {
 const regexHelp = [
     "Separate <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions'>JS RegExp-legal</a> terms with <b>||</b> or " +
     "<b>&&</b> (higher priority) to combine expressions."
-    , "Press <kbd style='font-size:1.4em'>Enter</kbd> or <kbd style='font-size:1.4em'>Tab</kbd> to activate, including after clearing."
+    , "Press <kbd style='background:cornsilk;font-size:1.2em'>Enter</kbd> or <kbd style='background:cornsilk;font-size:1.2em'>Tab</kbd> to activate, including after clearing."
     , "Supply RegExp options after a comma. e.g. <b>taipei,i</b> for case-insensitive search."]
 
 function buildRgxTree(mx, e) {
-    if (!(e.type === 'change' || (e.type==='keypress' && e.key === 'Enter')))
+    if (!(e.type === 'change' || (e.type === 'keypress' && e.key === 'Enter')))
         return
 
-    let rgx = e.target.value.trim()
+    mx.rgxRaw = e.target.value.trim()
 
-    if (rgx === '') {
+    if (mx.rgxRaw === '') {
         mx.rgxTree = null // test
-        return
+    } else {
+        rebuildRgxTree(mx)
     }
+}
 
-    mx.rgxTree = rgx.split('||').map(orx => orx.trim().split('&&').map(andx => {
+function rebuildRgxTrees( mx) {
+    ["titlergx", "listingrgx"].map( n => {
+        let rgmx = mx.fmUp(n);
+        if ( rgmx.rgxTree)
+            rebuildRgxTree(rgmx )
+    })
+}
+
+function rebuildRgxTree( mx) {
+
+    let matchCase = mx.fmUp("rgxMatchCase").value
+
+    mx.rgxTree = mx.rgxRaw.split('||').map(orx => orx.trim().split('&&').map(andx => {
         try {
             let [term, options=''] = andx.trim().split(',')
+            if ( !matchCase)
+                options = options + 'i'
             return new RegExp( term, options)
         }
         catch (error) {

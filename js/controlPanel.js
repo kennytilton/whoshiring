@@ -48,7 +48,7 @@ function controlPanel() {
                         return ons.join(' and ')
                     }
                 })})
-            , mkTitleRgx, mkFullRgx, mkRgxHelp)
+            , mkTitleRgx, mkFullRgx, mkRgxOptions)
         , openShutCase("job-sorts", "sorting"
             , i({style: "margin-left:12px"
                 , content: cF( c=> {
@@ -68,9 +68,10 @@ function controlPanel() {
 window['controlPanel'] = controlPanel;
 
 function pickAMonth() {
-    return div ({style: merge( hzFlexWrap, {
+    return div ({style: merge( hzFlexWrapCentered, {
             align_items: "center"
             , margin: "0px 0px 9px 24px"})}
+
         , select( {
                 name: "searchMonth"
                 , style: "min-width:128px;margin:0 12px 6px 0;"
@@ -78,10 +79,10 @@ function pickAMonth() {
                 , onchange: (mx,e) => {
                     mx.value = e.target.value
                 }}
-            , option( {value: "none"
-                    // , selected: "selected"
-                    , disabled: "disabled"}
-                , "Pick a month. Any month.")
+            // , option( {value: "none"
+            //         , selected: "selected"
+            //         , disabled: "disabled"}
+            //     , "Pick a month. Any month.")
             , gMonthlies.map( (m,x) => option( {
                     value: m.hnId
                     , selected: x===0? "selected":null}
@@ -95,7 +96,7 @@ function pickAMonth() {
                 , hidden: cF( c=> !c.md.fmUp("searchMonth").value)
                 , content: cF(c => {
                     let pgr = c.md.fmUp("progress")
-                    return pgr.hidden ? "Jobs found: " + c.md.fmUp("job-list").selectedJobs.length
+                    return pgr.hidden ? "Jobs found: " + hiringApp.jobs.length
                         : "Parsing: "+ PARSE_CHUNK_SIZE * pgr.value})})
 
             , progress({
@@ -128,9 +129,7 @@ function sortBar() {
             , style: cF(c => "margin-right:9px;min-width:72px;" + (c.md.selected ? "background:#ddf" : ""))
             , onclick: mx => {
                 let currSel = mx.par.selection;
-                clg('setting selection', currSel.title , js.title);
                 if ( currSel.title === js.title ) {
-                    clg('sort dir chg!');
                     mx.par.order = -mx.par.order;
                 } else {
                     mx.par.selection = js
@@ -139,8 +138,7 @@ function sortBar() {
             , content: cF( c=> {
                 let spec = c.md.par.sortSpec;;
                 if (spec.title === js.title) {
-                    clg('using order', spec.order)
-                    return js.title + " sort " + (spec.order===-1 ? "&#x2798":"&#x279a")//"&#x25bc;":"&#x25b2;")
+                    return js.title + " sort " + (spec.order===-1 ? "&#x2798":"&#x279a")
                 } else {
                     return js.title
                 }
@@ -149,13 +147,14 @@ function sortBar() {
 }
 
 function jobListingControlBar() {
-    return div({style: merge( hzFlexWrap, {
-            margin:"6px 0 0 24px"
-            // , max_height: "16px"
+    return div({style: merge( hzFlexWrapCentered, {
+            margin:"6px 0 0 0px"
+            , padding: "4px"
+            , border_style: "inset"
             , align_items: "center"})}
+
+        , span({ content: cF(c => "Matches: " + c.md.fmUp("job-list").selectedJobs.length)})
         , resultMax()
-        , span({ content: cF(c => {
-            return "jobs of " + c.md.fmUp("job-list").selectedJobs.length + " matches."})})
         , button({
                 style: cF(c=> {
                     let pgr = c.md.fmUp("progress")
@@ -173,8 +172,8 @@ function jobListingControlBar() {
 }
 
 function resultMax() {
-    return div( {style: hzFlexWrap}
-        , span("Display")
+    return div( {style: merge( hzFlexWrap, {margin_left: "18px"})}
+        , span("Display limit:")
         , input({
                 value: cF( c=> c.md.results)
                 , style:"max-width:24px;margin-left:6px;margin-right:6px"

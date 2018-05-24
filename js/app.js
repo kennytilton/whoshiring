@@ -45,7 +45,7 @@ window['WhoIsHiring'] = WhoIsHiring;
 
 function appHeader () {
     return div( {style: hzFlexWrap}
-        , span({style: "padding:4px;font-size:2em; margin-bottom:12px;background:orange"}
+        , span({style: "padding:4px;font-size:1.5em; margin-bottom:12px;background:orange"}
             , "Ask HN: Who Is Hiring?")
         , helpToggle( "appHelpToggle", "Show/hide app help")
         , appHelp())

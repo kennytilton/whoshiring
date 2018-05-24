@@ -47,14 +47,14 @@ function jobHeader(j) {
 
         // if the job is collapsed so we cannot see the stars, at least
         // show one star iff there are any.
-        , img( {src: "dist/star32.png"
-            , style: cF( c=> {
+        , span({style: cF( c=> {
                 let un = UNote.dict[j.hnId]
                     , mol = c.md.fmUp("showDetails");
 
-                return "max-height:16px;margin-right:9px; display:" +
+                return "color:red;max-height:16px;margin-right:9px; display:" +
                     ( ((mol.onOff || !un || !un.stars || un.stars === 0))? "none":"block") // || (un && un.stars===0)
-            })})
+            })}
+        ,"&#x2b51")
 
         // .. and now the job header much as it appears on HN
         , span({onclick: mx=> {

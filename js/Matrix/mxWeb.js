@@ -803,7 +803,6 @@ class MXStorable extends Model {
     }
 
     static obsAnyChange ( slot, row, newv, priorv, c) {
-        clg('mxStoring!', row.id, slot, newv)
         row.store()
     }
 
