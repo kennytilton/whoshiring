@@ -60,7 +60,9 @@ function jobHeader(j) {
         , span({onclick: mx=> {
             let mol = mx.fmUp("showDetails")
             mol.onOff = !mol.onOff
+
         }}, j.titlesearch))
+
 }
 
 function jobDetails (j) {
