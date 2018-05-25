@@ -60,7 +60,7 @@ function jobHeader(j) {
         , span({onclick: mx=> {
             let mol = mx.fmUp("showDetails")
             mol.onOff = !mol.onOff
-        }}, j.title.map(h => h.textContent).join(" | ")))
+        }}, j.titlesearch))
 }
 
 function jobDetails (j) {
@@ -80,18 +80,7 @@ function jobDetails (j) {
         , div( { style: "margin:6px"}
             // here rather than toggling hidden we avoid even building the hidden
             // structure until the user requests it. Performance advantage merely guessed at.
-            , c=> c.md.fmUp("showDetails") ?
-                j.body.map( (n,x) => {
-                    if (n.nodeType === 1) { // Normal DOM
-                        return "<p>" + n.innerHTML + "</p>"
-
-                    } else if (n.nodeType === 3) { // string content
-                        return "<p>" + n.textContent + "</p>"
-
-                    } else {
-                        clg('UNEXPECTED Node type', n.nodeType, n.nodeName, n.textContent)
-                    }
-                }) : null))
+            , c=> c.md.fmUp("showDetails") ? j.body : null))
 }
 
 function toggleFullListing() {

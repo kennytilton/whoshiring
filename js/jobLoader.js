@@ -101,13 +101,13 @@ function jobSpecExtend(j, dom) {
         });
 
         let child = dom.childNodes
-            , inHeader = true;
+            , inHeader = true
+            , titleSeg = [];
 
         if (child[0].nodeType === 3
             // && child[0].textContent.search("Instructure") !== -1
             && child[0].textContent.split("|").length > 1) {
 
-            j.title = []
             j.body = []
 
             for (let i = 0; i < child.length; i++) {
@@ -116,17 +116,20 @@ function jobSpecExtend(j, dom) {
                 if (inHeader) {
                     if (n.nodeType === 1 && n.nodeName === 'P') {
                         inHeader = false
-                        j.body.push(n)
+                        j.body.push("<p>" + n.innerHTML + "</p>")
                     } else {
-                        j.title.push(n)
+                        titleSeg.push(n)
                     }
                 } else {
-                    j.body.push(n)
+                    if (n.nodeType === 1) {
+                        j.body.push("<p>" + n.innerHTML + "</p>");
+                    } else if (n.nodeType === 3) {
+                        j.body.push("<p>" + n.textContent + "</p>")
+                    }
                 }
             }
 
-
-            let htext = j.title.map(h => h.textContent).join(" | ")
+            let htext = titleSeg.map(h => h.textContent).join(" | ")
                 , hseg = htext.split("|").map(s => s.trim())
 
             let internOK = new RegExp(/((internship|intern)(?=|s,\)))/, 'i')
