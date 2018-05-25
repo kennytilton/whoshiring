@@ -33,7 +33,7 @@ function openShutCase( name, title, echo, ...cases) {
     let toggleName = name+"-toggle";
     return div(
         div({class: "selector", style: hzFlexWrap}
-            , toggleChar( toggleName, "Show/hide "+title, title==="search", "&#x25be", "&#x25b8")//"--", "+")
+            , toggleChar( toggleName, "Show/hide "+title, title==="nochance", "&#x25be", "&#x25b8")//"--", "+")
             , span( {style: "margin-left:9px;min-width:48px"}, title)
             , echo)
         , div( {

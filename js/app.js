@@ -54,12 +54,14 @@ function appHeader () {
 // --- app help ----------------------------------------------
 
 const appHelpEntry = [
-    "All filters are ANDed."
+    "Click/tap any job to show/hide full listing"
+    , "All filters are ANDed."
+    ,"Static page scrape will fall behind actual jobs during the early rush, so..."
+    , "...clone the " +
+    "<a href='https://github.com/kennytilton/whoshiring'>GitHub project</a> " +
+    "and run yourself to control currency."
     , "RFEs welcome and can be raised " +
     "<a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. "
-    , "GitHub source can be " +
-    "<a href='https://github.com/kennytilton/whoshiring'>" +
-    "found here</a>."
 ]
 
 function appHelp () {

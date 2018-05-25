@@ -21,7 +21,8 @@ class UserNotes extends MXStorable {
             {
                 hnId: islots.hnId
                 , stars: cI(islots.stars || 0)
-                , hidden: cI(islots.hidden || false)
+                , hidden: cI(islots.hidden || false) // todo lose this
+                , excluded: cI(islots.excluded || false)
                 , applied: cI(islots.applied || false)
                 , notes: cI(islots.notes) // a little confusing since object is naned Notes
             }))
@@ -59,6 +60,7 @@ function userAnnotations(j) {
     //clg('uannot', j.hnId, j.company)
     return div( {style: "display:flex; flex-direction: column"}
         , div ({style: "display:flex; flex-wrap:wrap; align-items:center"}
+            // , excludeJob(j)
             , jobStars(j)
             , applied(j)
             , noteToggle(j)
@@ -105,7 +107,7 @@ function noteEditor (j) {
 
 // --- stars ----------------------------------------------
 
-const MAX_STARS = 5;
+const MAX_STARS = 3;
 
 function jobStars(j) {
     return div({style: "margin-left:6px; display:flex; flex-wrap:wrap"}
@@ -115,7 +117,7 @@ function jobStars(j) {
             //clg('starring', j.hnId, j.company)
             for (let n = 0; n < MAX_STARS; ++n)
                 stars.push( span({
-                    content: "&#x2b51"
+                    content: "&#x2605"
                     , style: cF( c=> "cursor:pointer;color:" +
                         (unote.stars >= c.md.starN ? "red;":"gray;"))
                     , onclick: mx => {
@@ -152,3 +154,22 @@ function applied(j) {
             , {name: "applied?"}),
         label({for: "applied?"+j.hnId}, "Applied"))
 }
+
+// function excludeJob(j) {
+//     return span({
+//                 id: "excluded?"+j.hnId
+//         , content: "&#x20e0"
+//         , style: cF( c=> "color:" + (c.md.onOff ? "red":"gray"))
+//                 , checked: cF(c => {
+//                     let unote = UNote.dict[j.hnId];
+//                     return unote.excluded || false
+//                 })
+//                 , onclick: mx => {
+//                     let unote = UNote.dict[j.hnId]
+//                         , newv = !unote.excluded;
+//                     unote.excluded = newv
+//                 }
+//
+//             }
+//             , {name: "excluded?"})
+// }

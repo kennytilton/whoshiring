@@ -49,6 +49,7 @@ function controlPanel() {
                     }
                 })})
             , mkTitleRgx, mkFullRgx, mkRgxOptions)
+
         , openShutCase("job-sorts", "sorting"
             , i({style: "margin-left:12px"
                 , content: cF( c=> {
@@ -60,6 +61,7 @@ function controlPanel() {
                     }
                 })})
             , sortBar)
+
         , jobListingControlBar
     )
 }
@@ -74,7 +76,7 @@ function pickAMonth() {
 
         , select( {
                 name: "searchMonth"
-                , style: "min-width:128px;margin:0 12px 6px 0;"
+                , style: "font-size:1.5em; min-width:128px; margin:0 12px 6px 0;"
                 , value: cI( gMonthlies[0].hnId)
                 , onchange: (mx,e) => {
                     mx.value = e.target.value
@@ -147,11 +149,14 @@ function sortBar() {
 }
 
 function jobListingControlBar() {
-    return div({style: merge( hzFlexWrapCentered, {
-            margin:"6px 0 0 0px"
-            , padding: "4px"
-            , border_style: "inset"
-            , align_items: "center"})}
+    return div({
+            style: merge( hzFlexWrapCentered, {
+                margin:"6px 0 0 0px"
+                , padding: "4px"
+                , border_style: "inset"
+                , border_color: "khaki"
+                , border_width: "2px"
+                , align_items: "center"})}
 
         , span({ content: cF(c => "Matches: " + c.md.fmUp("job-list").selectedJobs.length)})
         , resultMax()

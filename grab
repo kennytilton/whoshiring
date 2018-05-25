@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo "Checking HN message $1"
+
+# curl 'https://news.ycombinator.com/item?id=$1' > temp/$1.tmp
+
+if diff -q temp/$1.tmp files/$1.html; then
+  echo "$1.html has NOT changed"
+  exit
+else
+  echo "$1.html HAS changed"
+  epoch=`date +%s`
+  echo "epoch is $epoch"
+  mkdir -p files/backup
+  cp files/$1.html files/backup/$1.$epoch.html
+  mv temp/$1.tmp files/$1.html
+  git add files/$1.html
+  git commit -m "Grab new $1 page"
+  git push
+fi
+
+echo "Bye-bye"

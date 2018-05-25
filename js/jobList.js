@@ -28,7 +28,7 @@ function jobListItem(c, j) {
         // shade alternate rows differently
             style: cF(c=> {
                 let kn = c.md.fmUp("job-list").kidValues.indexOf(j)
-                return "padding:4px;background-color:" + (kn % 2? "#f8f8f8":"#eee")
+                return "cursor:pointer;padding:12px;background-color:" + (kn % 2? "#f8f8f8":"#eee")
             })
 
             , onclick: mx=> {
@@ -42,7 +42,7 @@ function jobListItem(c, j) {
 }
 
 function jobHeader(j) {
-    return div( { style: "cursor:pointer;display:flex"}
+    return div( { style: "cursor:pointer; display:flex"}
         , toggleFullListing( )
 
         // if the job is collapsed so we cannot see the stars, at least
@@ -79,7 +79,7 @@ function jobDetails (j) {
         , userAnnotations(j)
         , div( { style: "margin:6px"}
             // here rather than toggling hidden we avoid even building the hidden
-            // structure until the user requests it. Performance advantage only guessed at!
+            // structure until the user requests it. Performance advantage merely guessed at.
             , c=> c.md.fmUp("showDetails") ?
                 j.body.map( (n,x) => {
                     if (n.nodeType === 1) { // Normal DOM
@@ -96,7 +96,7 @@ function jobDetails (j) {
 
 function toggleFullListing() {
     return toggleChar("showDetails", "Show/hide full listing"
-        , false, "--", "+"
+        , false, "","" //"&#x25be", "&#x25b8"
         , {class: "listing-toggle"}
         , {
             // cFI starts out formulaic to compute the initial value, but then
@@ -136,7 +136,9 @@ function jobStarsCompare( dir, j, k) {
     // force unstarred to end, in creation order
     if ( uj.stars > 0) {
         if ( uk.stars > 0) {
-            return dir * (uj.stars < uk.stars ? -1 : 1)
+            return dir * (uj.stars < uk.stars ? -1 :
+                (uj.stars > uk.stars ? 1 :
+                    (uj.hnId < uk.hnId ? -1 : 1)))
         } else {
             return -1;
         }

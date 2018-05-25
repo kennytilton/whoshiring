@@ -130,6 +130,7 @@ function jobSpecExtend(j, dom) {
                 , nointernOK = new RegExp(/((no internship|no intern)(?=|s,\)))/, 'i')
                 , visaOK = new RegExp(/((visa|visas)(?=|s,\)))/, 'i')
                 , novisaOK = new RegExp(/((no visa|no visas)(?=|s,\)))/, 'i')
+                , onsiteOK = new RegExp(/(on.?site)/, 'i')
                 , remoteOK = new RegExp(/(remote)/, 'i')
                 , noremoteOK = new RegExp(/(no remote)/, 'i')
                 , hsmatch = rx => hseg.some(hs => hs.match(rx) !== null);
@@ -139,6 +140,7 @@ function jobSpecExtend(j, dom) {
 
             j.titlesearch = htext
             j.bodysearch = j.body.map(n => n.textContent).join('<**>')
+            j.onsite = hsmatch(onsiteOK)
             j.remote = (hsmatch(remoteOK) && !hsmatch(noremoteOK))
             j.visa = (hsmatch(visaOK) && !hsmatch(novisaOK))
             j.intern = (hsmatch(internOK) && !hsmatch(novisaOK))

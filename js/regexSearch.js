@@ -73,10 +73,12 @@ function labeledRow(label, ...children) {
 }
 
 const regexHelp = [
-    "Separate <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions'>JS RegExp-legal</a> terms with <b>||</b> or " +
+    "Press <kbd style='background:cornsilk;font-size:1em'>Enter</kbd> or <kbd style='background:cornsilk;font-size:1em'>Tab</kbd> to activate, including after clearing."
+    , "Separate <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions'>JS RegExp-legal</a> terms with <b>||</b> or " +
     "<b>&&</b> (higher priority) to combine expressions."
-    , "Press <kbd style='background:cornsilk;font-size:1.2em'>Enter</kbd> or <kbd style='background:cornsilk;font-size:1.2em'>Tab</kbd> to activate, including after clearing."
-    , "Supply RegExp options after a comma. e.g. <b>taipei,i</b> for case-insensitive search."]
+    , "Regex terms are split on comma and passed to <code>new RegExp(pattern,flags)</code>."
+    , "e.g. Enter <b>taipei,i</b> for case-insensitive search."
+]
 
 function buildRgxTree(mx, e) {
     if (!(e.type === 'change' || (e.type === 'keypress' && e.key === 'Enter')))
@@ -106,7 +108,7 @@ function rebuildRgxTree( mx) {
     mx.rgxTree = mx.rgxRaw.split('||').map(orx => orx.trim().split('&&').map(andx => {
         try {
             let [term, options=''] = andx.trim().split(',')
-            if ( !matchCase)
+            if ( !matchCase && options.search('i') === -1)
                 options = options + 'i'
             return new RegExp( term, options)
         }
