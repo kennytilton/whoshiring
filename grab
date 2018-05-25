@@ -2,7 +2,16 @@
 
 echo "Checking HN message $1"
 
-# curl 'https://news.ycombinator.com/item?id=$1' > temp/$1.tmp
+# todo: ensure we are in right directory
+
+mkdir -p temp
+
+curl 'https://news.ycombinator.com/item?id=$1' > temp/$1.tmp
+
+if [ ! -f temp/$1.tmp ]; then
+    echo "Download target temp/$1.tmp not found after curl."
+    exit
+fi
 
 if diff -q temp/$1.tmp files/$1.html; then
   echo "$1.html has NOT changed"

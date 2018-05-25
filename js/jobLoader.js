@@ -41,6 +41,7 @@ function jobsCollect(md) {
 
 function parseListings( listing, tempJobs, chunkSize, progressBar) {
     let total = listing.length
+        , totchar =0
         , chunker = offset => {
         let jct = Math.min( total - offset, chunkSize)
 
@@ -55,12 +56,14 @@ function parseListings( listing, tempJobs, chunkSize, progressBar) {
                         UNote.dict[hnId] = new UserNotes({hnId: hnId});
                     }
                     tempJobs.push(spec)
+                    totchar += JSON.stringify(spec).length;
+                    clg('totchar', jn, totchar)
                 }
             }
             progressBar.value = progressBar.value + 1
             //window.requestAnimationFrame(() => chunker( offset + jct))
 
-            if (tempJobs.length < 5000)
+            if (tempJobs.length < 50000)
                 window.requestAnimationFrame(() => chunker( offset + jct))
             else {
                 progressBar.hidden = true
