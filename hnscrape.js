@@ -16,6 +16,26 @@ system = require('system');
 webpage = require('webpage');
 
 /*
+tst = {};
+
+tst[1]="one";
+tst[2]="two";
+tst[3]="";
+tst["4"] = 4;
+tst[4]=44;
+
+console.log('tst ', JSON.stringify(tst));
+console.log('tst2', tst[2], tst[4], tst["4"]);
+
+tst2 = JSON.parse( JSON.stringify(tst))
+console.log('tst2-2', tst2[2]);
+console.log('keys', Object.keys(tst2));
+console.log('unfrined?', tst2[222]===undefined)
+phantom.exit(0);
+
+*/
+
+/*
 var page = webpage.create();
 page.onConsoleMessage = function (msg) { console.log(msg); };
 
@@ -32,12 +52,13 @@ page.open('https://news.ycombinator.com/item?id='+system.args[1]+'&p=1', functio
 });
 */
 
+var clg = console.log;
 var page;
 
-function handle_page(pgn){
+function handle_page(pgn, seen){
     var page = webpage.create();
     var url = 'https://news.ycombinator.com/item?id='+system.args[1]+'&p='+pgn;
-    console.log('url='+url);
+    console.log('url=', url, 'seen', Object.keys(seen).length);
     page.onConsoleMessage = function (msg) { console.log(msg); };
     page.open( url, function( status){
         console.log('status '+ status+','+pgn);
@@ -46,12 +67,13 @@ function handle_page(pgn){
         // }, 'title');
         // console.log('title = '+title);
 
-        page.injectJs('hnscrapejob.js');
+        page.injectJs('js/jobDomParse.js');
         console.log('injected');
 
-        var rpg = page.evaluate( function( pgno) {
+        var seen2 = page.evaluate( function( pgno, seen) {
 
-            console.log('eval start', pgno);
+            //console.log('eval start', pgno, seen);
+            console.log('eval start2', pgno, 'seenkeys', Object.keys(seen).length);
 
             // if (!page.injectJs('hnscrapejob.js')) {
             //     console.log('scrapejob not loaded');
@@ -59,25 +81,40 @@ function handle_page(pgn){
             // }
             var hnBody = document.getElementsByTagName('body')[0];
             var listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'));
-            //console.log('eval end', pgno, listing.length);
+            console.log('athings found', pgno, listing.length);
             for ( jn = 0; jn < 3 && jn < listing.length; ++jn) {
                 var j = listing[jn];
                 var s = {hnId: j.id};
-                jobExtend( s, j, 0);
-                console.log( JSON.stringify(s));
+                if (seen[j.id]) {
+                    console.log('skipping already seen!!!!', j.id, 'onpg', seen[j.id])
+                } else {
+                    jobSpecExtend( s, j, 0);
+                    if ( s.OK) {
+                        console.log('good job', j.id)
+                        seen[j.id] = pgno;
+                        console.log( 'new spec!!!', JSON.stringify(s));
+                    }
+                }
             }
-            return listing.length;
-        }, pgn)
+            console.log('reeturning seen', Object.keys(seen).length);
+            return seen;
+        }, pgn, seen)
 
-        console.log('driver sees '+rpg);
+        console.log('driver sees ', Object.keys(seen2).length);
 
         page.close();
-        setTimeout( (function () { next_page(pgn+1) }) ,500);
+        if (pgn < 3)
+        setTimeout( (function () { next_page(pgn+1, seen2) }) ,500);
     });
 }
 
-function next_page(pgn){
-    if ( pgn > 1){phantom.exit(0);}
-    handle_page(pgn);
+function next_page(pgn, seen){
+    if ( pgn > 2){
+        console.log('stopping before page', pgn)
+        phantom.exit(0);
+    } else {
+        console.log('next page seen', pgn, Object.keys(seen).length);
+        handle_page(pgn, seen);
+    }
 }
-next_page(1);
+next_page(1, {});

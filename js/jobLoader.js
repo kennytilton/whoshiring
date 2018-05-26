@@ -2,6 +2,7 @@ goog.require('Matrix.Cells')
 goog.require('Matrix.Model')
 goog.require('Matrix.mxWeb')
 goog.require('Hiring.usernote')
+goog.require('Hiring.jobDomParse')
 goog.provide('Hiring.jobLoader')
 
 // --- loading job data -----------------------------------------
@@ -57,6 +58,7 @@ function parseListings( listing, tempJobs, chunkSize, progressBar) {
                         UNote.dict[hnId] = new UserNotes({hnId: hnId});
                     }
                     tempJobs.push(spec)
+                    clg('spec!!!!!', JSON.stringify(spec))
                     totchar += JSON.stringify(spec).length;
                     //clg('totchar', jn, totchar)
                 }
@@ -82,81 +84,9 @@ function parseListings( listing, tempJobs, chunkSize, progressBar) {
 function jobSpec(dom) {
     let spec = {hnId: dom.id}
     for (let n = 0; n < dom.children.length; ++n) {
-        jobExtend( spec, dom.children[n], 0)
+        jobSpecExtend( spec, dom.children[n], 0)
     }
     return spec
-}
-
-function jobSpecExtend(j, dom, depth) {
-    let cn = dom.className;
-
-    if (cn.length === 3 && "c5a,cae,c00,c9c,cdd,c73,c88".search(cn) !== -1) {
-        let rs = dom.getElementsByClassName('reply');
-        Array.prototype.map.call(rs, function (e) {
-            e.remove()
-        });
-
-        let child = dom.childNodes
-            , inHeader = true
-            , titleSeg = [];
-
-        if (child[0].nodeType === 3
-            // && child[0].textContent.search("Instructure") !== -1
-            && child[0].textContent.split("|").length > 1) {
-
-            j.body = []
-
-            for (let i = 0; i < child.length; i++) {
-                n = child[i]
-
-                if (inHeader) {
-                    if (n.nodeType === 1 && n.nodeName === 'P') {
-                        inHeader = false
-                        j.body.push("<p>" + n.innerHTML + "</p>")
-                    } else {
-                        titleSeg.push(n)
-                    }
-                } else {
-                    if (n.nodeType === 1) {
-                        j.body.push("<p>" + n.innerHTML + "</p>");
-                    } else if (n.nodeType === 3) {
-                        j.body.push("<p>" + n.textContent + "</p>");
-                    } else {
-                        clg('lodernodetype bad ', n.nodeType);
-                        j.body.push("")
-                    }
-                }
-            }
-
-            let htext = titleSeg.map(h => h.textContent).join(" | ")
-                , hseg = htext.split("|").map(s => s.trim())
-
-            let internOK = new RegExp(/((internship|intern)(?=|s,\)))/, 'i')
-                , nointernOK = new RegExp(/((no internship|no intern)(?=|s,\)))/, 'i')
-                , visaOK = new RegExp(/((visa|visas)(?=|s,\)))/, 'i')
-                , novisaOK = new RegExp(/((no visa|no visas)(?=|s,\)))/, 'i')
-                , onsiteOK = new RegExp(/(on.?site)/, 'i')
-                , remoteOK = new RegExp(/(remote)/, 'i')
-                , noremoteOK = new RegExp(/(no remote)/, 'i')
-                , hsmatch = rx => hseg.some(hs => hs.match(rx) !== null);
-
-            j.company = hseg[0]
-            j.OK = true // || j.company.search("Privacy.com") === 0;
-
-            j.titlesearch = htext
-            j.bodysearch = j.body.map(n => n.textContent).join('<**>')
-            j.onsite = hsmatch(onsiteOK)
-            j.remote = (hsmatch(remoteOK) && !hsmatch(noremoteOK))
-            j.visa = (hsmatch(visaOK) && !hsmatch(novisaOK))
-            j.intern = (hsmatch(internOK) && !hsmatch(novisaOK))
-        }
-    }
-    if (cn !== "reply") {
-        for (var n = 0; n < dom.children.length; ++n) {
-            clg('recur', dom.className, depth);
-            jobSpecExtend(j, dom.children[n], depth + 1);
-        }
-    }
 }
 
 
