@@ -4,8 +4,8 @@ goog.require('Matrix.mxWeb')
 goog.provide('Hiring.utility')
 
 function toggleChar ( name, title, initialState, onChar, offChar, attrs={}, locals={},style="") {
-    return b( Object.assign( {
-            style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"+style
+    return span( Object.assign( {
+            style: "font-weight:bold; cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"+style
             , onclick: mx => mx.onOff = !mx.onOff
             , title: title
             , content: cF( c=> c.md.onOff? onChar:offChar)

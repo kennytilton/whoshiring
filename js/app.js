@@ -28,6 +28,11 @@ function WhoIsHiring() {
     return div( {
             style: "margin:0px;padding:36px;"
         }
+        // , iframe({
+        //     src: cI("temp/himom.html?p=1")
+        //     , style: "width:100px; height:24px"
+        //     , onload: md => hiMom(md)
+        // })
         , appHeader()
         , jobListingLoader() // hidden iFrame where we load HN page for scraping
         , pickAMonth()
@@ -37,6 +42,16 @@ function WhoIsHiring() {
             //, whoshiringTester()
             , jobList())
     )
+}
+
+function hiMom(md) {
+    if (md.dom.contentDocument) { // FF
+        info = md.dom.contentDocument.getElementsByTagName('div')[0];
+        clg("bam info", info.innerHTML);
+        let test = JSON.parse(info.innerHTML);
+        clg("bam jsone", test.test, test.name);
+        setInterval( () => md.src = "temp/himom.html?p="+Date.now(), 2000)
+    }
 }
 
 window['WhoIsHiring'] = WhoIsHiring;

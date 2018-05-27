@@ -69,6 +69,8 @@ function controlPanel() {
 
 window['controlPanel'] = controlPanel;
 
+const SEARCH_MO_IDX = 2;
+
 function pickAMonth() {
     return div ({style: merge( hzFlexWrapCentered, {
             align_items: "center"
@@ -77,7 +79,7 @@ function pickAMonth() {
         , select( {
                 name: "searchMonth"
                 , style: "font-size:1.5em; min-width:128px; margin:0 12px 6px 0;"
-                , value: cI( gMonthlies[0].hnId)
+                , value: cI( gMonthlies[SEARCH_MO_IDX].hnId)
                 , onchange: (mx,e) => {
                     mx.value = e.target.value
                 }}
@@ -87,7 +89,7 @@ function pickAMonth() {
             //     , "Pick a month. Any month.")
             , gMonthlies.map( (m,x) => option( {
                     value: m.hnId
-                    , selected: x===0? "selected":null}
+                    , selected: x===SEARCH_MO_IDX? "selected":null}
                 , m.desc)))
 
         , div( {style: hzFlexWrapCentered}

@@ -14,43 +14,32 @@ phantom.onError = function(msg, trace) {
 
 system = require('system');
 webpage = require('webpage');
+var fs = require('fs');
 
 /*
-tst = {};
+The Phantom script can maintain an HTML file for load into an iframe.
+The iframe can have a JSON string for the app to parse.
+Changed p=n's can be reprocessed
 
-tst[1]="one";
-tst[2]="two";
-tst[3]="";
-tst["4"] = 4;
-tst[4]=44;
+OK, the bash script runs on my mac so it is not pounding anything.
 
-console.log('tst ', JSON.stringify(tst));
-console.log('tst2', tst[2], tst[4], tst["4"]);
+The script grabs monthlies until the last two are no diff, then it tosses the last and writes
+an HTML file with name and timestamp as JSON in a text field or sth.
 
-tst2 = JSON.parse( JSON.stringify(tst))
-console.log('tst2-2', tst2[2]);
-console.log('keys', Object.keys(tst2));
-console.log('unfrined?', tst2[222]===undefined)
-phantom.exit(0);
+A refresh button in the app reloads the info html into an iframe.
 
-*/
+On initial load, the app loads each file for the current month into its own iframe.
 
-/*
-var page = webpage.create();
-page.onConsoleMessage = function (msg) { console.log(msg); };
+Each iframe keeps its own list of jobs.
 
-page.open('https://news.ycombinator.com/item?id='+system.args[1]+'&p=1', function(status) {
-// page.open('http://m.bing.com', function(status) {
+The app sees which month is selected and appends the jobs from the iframes.
 
-    var title = page.evaluate(function(s) {
-        return document.querySelector(s).innerText;
-    }, 'title');
+The refresh button relads the iframe with the info, which telsl it which month-sub iframe
+to reload, which jobs to recompute.
 
-    console.log(title);
-    phantom.exit();
+ */
 
-});
-*/
+
 
 var clg = console.log;
 var page;
@@ -58,63 +47,84 @@ var page;
 function handle_page(pgn, seen){
     var page = webpage.create();
     var url = 'https://news.ycombinator.com/item?id='+system.args[1]+'&p='+pgn;
-    console.log('url=', url, 'seen', Object.keys(seen).length);
+    var objPop = function (obj) { return Object.keys(obj).length};
+    var objMerge = function (obj, src) {
+        Object.keys(src).forEach(function(key) { obj[key] = src[key]; });
+        return obj;
+    }
+
     page.onConsoleMessage = function (msg) { console.log(msg); };
+    page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36';
+
+    console.log('url=', url, 'seen', objPop( seen));
+
     page.open( url, function( status){
-        console.log('status '+ status+','+pgn);
-        // var title = page.evaluate(function(s){
-        //     return document.querySelector(s).innerText;
-        // }, 'title');
-        // console.log('title = '+title);
+        console.log('status '+ status);
 
         page.injectJs('js/jobDomParse.js');
-        console.log('injected');
+        //console.log('injected');
 
         var seen2 = page.evaluate( function( pgno, seen) {
-
-            //console.log('eval start', pgno, seen);
-            console.log('eval start2', pgno, 'seenkeys', Object.keys(seen).length);
-
-            // if (!page.injectJs('hnscrapejob.js')) {
-            //     console.log('scrapejob not loaded');
-            //     phantom.exit(17);
-            // }
+            //console.log('eval cb entry');
             var hnBody = document.getElementsByTagName('body')[0];
+            //console.log('eval body?', hnBody);
             var listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'));
             console.log('athings found', pgno, listing.length);
-            for ( jn = 0; jn < 3 && jn < listing.length; ++jn) {
+            for ( jn = 0; // jn < 10 &&
+                    jn < listing.length; ++jn) {
                 var j = listing[jn];
                 var s = {hnId: j.id};
                 if (seen[j.id]) {
                     console.log('skipping already seen!!!!', j.id, 'onpg', seen[j.id])
                 } else {
                     jobSpecExtend( s, j, 0);
+
                     if ( s.OK) {
-                        console.log('good job', j.id)
-                        seen[j.id] = pgno;
-                        console.log( 'new spec!!!', JSON.stringify(s));
+                        // console.log('good job', j.id, s.hnId, s.company)
+                        seen[s.hnId] = pgno;
+                        //console.log( 'new spec!!!', JSON.stringify(s));
                     }
                 }
             }
             console.log('reeturning seen', Object.keys(seen).length);
             return seen;
-        }, pgn, seen)
+        }, pgn, seen);
 
-        console.log('driver sees ', Object.keys(seen2).length);
 
-        page.close();
-        if (pgn < 3)
-        setTimeout( (function () { next_page(pgn+1, seen2) }) ,500);
+        console.log('driver sees seen/seen2', objPop(seen), objPop(seen2));
+
+
+        if ( pgn < 10 ) {// && */ objPop(seen2) > objPop(seen)) {
+            console.log('get more', objPop(seen), objPop(seen2));
+            setTimeout( (function () { next_page(pgn+1, objMerge( seen, seen2)) }) ,200);
+        } else {
+            console.log('exitting', pgn, objPop(seen2));
+            var path = 'files/' + system.args[1] + '.json';
+            console.log( 'seen2-0',  path);
+            fs.write(path, "", 'w');
+            console.log('s2keys', Object.keys(seen2).length);
+            for (id in seen2) {
+                //console.log('id2', id);
+                fs.write( path, JSON.stringify( seen2[id]), 'a');
+                fs.write( path, '\n', 'a');
+            }
+
+            console.log('fini');
+
+            phantom.exit();
+        }
     });
+    // NOT HERE page.close();
 }
 
 function next_page(pgn, seen){
-    if ( pgn > 2){
-        console.log('stopping before page', pgn)
+    if ( pgn > 20){
+        console.log('stopping before page', pgn, 'seen', Object.keys( seen).length);
         phantom.exit(0);
     } else {
-        console.log('next page seen', pgn, Object.keys(seen).length);
+        console.log('npg> handling page', pgn , Object.keys( seen).length);
         handle_page(pgn, seen);
     }
 }
-next_page(1, {});
+
+next_page(0, {});

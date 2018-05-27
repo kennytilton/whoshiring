@@ -22,8 +22,15 @@ function jobListingLoader() {
 
 const PARSE_CHUNK_SIZE = 100
 
+function domAthings( dom) {
+    let hnBody = dom.contentDocument.getElementsByTagName('body')[0]
+    return Array.prototype.slice.call(hnBody.querySelectorAll('.athing'))
+}
+
 function jobsCollect(md) {
     if (md.dom.contentDocument) { // FF
+        clg('normal dom', domAthings(md.dom).length);
+
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
         let chunkSize = PARSE_CHUNK_SIZE
             , listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'))
@@ -36,12 +43,12 @@ function jobsCollect(md) {
         if (listing.length > 0) {
             clg('listing length', listing.length)
             progressBar.max = Math.floor( listing.length / PARSE_CHUNK_SIZE)+""
-            parseListings( listing, tempJobs, PARSE_CHUNK_SIZE, progressBar)
+            parseListings( md, listing, tempJobs, PARSE_CHUNK_SIZE, progressBar)
         }
     }
 }
 
-function parseListings( listing, tempJobs, chunkSize, progressBar) {
+function parseListings( md, listing, tempJobs, chunkSize, progressBar) {
     let total = listing.length
         , totchar =0
         , chunker = offset => {
@@ -58,7 +65,7 @@ function parseListings( listing, tempJobs, chunkSize, progressBar) {
                         UNote.dict[hnId] = new UserNotes({hnId: hnId});
                     }
                     tempJobs.push(spec)
-                    clg('spec!!!!!', JSON.stringify(spec))
+                    //clg('spec!!!!!', JSON.stringify(spec))
                     totchar += JSON.stringify(spec).length;
                     //clg('totchar', jn, totchar)
                 }
@@ -66,19 +73,30 @@ function parseListings( listing, tempJobs, chunkSize, progressBar) {
             progressBar.value = progressBar.value + 1
             //window.requestAnimationFrame(() => chunker( offset + jct))
 
-            if (tempJobs.length < 3)
+            if (tempJobs.length < 30000)
                 window.requestAnimationFrame(() => chunker( offset + jct))
             else {
                 clg('fini!!!!!! load');
                 progressBar.hidden = true
                 hiringApp.jobs = tempJobs
+                frameZap(md);
+                clg('post dom1111', domAthings(md.dom).length);
             }
         } else {
+            clg('fini!!!22222!!! load');
             progressBar.hidden = true
             hiringApp.jobs = tempJobs
+            frameZap(md);
+            clg('post dom', domAthings(md.dom).length);
         }
     }
     chunker( 0);
+}
+
+function frameZap( md ) {
+    b = md.dom.contentDocument.getElementsByTagName('body')[0];
+    clg('body?', b);
+    b.innerHTML = "";
 }
 
 function jobSpec(dom) {
