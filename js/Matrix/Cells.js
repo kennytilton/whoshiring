@@ -779,7 +779,7 @@ class Cell {
 						|| caller.currentp()
 						|| find(caller.lazy, [true, kAlways,kOnceAsked])
 						|| !caller.useds.has(c))) {
-						//clg('calcing eager '+caller.lazy);
+						// clg('calcing eager ', c.name, caller.name);
 						caller.calcNSet('propagate');
 					}
 				}

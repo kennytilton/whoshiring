@@ -16,7 +16,7 @@ function mkListingRgx(prop, lbl, desc) {
     return labeledRow(lbl, input({
         placeholder: `Regex for ${desc} search`
         , class: "listing-regex"
-        , onkeypress: buildRgxTree
+        //, onkeypress: buildRgxTree
         , onchange: buildRgxTree
         , value: ''
         , style: "min-width:72px;width:300px;font-size:1em"
@@ -81,8 +81,10 @@ const regexHelp = [
 ]
 
 function buildRgxTree(mx, e) {
-    if (!(e.type === 'change' || (e.type === 'keypress' && e.key === 'Enter')))
-        return
+    // if (!(e.type === 'change' || (e.type === 'keypress' && e.key === 'Enter')))
+    //     return
+
+    // clg('rebuilding rgxtree', e.type)
 
     mx.rgxRaw = e.target.value.trim()
 
