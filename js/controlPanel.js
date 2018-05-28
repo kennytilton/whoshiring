@@ -69,7 +69,7 @@ function controlPanel() {
 
 window['controlPanel'] = controlPanel;
 
-const SEARCH_MO_IDX = 0;
+const SEARCH_MO_IDX = 1;
 
 function pickAMonth() {
     return div ({style: merge( hzFlexWrapCentered, {

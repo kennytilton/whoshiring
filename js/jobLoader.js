@@ -60,7 +60,8 @@ function mkPageLoader( par, hnId, pgNo) {
                 if  (hnId === null) {
                     clg('no modef.hnId!!!', par.pgNo, pgNo)
                     return ""
-                } else if ( pgNo === null) {
+                } else if ( pgNo === undefined) {
+                    clg('src=', `files/${hnId}/${hnId}.html`)
                     return `files/${hnId}/${hnId}.html`
                 } else {
                     return `files/${hnId}/${pgNo}.html`
@@ -84,8 +85,9 @@ function domAthings( dom) {
 }
 
 function jobsCollect(md) {
+    clg('collecting')
     if (md.dom.contentDocument) { // FF
-        // clg('normal dom!!!', md.pgNo, domAthings(md.dom).length);
+        clg('normal dom!!!', md.pgNo, domAthings(md.dom).length);
 
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
         let chunkSize = PARSE_CHUNK_SIZE
@@ -97,7 +99,7 @@ function jobsCollect(md) {
         progressBar.hidden = false
 
         if (listing.length > 0) {
-            //clg('listing length', listing.length)
+            clg('listing length', listing.length)
             progressBar.max = Math.floor( listing.length / PARSE_CHUNK_SIZE)+""
             parseListings( md, listing, tempJobs, PARSE_CHUNK_SIZE, progressBar)
         } else {
