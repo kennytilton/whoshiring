@@ -9,7 +9,7 @@ function jobList () {
     return ul({style: "list-style-type: none; background-color:#eee; padding:0"}
         , {
             name: "job-list"
-            , selectedJobs: cF(c => jobListFilter(c.md, c.md.fmUp("jobLoader").jobs) || [])
+            , selectedJobs: cF(c => jobListFilter(c.md, c.md.fmUp("jobLoader").jobs))
             , kidValues: cF(c => {
                 let jsort = jobListSort(c.md, c.md.selectedJobs) || []
                     , mxlim = c.md.fmUp("resultmax");

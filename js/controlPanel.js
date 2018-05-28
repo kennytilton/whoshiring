@@ -69,7 +69,7 @@ function controlPanel() {
 
 window['controlPanel'] = controlPanel;
 
-const SEARCH_MO_IDX = 2;
+const SEARCH_MO_IDX = 0;
 
 function pickAMonth() {
     return div ({style: merge( hzFlexWrapCentered, {
@@ -101,7 +101,8 @@ function pickAMonth() {
                 , hidden: cF( c=> !c.md.fmUp("searchMonth").value)
                 , content: cF(c => {
                     let pgr = c.md.fmUp("progress")
-                    return pgr.hidden ? "Jobs found: " + c.md.fmUp("jobLoader").jobs.length
+                        , jobs = c.md.fmUp("jobLoader").jobs || [];
+                    return pgr.hidden ? "Jobs found: " + jobs.length
                         : "Parsing: "+ PARSE_CHUNK_SIZE * pgr.value})})
 
             , progress({

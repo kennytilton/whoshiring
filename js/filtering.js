@@ -8,7 +8,10 @@ goog.provide('Hiring.filtering')
 // --- filtering and sorting ------------------------------------------------
 
 function jobListFilter(mx, jobs) {
+    if ( !jobs) return [];
     clg("jobListFilter sees job ct", jobs.length, jobs[0])
+
+
     let remoteok = mx.fmUp("REMOTE").onOff
         , onsiteok = mx.fmUp("ONSITE").onOff
         , visaok = mx.fmUp("VISA").onOff
@@ -19,14 +22,6 @@ function jobListFilter(mx, jobs) {
         , sortBy = mx.fmUp("sortby").selection
         , titleRgx = mx.fmUp("titlergx").rgxTree
         , listingRgx = mx.fmUp("listingrgx").rgxTree;
-
-    clg('listrgx', listingRgx)
-
-    jobs.map( j=> {
-        if ( j.titlesearch.search(/lisp/i) !== -1) {
-            clg('Bam lisp', j.company)
-        }
-    })
 
     return jobs.filter(j => !remoteok || j.remote)
         .filter(j => !onsiteok || j.onsite)
