@@ -1,13 +1,10 @@
-// goog.require('Matrix.Cells')
-// goog.require('Matrix.Model')
-// goog.require('Matrix.mxWeb')
-// goog.require('Hiring.usernote')
-// goog.provide('Hiring.jobDomParse')
+goog.provide('Hiring.jobDomParse')
 
 function escH(html) {
     //return document.createElement('div').appendChild(document.createTextNode(html)).parentNode.innerHTML;
     //return html.replace('\\n',"<br/>");
-    return html.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    //return html.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    return html
 }
 function jobSpecExtend(spec, dom, depth) {
     var cn = dom.className;
@@ -33,21 +30,22 @@ function jobSpecExtend(spec, dom, depth) {
                 n = child[i]
 
                 if (inHeader) {
-                    if (n.nodeType === 1 && escH(n.nodeName) === 'P') {
+                    if (n.nodeType === 1 && n.nodeName === 'P') {
                         inHeader = false
-                        spec.body.push("<p>" + escH(n.innerHTML)  + "</p>")
+                        spec.body.push(n) //("<p>" + escH(n.innerHTML)  + "</p>")
                     } else {
                         titleSeg.push(n)
                     }
                 } else {
-                    if (n.nodeType === 1) {
-                        spec.body.push("<p>" + escH(n.innerHTML) + "</p>");
-                    } else if (n.nodeType === 3) {
-                        spec.body.push("<p>" + escH(n.textContent) + "</p>");
-                    } else {
-                        //clg('lodernodetype bad ', n.nodeType);
-                        spec.body.push("")
-                    }
+                    spec.body.push(n)
+                    // if (n.nodeType === 1) {
+                    //     spec.body.push("<p>" + escH(n.innerHTML) + "</p>");
+                    // } else if (n.nodeType === 3) {
+                    //     spec.body.push("<p>" + escH(n.textContent) + "</p>");
+                    // } else {
+                    //     //clg('lodernodetype bad ', n.nodeType);
+                    //     spec.body.push("")
+                    // }
                 }
             }
 

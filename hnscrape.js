@@ -60,6 +60,11 @@ function handle_page(pgn, seen){
 
     page.open( url, function( status){
         console.log('status '+ status);
+        if ( status === "fail")
+        {
+            phantom.exit();
+            return {};
+        }
 
         page.injectJs('js/jobDomParse.js');
         //console.log('injected');
@@ -94,7 +99,7 @@ function handle_page(pgn, seen){
         console.log('driver sees seen/seen2', objPop(seen), objPop(seen2));
 
 
-        if ( pgn < 10 ) {// && */ objPop(seen2) > objPop(seen)) {
+        if ( pgn < 2 || objPop(seen2) > objPop(seen)) {
             console.log('get more', objPop(seen), objPop(seen2));
             setTimeout( (function () { next_page(pgn+1, objMerge( seen, seen2)) }) ,200);
         } else {

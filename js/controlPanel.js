@@ -81,6 +81,7 @@ function pickAMonth() {
                 , style: "font-size:1.5em; min-width:128px; margin:0 12px 6px 0;"
                 , value: cI( gMonthlies[SEARCH_MO_IDX].hnId)
                 , onchange: (mx,e) => {
+                    clg('new month!!!', e.target.value)
                     mx.value = e.target.value
                 }}
             // , option( {value: "none"
@@ -100,7 +101,7 @@ function pickAMonth() {
                 , hidden: cF( c=> !c.md.fmUp("searchMonth").value)
                 , content: cF(c => {
                     let pgr = c.md.fmUp("progress")
-                    return pgr.hidden ? "Jobs found: " + hiringApp.jobs.length
+                    return pgr.hidden ? "Jobs found: " + c.md.fmUp("jobLoader").jobs.length
                         : "Parsing: "+ PARSE_CHUNK_SIZE * pgr.value})})
 
             , progress({

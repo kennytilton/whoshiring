@@ -3,10 +3,21 @@
 echo "Checking HN message $1"
 
 # todo: ensure we are in right directory
+echo "https://news.ycombinator.com/item?id=$1"
 
-mkdir -p temp
+# curl  'https://news.ycombinator.com/item?id=16967543' > b.b
 
-curl 'https://news.ycombinator.com/item?id=$1' > temp/$1.tmp
+
+mkdir -p temp/$1
+
+rm temp/$1/*.html
+
+for x in {1..10}; do
+  echo "x=$x"
+  curl  "https://news.ycombinator.com/item?id=$1&p=$x" > temp/$1/$x.html
+done
+
+exit
 
 if [ ! -f temp/$1.tmp ]; then
     echo "Download target temp/$1.tmp not found after curl."

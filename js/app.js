@@ -14,7 +14,7 @@ const SLOT_CT = 5;
 
 const hiringApp = new TagSession(null, 'HiringSession'
     , {
-        jobs: cI([])
+        //jobs: cI([])
     });
 
 
