@@ -29,11 +29,11 @@ function slideInRule( c, show) {
 }
 
 
-function openShutCase( name, title, echo, ...cases) {
+function openShutCase( name, title, initOpen, echo, ...cases) {
     let toggleName = name+"-toggle";
     return div(
         div({class: "selector", style: hzFlexWrap}
-            , toggleChar( toggleName, "Show/hide "+title, title==="search", "&#x25be", "&#x25b8")
+            , toggleChar( toggleName, "Show/hide "+title, initOpen, "&#x25be", "&#x25b8")
             , span( {style: "margin-left:9px;min-width:48px"}, title)
             , echo)
         , div( {

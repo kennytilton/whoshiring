@@ -33,9 +33,10 @@ java -jar compiler.jar                         \
     --js js/Matrix/mxWeb.js                    \
     --js js/utility.js                         \
     --js js/userAnnotation.js                  \
+    --js js/jobDomParse.js                     \
     --js js/jobLoader.js                       \
     --js js/filtering.js                       \
-    --js js/jobList.js                     \
+    --js js/jobList.js                         \
     --js js/controlPanel.js                    \
     --js js/regexSearch.js                     \
     --js js/app.js                             \

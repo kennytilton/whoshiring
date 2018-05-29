@@ -28,7 +28,7 @@ function jobListingLoader() {
             , jobs: cF(c => {
                 let parts = c.md.kids.map(k => k.jobs);
                 if (parts.every(p => p !== null)) {
-                    clg('all jobs resolved!!!!')
+                    // clg('all jobs resolved!!!!')
                     let all = parts.reduce((accum, pj) => {
                         return accum.concat(pj)
                     });
@@ -41,8 +41,6 @@ function jobListingLoader() {
         , c=> {
             let selId = c.md.fmUp("searchMonth").value
                 , moDef = gMonthlies.find( mo => mo.hnId === selId);
-            ast( moDef);
-            clg('modef', JSON.stringify(moDef), moDef.pgCount)
 
             if (moDef.pgCount > 0) {
                 return myRange( moDef.pgCount).map( pgn=> {
@@ -61,7 +59,6 @@ function mkPageLoader( par, hnId, pgNo) {
                     clg('no modef.hnId!!!', par.pgNo, pgNo)
                     return ""
                 } else if ( pgNo === undefined) {
-                    clg('src=', `files/${hnId}/${hnId}.html`)
                     return `files/${hnId}/${hnId}.html`
                 } else {
                     return `files/${hnId}/${pgNo}.html`
@@ -85,9 +82,8 @@ function domAthings( dom) {
 }
 
 function jobsCollect(md) {
-    clg('collecting')
     if (md.dom.contentDocument) { // FF
-        clg('normal dom!!!', md.pgNo, domAthings(md.dom).length);
+        //clg('normal dom!!!', md.pgNo, domAthings(md.dom).length);
 
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
         let chunkSize = PARSE_CHUNK_SIZE
@@ -99,15 +95,13 @@ function jobsCollect(md) {
         progressBar.hidden = false
 
         if (listing.length > 0) {
-            clg('listing length', listing.length)
+            //clg('listing length', listing.length)
             progressBar.max = Math.floor( listing.length / PARSE_CHUNK_SIZE)+""
             parseListings( md, listing, tempJobs, PARSE_CHUNK_SIZE, progressBar)
         } else {
-            clg('no jobs!!', md.pgNo)
             md.jobs = []
         }
     } else {
-        clg('no content', md.pgNo)
         md.jobs = [];
     }
 }

@@ -1,29 +1,12 @@
+
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>mxWeb HN Hiring Browser</title>
+    <title>mxWeb&trade; HN Hiring Browser</title>
 
-    <script src="js/closure-library/closure/goog/base.js"></script>
-
-    <script src="js/Matrix/Cells.js"></script>
-    <script src="js/Matrix/Model.js"></script>
-    <script src="js/Matrix/mxWeb.js"></script>
-    <script src="js/Matrix/mxXHR.js"></script>
-
-    <script src="js/utility.js"></script>
-    <script src="js/userAnnotation.js"></script>
-    <script src="js/jobDomParse.js"></script>
-    <script src="js/jobLoader.js"></script>
-    <script src="js/filtering.js"></script>
-    <!-- script src="js/whoshiringApi.js"></script -->
-    <script src="js/jobList.js"></script>
-    <script src="js/controlPanel.js"></script>
-    <script src="js/regexSearch.js"></script>
-    <script src="js/app.js"></script>
-
-    <!-- script src="dist/whoishiring.js"></script -->
+    <script src="dist/whoishiring.js"></script>
 
     <STYLE type="text/css">
         html * {
@@ -46,27 +29,44 @@
             animation-direction: reverse;
         }
         @keyframes slideFadeIn {
-            from { opacity: 0; }
-            to { opacity: 100%; }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 100%;
+            }
         }
         @keyframes fazeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        .fazer {
+            animation-duration: 2s;
+            animation-name: fazeIn;
+            animation-fill-mode: forwards;
         }
     </STYLE>
+
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+
 </head>
 <body>
 <h1>Script failed to load.</h1>
-Was the google closure compilation clean? If so...
-<p>...please check the browser console for diagnostics.</p>
+<p>Was the google closure compilation clean? If so...</p>
+<p>Please check the browser console for diagnostics.</p>
 <script>
     var gMonthlies = [
-    { hnId: "16967543", desc: "May, 2018", pgCount: 7}
-    , { hnId: "16735011", desc: "April, 2018"}
-    , { hnId: "16492994", desc: "March, 2018"}
+        { hnId: "16967543", desc: "May, 2018 ", pgCount: 9}
+        , { hnId: "16735011", desc: "April, 2018 "}
+        , { hnId: "16492994", desc: "March, 2018 "}
     ]
     document.body.innerHTML = tag2html( window.WhoIsHiring());
 </script>
 </body>
 </html>
-

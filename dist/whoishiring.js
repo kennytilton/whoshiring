@@ -319,7 +319,7 @@ $jscomp.polyfill("Map", function(c) {
       }
       g = f.next();
       return g.done || 4 != g.value[0].x || "t" != g.value[1] || !f.next().done ? !1 : !0;
-    } catch (w) {
+    } catch (v) {
       return !1;
     }
   }
@@ -5183,8 +5183,8 @@ goog.debug.deepExpose = function(c, d) {
       } else {
         e.push("undefined");
       }
-    } catch (v) {
-      e.push("*** " + v + " ***");
+    } catch (w) {
+      e.push("*** " + w + " ***");
     }
   };
   h(c, "");
@@ -8181,7 +8181,7 @@ function xhraw(c) {
 function toggleChar(c, d, e, f, g, h, k, l) {
   h = void 0 === h ? {} : h;
   k = void 0 === k ? {} : k;
-  return b(Object.assign({style:"cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;" + (void 0 === l ? "" : l), onclick:function(c) {
+  return span(Object.assign({style:"font-weight:bold; cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;" + (void 0 === l ? "" : l), onclick:function(c) {
     return c.onOff = !c.onOff;
   }, title:d, content:cF(function(c) {
     return c.md.onOff ? f : g;
@@ -8198,7 +8198,7 @@ function openShutCase(c, d, e, f) {
     g[h - 3] = arguments[h];
   }
   var k = c + "-toggle";
-  return div(div({class:"selector", style:hzFlexWrap}, toggleChar(k, "Show/hide " + d, "nochance" === d, "&#x25be", "&#x25b8"), span({style:"margin-left:9px;min-width:48px"}, d), e), div({class:cF(function(c) {
+  return div(div({class:"selector", style:hzFlexWrap}, toggleChar(k, "Show/hide " + d, "filters" === d, "&#x25be", "&#x25b8"), span({style:"margin-left:9px;min-width:48px"}, d), e), div({class:cF(function(c) {
     return slideInRule(c, c.md.fmUp(k).onOff);
   }), style:cF(function(c) {
     return "display:" + (c.md.fmUp(k).onOff ? "block" : "none");
@@ -8265,7 +8265,7 @@ function noteToggle(c) {
     return "margin-left:18px; cursor:pointer;color:" + (d.notes && 0 < d.notes.length ? "#f00" : "#000");
   }), title:"Show/hide editor for your own notes", onclick:function(c) {
     return c.editing = !c.editing;
-  }}, {name:"note-toggle", editing:cI(0 < (d.notes || "").length)}, "Memo");
+  }}, {name:"note-toggle", editing:cI(0 < (d.notes || "").length)}, "Notes");
 }
 function noteEditor(c) {
   var d = UNote.dict[c.hnId];
@@ -8302,6 +8302,9 @@ function applied(c) {
 }
 ;Hiring.filtering = {};
 function jobListFilter(c, d) {
+  if (!d) {
+    return [];
+  }
   var e = c.fmUp("REMOTE").onOff, f = c.fmUp("ONSITE").onOff, g = c.fmUp("VISA").onOff, h = c.fmUp("INTERNS").onOff, k = c.fmUp("Starred").onOff, l = c.fmUp("Applied").onOff, m = c.fmUp("Noted").onOff;
   c.fmUp("sortby");
   var r = c.fmUp("titlergx").rgxTree, t = c.fmUp("listingrgx").rgxTree;
@@ -8343,10 +8346,11 @@ function mkTitleSelects() {
   return mkJobSelects("title", "Title selects", titleSelects);
 }
 function mkUserSelects() {
-  return mkJobSelects("user", "User selects", userSelects, {"margin-top":"8px"});
+  return mkJobSelects("user", "User selects", userSelects, {margin:"8px 0 8px 24px"});
 }
 function mkJobSelects(c, d, e, f) {
-  return div({style:merge(hzFlexWrap, {margin_left:"24px"})}, e.map(function(d) {
+  f = void 0 === f ? {} : f;
+  return div({style:merge(hzFlexWrap, {margin_left:"24px"}, f)}, e.map(function(d) {
     return div({style:"min-width:124px"}, input({id:d[0] + "ID", class:c + "-jSelect", style:"", type:"checkbox", checked:cF(function(c) {
       return c.md.onOff;
     }), title:d[1], onclick:function(c) {
@@ -8354,109 +8358,145 @@ function mkJobSelects(c, d, e, f) {
     }}, {name:d[0], onOff:cI(!1)}), label({for:d[0] + "ID", title:d[1]}, d[0]));
   }));
 }
+;Hiring.jobDomParse = {};
+function escH(c) {
+  return c;
+}
+function jobSpecExtend(c, d, e) {
+  var f = d.className;
+  if (3 === f.length && -1 !== "c5a,cae,c00,c9c,cdd,c73,c88".search(f)) {
+    var g = d.getElementsByClassName("reply");
+    Array.prototype.map.call(g, function(c) {
+      c.remove();
+    });
+    g = d.childNodes;
+    var h = !0, k = [];
+    if (3 === g[0].nodeType && 1 < g[0].textContent.split("|").length) {
+      c.body = [];
+      for (var l = 0; l < g.length; l++) {
+        v = g[l], h ? 1 === v.nodeType && "P" === v.nodeName ? (h = !1, c.body.push(v)) : k.push(v) : c.body.push(v);
+      }
+      g = k.map(function(c) {
+        return c.textContent;
+      }).join(" | ");
+      var m = g.split("|").map(function(c) {
+        return c.trim();
+      });
+      h = new RegExp(/((internship|intern)(?=|s,\)))/i);
+      k = new RegExp(/((visa|visas)(?=|s,\)))/i);
+      l = new RegExp(/((no visa|no visas)(?=|s,\)))/i);
+      v = new RegExp(/(on.?site)/i);
+      var r = new RegExp(/(remote)/i), t = new RegExp(/(no remote)/i), w = function(c) {
+        return m.some(function(d) {
+          return null !== d.match(c);
+        });
+      };
+      c.company = m[0];
+      c.OK = !0;
+      c.titlesearch = g;
+      c.bodysearch = c.body.map(function(c) {
+        return c.textContent;
+      }).join("*4*2*");
+      c.onsite = w(v);
+      c.remote = w(r) && !w(t);
+      c.visa = w(k) && !w(l);
+      c.intern = w(h) && !w(l);
+    }
+  }
+  if ("reply" !== f) {
+    for (var v = 0; v < d.children.length; ++v) {
+      jobSpecExtend(c, d.children[v], e + 1);
+    }
+  }
+}
 ;Hiring.jobLoader = {};
+function myRange(c, d) {
+  if (void 0 === c) {
+    return [];
+  }
+  if (void 0 === d) {
+    return myRange(0, c);
+  }
+  var e = [];
+  for (n = c; n < d; ++n) {
+    e.push(n);
+  }
+  return e;
+}
 function jobListingLoader() {
-  return div(iframe({sandbox:"", src:cF(function(c) {
-    c = c.md.fmUp("searchMonth").value;
-    return "" === c ? "" : "files/" + c + ".html";
-  }), style:"display: none; width:1000px; height:100px", onload:function(c) {
+  return div({}, {name:"jobLoader", jobs:cF(function(c) {
+    c = c.md.kids.map(function(c) {
+      return c.jobs;
+    });
+    return c.every(function(c) {
+      return null !== c;
+    }) ? c.reduce(function(c, e) {
+      return c.concat(e);
+    }) : null;
+  })}, function(c) {
+    var d = c.md.fmUp("searchMonth").value, e = gMonthlies.find(function(c) {
+      return c.hnId === d;
+    });
+    return 0 < e.pgCount ? myRange(e.pgCount).map(function(d) {
+      return mkPageLoader(c.md, e.hnId, d + 1);
+    }) : mkPageLoader(c.md, e.hnId);
+  });
+}
+function mkPageLoader(c, d, e) {
+  return iframe({src:cF(function(f) {
+    return null === d ? (clg("no modef.hnId!!!", c.pgNo, e), "") : void 0 === e ? "files/" + d + "/" + d + ".html" : "files/" + d + "/" + e + ".html";
+  }), style:"display: none", onload:function(c) {
     return jobsCollect(c);
-  }}));
+  }}, {jobs:cI(null), pgNo:e});
 }
 var PARSE_CHUNK_SIZE = 100;
+function domAthings(c) {
+  c = c.contentDocument.getElementsByTagName("body")[0];
+  return Array.prototype.slice.call(c.querySelectorAll(".athing"));
+}
 function jobsCollect(c) {
   if (c.dom.contentDocument) {
     hnBody = c.dom.contentDocument.getElementsByTagName("body")[0];
-    var d = Array.prototype.slice.call(hnBody.querySelectorAll(".athing")), e = [];
-    c = c.fmUp("progress");
-    ast(c);
-    c.hidden = !1;
-    0 < d.length && (c.max = Math.floor(d.length / PARSE_CHUNK_SIZE) + "", parseListings(d, e, PARSE_CHUNK_SIZE, c));
+    var d = Array.prototype.slice.call(hnBody.querySelectorAll(".athing")), e = [], f = c.fmUp("progress");
+    ast(f);
+    f.hidden = !1;
+    0 < d.length ? (f.max = Math.floor(d.length / PARSE_CHUNK_SIZE) + "", parseListings(c, d, e, PARSE_CHUNK_SIZE, f)) : c.jobs = [];
+  } else {
+    c.jobs = [];
   }
 }
-function parseListings(c, d, e, f) {
-  var g = c.length, h = function(k) {
-    var l = Math.min(g - k, e);
-    if (0 < l) {
-      for (jn = 0; jn < l; ++jn) {
-        var m = jobSpec(c[k + jn]);
-        if (m.OK) {
-          var r = m.hnId;
-          UNote.dict[r] || (UNote.dict[r] = new UserNotes({hnId:r}));
-          d.push(m);
+function parseListings(c, d, e, f, g) {
+  var h = d.length, k = function(l) {
+    var m = Math.min(h - l, f);
+    if (0 < m) {
+      for (jn = 0; jn < m; ++jn) {
+        var r = jobSpec(d[l + jn]);
+        if (r.OK) {
+          var t = r.hnId;
+          r.pgNo = c.pgNo;
+          UNote.dict[t] || (UNote.dict[t] = new UserNotes({hnId:t}));
+          e.push(r);
         }
       }
-      f.value += 1;
-      5000 > d.length ? window.requestAnimationFrame(function() {
-        return h(k + l);
-      }) : (f.hidden = !0, hiringApp.jobs = d);
+      g.value += 1;
+      30000 > e.length ? window.requestAnimationFrame(function() {
+        return k(l + m);
+      }) : (g.hidden = !0, c.jobs = e, frameZap(c));
     } else {
-      f.hidden = !0, hiringApp.jobs = d;
+      g.hidden = !0, c.jobs = e, frameZap(c);
     }
   };
-  h(0);
+  k(0);
+}
+function frameZap(c) {
+  b = c.dom.contentDocument.getElementsByTagName("body")[0];
+  b.innerHTML = "";
 }
 function jobSpec(c) {
   for (var d = {hnId:c.id}, e = 0; e < c.children.length; ++e) {
-    jobSpecExtend(d, c.children[e]);
+    jobSpecExtend(d, c.children[e], 0);
   }
   return d;
-}
-function jobSpecExtend(c, d) {
-  var e = d.className;
-  if ("hnuser" === e) {
-    c.user = d.innerHTML;
-  } else {
-    if ("age" === e) {
-      c.age = d.children[0].innerHTML;
-    } else {
-      if (3 === e.length && -1 !== "c5a,cae,c00,c9c,cdd,c73,c88".search(e)) {
-        var f = d.getElementsByClassName("reply");
-        Array.prototype.map.call(f, function(c) {
-          c.remove();
-        });
-        f = d.childNodes;
-        var g = !0;
-        if (3 === f[0].nodeType && 1 < f[0].textContent.split("|").length) {
-          c.title = [];
-          c.body = [];
-          for (var h = 0; h < f.length; h++) {
-            n = f[h], g ? 1 === n.nodeType && "P" === n.nodeName ? (g = !1, c.body.push(n)) : c.title.push(n) : c.body.push(n);
-          }
-          f = c.title.map(function(c) {
-            return c.textContent;
-          }).join(" | ");
-          var k = f.split("|").map(function(c) {
-            return c.trim();
-          });
-          g = new RegExp(/((internship|intern)(?=|s,\)))/, "i");
-          h = new RegExp(/((visa|visas)(?=|s,\)))/, "i");
-          var l = new RegExp(/((no visa|no visas)(?=|s,\)))/, "i"), m = new RegExp(/(on.?site)/, "i"), r = new RegExp(/(remote)/, "i"), t = new RegExp(/(no remote)/, "i"), v = function(c) {
-            return k.some(function(d) {
-              return null !== d.match(c);
-            });
-          };
-          c.company = k[0];
-          c.OK = !0;
-          c.titlesearch = f;
-          c.bodysearch = c.body.map(function(c) {
-            return c.textContent;
-          }).join("<**>");
-          c.onsite = v(m);
-          c.remote = v(r) && !v(t);
-          c.visa = v(h) && !v(l);
-          c.intern = v(g) && !v(l);
-        }
-      }
-    }
-  }
-  if ("reply" === e) {
-    d.remove();
-  } else {
-    for (e = 0; e < d.children.length; ++e) {
-      jobSpecExtend(c, d.children[e]);
-    }
-  }
 }
 ;Hiring.controlPanel = {};
 function controlPanel() {
@@ -8480,9 +8520,6 @@ function controlPanel() {
     c = document.getElementsByClassName("listing-regex");
     var d = [];
     Array.prototype.map.call(c, function(c) {
-      var e = dom2mx(c);
-      ast(e);
-      clg("rgxs", c.value);
       c.value && d.push(c.value);
     });
     return d.join(" and ");
@@ -8495,11 +8532,12 @@ function controlPanel() {
   })}), sortBar), jobListingControlBar);
 }
 window.controlPanel = controlPanel;
+var SEARCH_MO_IDX = 0;
 function pickAMonth() {
-  return div({style:merge(hzFlexWrapCentered, {align_items:"center", margin:"0px 0px 9px 24px"})}, select({name:"searchMonth", style:"font-size:1.5em; min-width:128px; margin:0 12px 6px 0;", value:cI(gMonthlies[0].hnId), onchange:function(c, d) {
+  return div({style:merge(hzFlexWrapCentered, {align_items:"center", margin:"0px 0px 9px 24px"})}, select({name:"searchMonth", style:"font-size:1.5em; min-width:128px; margin:0 12px 6px 0;", value:cI(gMonthlies[SEARCH_MO_IDX].hnId), onchange:function(c, d) {
     c.value = d.target.value;
   }}, gMonthlies.map(function(c, d) {
-    return option({value:c.hnId, selected:0 === d ? "selected" : null}, c.desc);
+    return option({value:c.hnId, selected:d === SEARCH_MO_IDX ? "selected" : null}, c.desc);
   })), div({style:hzFlexWrapCentered}, viewOnHN(cF(function(c) {
     return "https://news.ycombinator.com/item?id=" + c.md.fmUp("searchMonth").value;
   }), {hidden:cF(function(c) {
@@ -8507,8 +8545,9 @@ function pickAMonth() {
   })}), span({style:"margin: 0 12px 0 12px", hidden:cF(function(c) {
     return !c.md.fmUp("searchMonth").value;
   }), content:cF(function(c) {
-    c = c.md.fmUp("progress");
-    return c.hidden ? "Jobs found: " + hiringApp.jobs.length : "Parsing: " + PARSE_CHUNK_SIZE * c.value;
+    var d = c.md.fmUp("progress");
+    c = c.md.fmUp("jobLoader").jobs || [];
+    return d.hidden ? "Total jobs: " + c.length : "Parsing: " + PARSE_CHUNK_SIZE * d.value;
   })}), progress({max:cI(0), hidden:cI(!0), value:cI(0)}, {name:"progress"})));
 }
 var jobSorts = [{title:"Creation", keyFn:jobHnIdKey}, {title:"Stars", compFn:jobStarsCompare}, {title:"Company", keyFn:jobCompanyKey}];
@@ -8529,7 +8568,7 @@ function sortBar() {
   }));
 }
 function jobListingControlBar() {
-  return div({style:merge(hzFlexWrapCentered, {margin:"6px 0 0 0px", padding:"4px", border_style:"inset", border_color:"khaki", border_width:"2px", align_items:"center"})}, span({content:cF(function(c) {
+  return div({style:merge(hzFlexWrapCentered, {margin:"12px 0 0 0px", padding:"6px", border_style:"ridge", border_color:"khaki", border_width:"2px", background:"#f8f8f8", align_items:"center"})}, span({content:cF(function(c) {
     return "Matches: " + c.md.fmUp("job-list").selectedJobs.length;
   })}), resultMax(), button({style:cF(function(c) {
     return "margin-left:24px;display:" + (c.md.fmUp("progress").hidden ? "block" : "none");
@@ -8553,7 +8592,8 @@ function resultMax() {
 ;Hiring.jobListItem = {};
 function jobList() {
   return ul({style:"list-style-type: none; background-color:#eee; padding:0"}, {name:"job-list", selectedJobs:cF(function(c) {
-    return jobListFilter(c.md, hiringApp.jobs) || [];
+    causation.peek();
+    return jobListFilter(c.md, c.md.fmUp("jobLoader").jobs);
   }), kidValues:cF(function(c) {
     var d = jobListSort(c.md, c.md.selectedJobs) || [];
     c = c.md.fmUp("resultmax");
@@ -8579,9 +8619,7 @@ function jobHeader(c) {
   })}, "&#x2b51"), span({onclick:function(c) {
     c = c.fmUp("showDetails");
     c.onOff = !c.onOff;
-  }}, c.title.map(function(c) {
-    return c.textContent;
-  }).join(" | ")));
+  }}, c.titlesearch));
 }
 function jobDetails(c) {
   return div({class:cF(function(c) {
@@ -8632,10 +8670,10 @@ function mkFullRgx() {
   return mkListingRgx("listing", "Full Listing", "title and listing");
 }
 function mkListingRgx(c, d, e) {
-  return labeledRow(d, input({placeholder:"Regex for " + e + " search", class:"listing-regex", onkeypress:buildRgxTree, onchange:buildRgxTree, value:"", style:"min-width:72px;width:300px;font-size:1em"}, {name:c + "rgx", rgxRaw:cI(null), rgxTree:cI(null)}));
+  return labeledRow(d, input({placeholder:"Regex for " + e + " search", class:"listing-regex", onchange:buildRgxTree, value:"", style:"min-width:72px;width:300px;font-size:1em"}, {name:c + "rgx", rgxRaw:cI(null), rgxTree:cI(null)}));
 }
 function mkRgxOptions() {
-  return div(div({style:merge(hzFlexWrapCentered, {margin:"4px 96px 20px 12px"})}, helpToggle("rgxHelpToggle", "Show/hide app help"), mkRgxMatchCase()), ul({class:cF(function(c) {
+  return div(div({style:merge(hzFlexWrapCentered, {margin:"4px 96px 20px 12px"})}, mkRgxMatchCase(), helpToggle("rgxHelpToggle", "Show/hide app help")), ul({class:cF(function(c) {
     return slideInRule(c, c.md.fmUp("rgxHelpToggle").onOff);
   }), style:cF(function(c) {
     return "display:" + (c.md.fmUp("rgxHelpToggle").onOff ? "block" : "none");
@@ -8644,7 +8682,7 @@ function mkRgxOptions() {
   })));
 }
 function mkRgxMatchCase() {
-  return div({style:"margin-left:88px; display:flex; flex-wrap: wrap; align-items:center"}, input({id:"rgxMatchCase", type:"checkbox", onclick:function(c) {
+  return div({style:"margin:0 48px 0 24px; display:flex; flex-wrap: wrap; align-items:center"}, input({id:"rgxMatchCase", type:"checkbox", onclick:function(c) {
     return c.value = !c.value;
   }, onchange:rebuildRgxTrees}, {name:"rgxMatchCase", value:cI(!1)}), label({for:"rgxMatchCase"}, "match case"));
 }
@@ -8656,9 +8694,8 @@ function labeledRow(c, d) {
 }
 var regexHelp = ["Press <kbd style='background:cornsilk;font-size:1em'>Enter</kbd> or <kbd style='background:cornsilk;font-size:1em'>Tab</kbd> to activate, including after clearing.", "Separate <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions'>JS RegExp-legal</a> terms with <b>||</b> or <b>&&</b> (higher priority) to combine expressions.", "Regex terms are split on comma and passed to <code>new RegExp(pattern,flags)</code>.", "e.g. Enter <b>taipei,i</b> for case-insensitive search."];
 function buildRgxTree(c, d) {
-  if ("change" === d.type || "keypress" === d.type && "Enter" === d.key) {
-    c.rgxRaw = d.target.value.trim(), "" === c.rgxRaw ? c.rgxTree = null : rebuildRgxTree(c);
-  }
+  c.rgxRaw = d.target.value.trim();
+  "" === c.rgxRaw ? c.rgxTree = null : rebuildRgxTree(c);
 }
 function rebuildRgxTrees(c) {
   ["titlergx", "listingrgx"].map(function(d) {
@@ -8681,7 +8718,7 @@ function rebuildRgxTree(c) {
     });
   });
 }
-;var SLOT_CT = 5, hiringApp = new TagSession(null, "HiringSession", {jobs:cI([])});
+;var SLOT_CT = 5, hiringApp = new TagSession(null, "HiringSession", {});
 function merge(c) {
   for (var d = [], e = 0; e < arguments.length; ++e) {
     d[e - 0] = arguments[e];
@@ -8699,7 +8736,7 @@ window.WhoIsHiring = WhoIsHiring;
 function appHeader() {
   return div({style:hzFlexWrap}, span({style:"padding:4px;font-size:1.5em; margin-bottom:12px;background:orange"}, "Ask HN: Who Is Hiring?"), helpToggle("appHelpToggle", "Show/hide app help"), appHelp());
 }
-var appHelpEntry = ["Click/tap any job to show/hide full listing", "All filters are ANDed.", "Static page scrape will fall behind actual jobs during the early rush, so...", "...clone the <a href='https://github.com/kennytilton/whoshiring'>GitHub project</a> and run yourself to control currency.", "RFEs welcome and can be raised <a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. "];
+var appHelpEntry = "Click/tap any job to show/hide full listing;All filters are ANDed.;Your notes and star ranking kept in local storage. Stick to one browser!;Static page scrape may fall behind actual jobs during the early rush, so...;...clone the <a href='https://github.com/kennytilton/whoshiring'>GitHub project</a> and run yourself to control currency.;RFEs welcome and can be raised <a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. ".split(";");
 function appHelp() {
   return ul({class:cF(function(c) {
     return slideInRule(c, c.md.fmUp("appHelpToggle").onOff);

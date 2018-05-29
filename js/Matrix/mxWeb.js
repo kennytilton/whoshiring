@@ -332,7 +332,7 @@ const TagAttributesGlobal =  new Set(['accesskey','autofocus','checked','class'
     ,'cols', 'content', 'contenteditable','contextmenu'
     , 'data','dir','draggable','dropzone','for','hidden','href'
     ,'id','itemid','itemprop','itemref','itemscope'
-	,'itemtype','lang','max','name'
+	,'itemtype','lang','list','max','name'
     ,'selected','spellcheck','src','style'
     ,'tabindex','title','translate', 'type'
     ,'value','viewBox','fill','d']);

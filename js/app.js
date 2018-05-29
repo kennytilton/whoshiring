@@ -10,14 +10,6 @@ goog.require('Hiring.controlPanel')
 goog.require('Hiring.jobListItem')
 goog.require('Hiring.regexSearch')
 
-const SLOT_CT = 5;
-
-const hiringApp = new TagSession(null, 'HiringSession'
-    , {
-        //jobs: cI([])
-    });
-
-
 // --- main ---------------------------------------
 
 function merge(...maps) {
@@ -28,11 +20,6 @@ function WhoIsHiring() {
     return div( {
             style: "margin:0px;padding:36px;"
         }
-        // , iframe({
-        //     src: cI("temp/himom.html?p=1")
-        //     , style: "width:100px; height:24px"
-        //     , onload: md => hiMom(md)
-        // })
         , appHeader()
         , jobListingLoader() // hidden iFrame where we load HN page for scraping
         , pickAMonth()
@@ -42,16 +29,6 @@ function WhoIsHiring() {
             //, whoshiringTester()
             , jobList())
     )
-}
-
-function hiMom(md) {
-    if (md.dom.contentDocument) { // FF
-        info = md.dom.contentDocument.getElementsByTagName('div')[0];
-        clg("bam info", info.innerHTML);
-        let test = JSON.parse(info.innerHTML);
-        clg("bam jsone", test.test, test.name);
-        setInterval( () => md.src = "temp/himom.html?p="+Date.now(), 2000)
-    }
 }
 
 window['WhoIsHiring'] = WhoIsHiring;
@@ -68,24 +45,27 @@ function appHeader () {
 
 // --- app help ----------------------------------------------
 
+function appHelp () {
+    return ul({
+            class: cF( c=> slideInRule(c, c.md.fmUp("appHelpToggle").onOff))
+            , style: cF( c=> "list-style:circle; display:" + (c.md.fmUp("appHelpToggle").onOff? "block":"none"))
+        }
+        , appHelpEntry.map( e=> li(e)))
+}
+
+
 const appHelpEntry = [
-    "Click/tap any job to show/hide full listing"
+    "Click any job to show/hide full listing"
     , "All filters are ANDed."
-    ,"Static page scrape will fall behind actual jobs during the early rush, so..."
+    , "Your notes and stars are kept in local storage; stick to one browser"
+    ,"Static page scrape may fall behind actual jobs during the early rush, so..."
     , "...clone the " +
     "<a href='https://github.com/kennytilton/whoshiring'>GitHub project</a> " +
     "and run yourself to control currency."
     , "RFEs welcome and can be raised " +
     "<a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. "
+    , "Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>Matrix Inside&trade;</a>."
 ]
-
-function appHelp () {
-    return ul({
-            class: cF( c=> slideInRule(c, c.md.fmUp("appHelpToggle").onOff))
-            , style: cF( c=> "display:" + (c.md.fmUp("appHelpToggle").onOff? "block":"none"))
-        }
-        , appHelpEntry.map( e=> li(e)))
-}
 
 
 

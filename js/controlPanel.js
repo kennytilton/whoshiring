@@ -6,12 +6,9 @@ goog.provide('Hiring.controlPanel')
 
 function controlPanel() {
     return div(
-        openShutCase("os-filters", "filters"
-            // , "bingo"
-            // , c=> c.md.fmUp("os-filters-toggle").onOff ? "filters":"filters-mass"
-            , i({style: "margin-left:12px"
+        openShutCase("os-filters", "filters", true
+             , i({style: "margin-left:12px"
                 , content: cF( c=> {
-                //clg("echo runs",c.md.fmUp("os-filters-toggle").onOff)
                 if (c.md.fmUp("os-filters-toggle").onOff) {
                     return ""
                 } else {
@@ -30,7 +27,7 @@ function controlPanel() {
                 }
             })})
             , mkTitleSelects, mkUserSelects )
-        , openShutCase("rgx-filters", "search"
+        , openShutCase("rgx-filters", "search", true
             , i({style: "margin-left:12px"
                 , content: cF( c=> {
                     if (c.md.fmUp("rgx-filters-toggle").onOff) {
@@ -39,9 +36,6 @@ function controlPanel() {
                         let rgxs = document.getElementsByClassName("listing-regex")
                             , ons = [];
                         Array.prototype.map.call(rgxs, rgx => {
-                            let mx = dom2mx(rgx);
-                            ast(mx);
-                            clg('rgxs', rgx.value)
                             if ( rgx.value) ons.push( rgx.value)
                         });
 
@@ -50,14 +44,14 @@ function controlPanel() {
                 })})
             , mkTitleRgx, mkFullRgx, mkRgxOptions)
 
-        , openShutCase("job-sorts", "sorting"
+        , openShutCase("job-sorts", "sorting", false
             , i({style: "margin-left:12px"
                 , content: cF( c=> {
                     if (c.md.fmUp("job-sorts-toggle").onOff) {
                         return ""
                     } else {
                         let s = c.md.fmUp("sortby").selection;
-                        return s.title + " " + (s.order === -1? "&#x2798":"&#x279a") //"&#x25bc;":"&#x25b2;")
+                        return s.title + " " + (s.order === -1? "&#x2798":"&#x279a")
                     }
                 })})
             , sortBar)
@@ -81,9 +75,9 @@ function pickAMonth() {
                 , style: "font-size:1.5em; min-width:128px; margin:0 12px 6px 0;"
                 , value: cI( gMonthlies[SEARCH_MO_IDX].hnId)
                 , onchange: (mx,e) => {
-                    clg('new month!!!', e.target.value)
                     mx.value = e.target.value
                 }}
+                // --- use this if complaints about initial load ----
             // , option( {value: "none"
             //         , selected: "selected"
             //         , disabled: "disabled"}
@@ -102,7 +96,7 @@ function pickAMonth() {
                 , content: cF(c => {
                     let pgr = c.md.fmUp("progress")
                         , jobs = c.md.fmUp("jobLoader").jobs || [];
-                    return pgr.hidden ? "Jobs found: " + jobs.length
+                    return pgr.hidden ? "Total jobs: " + jobs.length
                         : "Parsing: "+ PARSE_CHUNK_SIZE * pgr.value})})
 
             , progress({
@@ -155,11 +149,12 @@ function sortBar() {
 function jobListingControlBar() {
     return div({
             style: merge( hzFlexWrapCentered, {
-                margin:"6px 0 0 0px"
-                , padding: "4px"
-                , border_style: "inset"
+                margin:"12px 0 0 0px"
+                , padding: "6px"
+                , border_style: "ridge"
                 , border_color: "khaki"
                 , border_width: "2px"
+                , background: "#f8f8f8"
                 , align_items: "center"})}
 
         , span({ content: cF(c => "Matches: " + c.md.fmUp("job-list").selectedJobs.length)})

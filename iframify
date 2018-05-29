@@ -1,35 +1,21 @@
 #!/bin/bash
 
-echo "Checking HN message $1"
+echo "FYI: PWD is $PWD"
 
-# rm temp/$1/*.iframe.html
-
-# <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-
-sed -i.bak '/<head>/ a\
-  <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-' temp/$1/2.html
-
-exit
-
-if [ ! -f temp/$1.tmp ]; then
-    echo "Download target temp/$1.tmp not found after curl."
+if [ ! $1 ]; then
+    echo "arg 1 hnId must be supplied"
     exit
 fi
 
-if diff -q temp/$1.tmp files/$1.html; then
-  echo "$1.html has NOT changed"
-  exit
-else
-  echo "$1.html HAS changed"
-  epoch=`date +%s`
-  echo "epoch is $epoch"
-  mkdir -p files/backup
-  cp files/$1.html files/backup/$1.$epoch.html
-  mv temp/$1.tmp files/$1.html
-  git add files/$1.html
-  git commit -m "Grab new $1 page"
-  git push
+if [ ! -f $1 ]; then
+    echo "iFramify target $1 not found."
+    exit
 fi
 
-echo "Bye-bye"
+echo "Checking HN message $1"
+
+# Insert <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+sed -i '' 's/<head>/<head><meta http-equiv="Content-type" content="text\/html;charset=UTF-8">/g' $1
+
+exit

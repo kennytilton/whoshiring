@@ -87,7 +87,7 @@ function noteToggle(j) {
             , title: "Show/hide editor for your own notes"
             , onclick: mx => mx.editing = !mx.editing
         }, {name: "note-toggle", editing: cI( (unote.notes||"").length > 0 )}
-        , "Memo")
+        , "Notes")
 }
 
 function noteEditor (j) {

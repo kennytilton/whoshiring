@@ -1,23 +1,42 @@
 #!/bin/bash
 
-echo "Checking HN message $1"
+if [ ! $1 ]; then
+    echo "arg 1 hnId must be supplied"
+    exit
+fi
 
-# todo: ensure we are in right directory
-echo "https://news.ycombinator.com/item?id=$1"
+echo "FYI: PWD is $PWD"
 
-# curl  'https://news.ycombinator.com/item?id=16967543' > b.b
+if [ ! ${PWD##*/} = "whoshiring" ]; then
+    echo "Wrong PWD $PWD"
+    exit
+fi
 
+MAX_P=9
 
-mkdir -p temp/$1
+echo "Grabbing HN message $1 at URLs https://news.ycombinator.com/item?id=$1/p=1..$MAX_P"
 
-rm temp/$1/*.html
+mkdir -p files/temp/$1
+mkdir -p files/backup/$1
 
-for x in {1..10}; do
-  echo "x=$x"
-  curl  "https://news.ycombinator.com/item?id=$1&p=$x" > temp/$1/$x.html
+rm files/temp/$1/*.*
+touch files/temp/$1/hn.js
+
+for ((x=1;x<=MAX_P;x++)); do
+      echo "x=$x"
+      curl  "https://news.ycombinator.com/item?id=$1&p=$x" > files/temp/$1/$x.html
+      ./iframify files/temp/$1/$x.html
 done
 
-exit
+rm -r files/backup/$1
+cp -r files/$1 files/backup/$1
+
+rm -r files/$1
+cp -r files/temp/$1 files/$1
+
+ls -al files/$1
+
+exit #-----------------------------------------------------
 
 if [ ! -f temp/$1.tmp ]; then
     echo "Download target temp/$1.tmp not found after curl."

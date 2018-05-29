@@ -8,9 +8,8 @@ goog.provide('Hiring.filtering')
 // --- filtering and sorting ------------------------------------------------
 
 function jobListFilter(mx, jobs) {
-    if ( !jobs) return [];
-    clg("jobListFilter sees job ct", jobs.length, jobs[0])
-
+    if ( !jobs) return []
+    //clg("jobListFilter sees job ct", jobs.length, jobs[0])
 
     let remoteok = mx.fmUp("REMOTE").onOff
         , onsiteok = mx.fmUp("ONSITE").onOff
@@ -35,7 +34,7 @@ function jobListFilter(mx, jobs) {
         .filter(j => !listingRgx
             || rgxTreeMatch(j.titlesearch, listingRgx)
             || rgxTreeMatch(j.bodysearch, listingRgx))
-};
+}
 
 function rgxTreeMatch(s, ors) {
     return ors.some(ands => ands.every(andx => s.match(andx)))
@@ -66,11 +65,11 @@ function mkTitleSelects() {
     return mkJobSelects("title", "Title selects", titleSelects)
 }
 function mkUserSelects() {
-    return mkJobSelects("user", "User selects", userSelects, {"margin-top":"8px"})
+    return mkJobSelects("user", "User selects", userSelects, {"margin":"8px 0 8px 24px"})
 }
 
 function mkJobSelects( key, lbl, jSelects, styling = {}) {
-    return div( { style: merge( hzFlexWrap, {margin_left: "24px"})}
+    return div( { style: merge( hzFlexWrap, {margin_left: "24px"}, styling)}
         , jSelects.map( info => div( {style: "min-width:124px"}
             , input({
                     id: info[0]+"ID"
