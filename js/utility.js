@@ -93,3 +93,18 @@ function viewOnHN ( uri, attrs={}) {
         }, attrs)
         , img({ src: "dist/hn24.jpg"}))
 }
+
+
+function myRange( start, end) {
+    if (start === undefined) {
+        return []
+    } else if ( end === undefined) {
+        return myRange( 0, start)
+    } else {
+        let r = []
+        for (n = start; n < end; ++n) {
+            r.push(n)
+        }
+        return r
+    }
+}

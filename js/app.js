@@ -26,7 +26,6 @@ function WhoIsHiring() {
         , div( { class: cF( c=> slideInRule(c, c.md.fmUp("searchMonth").value))
                 , style: cF( c=> "display:" + (c.md.fmUp("searchMonth").value? "block":"none"))}
             , controlPanel()
-            //, whoshiringTester()
             , jobList())
     )
 }
@@ -53,11 +52,10 @@ function appHelp () {
         , appHelpEntry.map( e=> li(e)))
 }
 
-
 const appHelpEntry = [
-    "Click any job to show/hide full listing"
+    "Click any job header to show or hide the full listing."
     , "All filters are ANDed."
-    , "Your notes and stars are kept in local storage; stick to one browser"
+    , "Your notes and stars are kept in local storage; stick to one browser."
     ,"Static page scrape may fall behind actual jobs during the early rush, so..."
     , "...clone the " +
     "<a href='https://github.com/kennytilton/whoshiring'>GitHub project</a> " +

@@ -9,7 +9,7 @@ function mkTitleRgx() {
 }
 
 function mkFullRgx() {
-    return mkListingRgx('listing', "Full Listing", 'title and listing','accel and horizon')
+    return mkListingRgx('listing', "Full Listing", 'title and listing')
 }
 
 function mkListingRgx(prop, lbl, desc, debug) {
@@ -112,7 +112,7 @@ function buildRgxTree(mx, e) {
         mx.rgxTree = null // test
     } else {
         if (mx.history.indexOf( mx.rgxRaw) === -1) {
-            clg('adding!!!!', mx.rgxRaw)
+            clg('adding to rgx!!!!', mx.rgxRaw)
             mx.history = mx.history.concat(mx.rgxRaw)
         }
         rebuildRgxTree(mx)

@@ -10,9 +10,10 @@ function jobList () {
         , {
             name: "job-list"
             , selectedJobs: cF(c => {
-                let cause = causation.peek();
-                // clg('seljob run', cause, cause? cause.name:"no cause")
-                return jobListFilter(c.md, c.md.fmUp("jobLoader").jobs)
+                let rawjobs = c.md.fmUp("jobLoader").jobs
+                    , seljobs = jobListFilter(c.md, rawjobs);
+                // clg( 'got seljobs', seljobs.length)
+                return seljobs
             })
             , kidValues: cF(c => {
                 let jsort = jobListSort(c.md, c.md.selectedJobs) || []

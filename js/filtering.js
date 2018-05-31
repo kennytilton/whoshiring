@@ -22,6 +22,22 @@ function jobListFilter(mx, jobs) {
         , titleRgx = mx.fmUp("titlergx").rgxTree
         , listingRgx = mx.fmUp("listingrgx").rgxTree;
 
+
+/*    if (titleRgx) {
+        clg('inputs', jobs.length, titleRgx.join(',"'));
+
+        jobs.map( j => {
+        if (j.titlesearch.match( /skim/i )) {
+            clg('BAM2', j.hnId, j.company, j.titlesearch)
+        } else if (j.titlesearch.search("SKIM") !== -1) {
+            clg('BAM3', j.hnId, j.company, j.titlesearch)
+        } else if (rgxTreeMatch(j.titlesearch, titleRgx)) {
+            clg('BAM4', j.company, j.titlesearch)
+        }
+    })}*/
+
+    //return jobs.filter(j => !titleRgx || rgxTreeMatch(j.titlesearch, titleRgx))
+
     return jobs.filter(j => !remoteok || j.remote)
         .filter(j => !onsiteok || j.onsite)
         .filter(j => !visaok || j.visa)
@@ -65,11 +81,11 @@ function mkTitleSelects() {
     return mkJobSelects("title", "Title selects", titleSelects)
 }
 function mkUserSelects() {
-    return mkJobSelects("user", "User selects", userSelects, {"margin":"8px 0 8px 24px"})
+    return mkJobSelects("user", "User selects", userSelects)
 }
 
 function mkJobSelects( key, lbl, jSelects, styling = {}) {
-    return div( { style: merge( hzFlexWrap, {margin_left: "24px"}, styling)}
+    return div( { style: merge( hzFlexWrap, {"margin":"8px 0 8px 24px"}, styling)}
         , jSelects.map( info => div( {style: "min-width:124px"}
             , input({
                     id: info[0]+"ID"

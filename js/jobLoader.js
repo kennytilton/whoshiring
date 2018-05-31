@@ -7,19 +7,60 @@ goog.provide('Hiring.jobLoader')
 
 // --- loading job data -----------------------------------------
 
-function myRange( start, end) {
-    if (start === undefined) {
-        return []
-    } else if ( end === undefined) {
-        return myRange( 0, start)
-    } else {
-        let r = []
-        for (n = start; n < end; ++n) {
-            r.push(n)
-        }
-        return r
-    }
+const SEARCH_MO_IDX = 0;
+
+function pickAMonth() {
+    return div ({style: merge( hzFlexWrapCentered, {
+            align_items: "center"
+            , margin: "0px 0px 9px 24px"})}
+
+        , select( {
+                name: "searchMonth"
+                , style: "font-size:1.5em; min-width:128px; margin:0 12px 6px 0;"
+                , value: cI( gMonthlies[SEARCH_MO_IDX].hnId)
+                , onchange: (mx,e) => {
+                    let pgr = mx.fmUp("progress")
+                    ast(pgr)
+                    pgr.value = 0
+                    pgr.maxN = 0
+                    pgr.seen = new Set()
+                    pgr.hidden = false
+                    mx.value = e.target.value
+                }}
+            // --- use this if complaints about initial load ----
+            // , option( {value: "none"
+            //         , selected: "selected"
+            //         , disabled: "disabled"}
+            //     , "Pick a month. Any month.")
+            , gMonthlies.map( (m,x) => option( {
+                    value: m.hnId
+                    , selected: x===SEARCH_MO_IDX? "selected":null}
+                , m.desc)))
+
+        , div( {style: hzFlexWrapCentered}
+            , viewOnHN( cF( c=> `https://news.ycombinator.com/item?id=${c.md.fmUp("searchMonth").value}`)
+                , { hidden: cF( c=> !c.md.fmUp("searchMonth").value)})
+            , span({
+                style: "margin: 0 12px 0 12px"
+                , hidden: cF( c=> !c.md.fmUp("searchMonth").value)
+                , content: cF(c => {
+                    let pgr = c.md.fmUp("progress")
+                        , jobs = c.md.fmUp("jobLoader").jobs || [];
+                    return pgr.hidden ? "Total jobs: " + jobs.length
+                        : "Parsing: "+ PARSE_CHUNK_SIZE * pgr.value})})
+
+            , progress({
+                max: cF( c=> c.md.maxN + "")
+                , hidden: cF( c=> !c.md.fmUp("searchMonth").value)
+                , value: cI(0)
+            }, {
+                name: "progress"
+                , maxN: cI(0)
+                , seen: cI( new Set())})
+
+        ))
 }
+
 
 function jobListingLoader() {
     return div( {}
@@ -28,13 +69,19 @@ function jobListingLoader() {
             , jobs: cF(c => {
                 let parts = c.md.kids.map(k => k.jobs);
                 if (parts.every(p => p !== null)) {
-                    // clg('all jobs resolved!!!!')
+                    //clg('all jobs resolved!!!!', parts.map( p => p.length))
                     let all = parts.reduce((accum, pj) => {
                         return accum.concat(pj)
                     });
                     return all;
                 } else {
                     return null
+                }
+            }, {
+                observer: (s,md,newv) => {
+                    if ( newv) {
+                        md.fmUp("progress").hidden = true;
+                    }
                 }
             })
         }
@@ -82,22 +129,16 @@ function domAthings( dom) {
 }
 
 function jobsCollect(md) {
-    if (md.dom.contentDocument) { // FF
-        //clg('normal dom!!!', md.pgNo, domAthings(md.dom).length);
-
+    if (md.dom.contentDocument) {
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
         let chunkSize = PARSE_CHUNK_SIZE
             , listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'))
             , tempJobs = []
-            , progressBar = md.fmUp("progress");
-
-        ast(progressBar);
-        progressBar.hidden = false
+            , pgr = md.fmUp("progress");
 
         if (listing.length > 0) {
-            //clg('listing length', listing.length)
-            progressBar.max = Math.floor( listing.length / PARSE_CHUNK_SIZE)+""
-            parseListings( md, listing, tempJobs, PARSE_CHUNK_SIZE, progressBar)
+            pgr.maxN = pgr.maxN + Math.floor( listing.length / PARSE_CHUNK_SIZE)
+            parseListings( md, listing, tempJobs, PARSE_CHUNK_SIZE, pgr)
         } else {
             md.jobs = []
         }
@@ -115,20 +156,25 @@ function parseListings( md, listing, tempJobs, chunkSize, progressBar) {
 
         if (jct > 0) {
             for (jn = 0; jn < jct; ++jn) {
-                let spec = jobSpec( listing[ offset + jn])
+                let dom = listing[ offset + jn];
 
-                if (spec.OK) {
-                    let hnId = spec.hnId;
+                if ( progressBar.seen.has( dom.id)) {
+                    // clg('hnID already seen; NOT aborting pageNo', dom.id, md.pgNo, tempJobs.length)
+                } else {
+                    progressBar.seen.add(dom.id)
 
-                    spec.pgNo = md.pgNo;
+                    let spec = jobSpec(listing[offset + jn])
 
-                    if (!UNote.dict[hnId]) {
-                        UNote.dict[hnId] = new UserNotes({hnId: hnId});
+                    if (spec.OK) {
+                        let hnId = spec.hnId;
+
+                        spec.pgNo = md.pgNo;
+
+                        if (!UNote.dict[hnId]) {
+                            UNote.dict[hnId] = new UserNotes({hnId: hnId});
+                        }
+                        tempJobs.push(spec)
                     }
-                    tempJobs.push(spec)
-                    // clg('spec!!!!!', JSON.stringify(spec))
-                    // totchar += JSON.stringify(spec).length;
-                    // clg('totchar', jn, totchar)
                 }
             }
             progressBar.value = progressBar.value + 1
@@ -137,19 +183,13 @@ function parseListings( md, listing, tempJobs, chunkSize, progressBar) {
             if (tempJobs.length < 30000)
                 window.requestAnimationFrame(() => chunker( offset + jct))
             else {
-                // clg('fini!!!!!! load', md.pgNo, tempJobs.length);
-                progressBar.hidden = true
-                // hiringApp.jobs = tempJobs
                 md.jobs = tempJobs;
                 frameZap(md);
                 //clg('post dom zap!!', domAthings(md.dom).length);
             }
         } else {
-            // clg('fini!!!2!!! load', md.pgNo, tempJobs.length);
-            progressBar.hidden = true
             md.jobs = tempJobs;
             frameZap(md);
-            //clg('post dom zap', domAthings(md.dom).length, md.jobs.length);
         }
     }
     chunker( 0);

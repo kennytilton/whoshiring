@@ -1,0 +1,34 @@
+
+@media screen and (min-width: 960px) {
+    html {
+        margin-left: calc(100vw - 100%);
+        margin-right: 0;
+    }
+}
+html * {
+    font-family: Arial;
+}
+.selector {
+    background-color: PAPAYAWHIP;
+    min-width:104px;
+    margin-right:9px;
+    padding:4px;
+}
+
+.slideIn {
+    animation-duration: 1s;
+    animation-name: slideFadeIn;
+}
+.slideOut {
+    animation-duration: 1s;
+    animation-name: slideFadeIn;
+    animation-direction: reverse;
+}
+@keyframes slideFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes fazeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}

@@ -27,7 +27,7 @@ function controlPanel() {
                 }
             })})
             , mkTitleSelects, mkUserSelects )
-        , openShutCase("rgx-filters", "search", true
+        , openShutCase("rgx-filters", "search", false
             , i({style: "margin-left:12px"
                 , content: cF( c=> {
                     if (c.md.fmUp("rgx-filters-toggle").onOff) {
@@ -63,50 +63,7 @@ function controlPanel() {
 
 window['controlPanel'] = controlPanel;
 
-const SEARCH_MO_IDX = 0;
 
-function pickAMonth() {
-    return div ({style: merge( hzFlexWrapCentered, {
-            align_items: "center"
-            , margin: "0px 0px 9px 24px"})}
-
-        , select( {
-                name: "searchMonth"
-                , style: "font-size:1.5em; min-width:128px; margin:0 12px 6px 0;"
-                , value: cI( gMonthlies[SEARCH_MO_IDX].hnId)
-                , onchange: (mx,e) => {
-                    mx.value = e.target.value
-                }}
-                // --- use this if complaints about initial load ----
-            // , option( {value: "none"
-            //         , selected: "selected"
-            //         , disabled: "disabled"}
-            //     , "Pick a month. Any month.")
-            , gMonthlies.map( (m,x) => option( {
-                    value: m.hnId
-                    , selected: x===SEARCH_MO_IDX? "selected":null}
-                , m.desc)))
-
-        , div( {style: hzFlexWrapCentered}
-            , viewOnHN( cF( c=> `https://news.ycombinator.com/item?id=${c.md.fmUp("searchMonth").value}`)
-                , { hidden: cF( c=> !c.md.fmUp("searchMonth").value)})
-            , span({
-                style: "margin: 0 12px 0 12px"
-                , hidden: cF( c=> !c.md.fmUp("searchMonth").value)
-                , content: cF(c => {
-                    let pgr = c.md.fmUp("progress")
-                        , jobs = c.md.fmUp("jobLoader").jobs || [];
-                    return pgr.hidden ? "Total jobs: " + jobs.length
-                        : "Parsing: "+ PARSE_CHUNK_SIZE * pgr.value})})
-
-            , progress({
-                max: cI(0)
-                , hidden: cI( true)
-                , value: cI(0)
-            }, {name: "progress"})
-
-        ))
-}
 
 const jobSorts = [
     {title: "Creation", keyFn: jobHnIdKey}
@@ -155,6 +112,7 @@ function jobListingControlBar() {
                 , border_color: "khaki"
                 , border_width: "2px"
                 , background: "#f8f8f8"
+                , justify_content: "space-between"
                 , align_items: "center"})}
 
         , span({ content: cF(c => "Matches: " + c.md.fmUp("job-list").selectedJobs.length)})
