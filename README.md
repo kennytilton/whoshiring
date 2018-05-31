@@ -1,7 +1,7 @@
 # whoshiring
 Welcome to "woshiring", a browser for Hacker News's monthly Ask HN: Who's Hiring pages built atop the Matrix mxWeb&trade; web application un-framework. (It is just a thin, pass-through wrapper for HTML, CSS, JS, and AJAX.)
 
-## Running it yourself
+### Running it yourself
 Easy.
 ````bash
 git clone https://github.com/kennytilton/whoshiring.git
@@ -10,7 +10,17 @@ Now open `whoshiring/index-es6.html` in FireFox. Other browsers refuse to deal w
 
 You can now play with the source*, save, and refresh the page back in the browser. That is how I work, FWIW.
 
-### * No, you cannot (play with the source)
+#### Staying current
+The app works by scraping saved HN page sources. The files directory has a subdirectory for each HN message ID in which they ask Who's Hiring. That subirectory has multiple HTML files retrieved with the additional query parameter `p=<n>` where `<n>` is 1 to however many pages of answers (job listings) they have. They do about 200 jobs per page, and recently had about 870 jobs all told. Anyway...
+
+To refresh your page data:
+````bash
+cd whoshiring
+./grab
+````
+More soon.
+
+#### * No, you cannot (play with the source)
 
 mxWeb is simple, but only after we have grokked the data flow library Matrix&trade; on which it is built. Matrix is like [MobX](https://github.com/mobxjs/mobx), but goes a bit further. We find the [Binding.scala](https://github.com/ThoughtWorksInc/Binding.scala) data flow library impressive as well.
 
