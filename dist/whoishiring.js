@@ -8227,12 +8227,13 @@ function onOffCheckbox(c) {
   }}, {name:c, onOff:cI(!1)}), label({for:name + "ID" + f, title:d}, e));
 }
 var hzFlexWrap = {display:"flex", flex_wrap:"wrap"}, hzFlexWrapCentered = {display:"flex", flex_wrap:"wrap", align_items:"center"};
-function helpToggle(c, d) {
-  return b({style:"cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;", onclick:function(c) {
+function helpToggle(c, d, e) {
+  e = void 0 === e ? {} : e;
+  return b(merge({style:"cursor:pointer; margin-left:9px;", onclick:function(c) {
     return c.onOff = !c.onOff;
   }, title:d, content:cF(function(c) {
     return c.md.onOff ? "&#x00bf" : "&#xfe56";
-  })}, {name:c, onOff:cI(!1)});
+  })}, e), {name:c, onOff:cI(!1)});
 }
 function viewOnHN(c, d) {
   d = void 0 === d ? {} : d;
@@ -8678,6 +8679,12 @@ function mkListingRgx(c, d, e, f) {
     });
   }));
 }
+function labeledRow(c, d) {
+  for (var e = [], f = 1; f < arguments.length; ++f) {
+    e[f - 1] = arguments[f];
+  }
+  return div({style:{display:"flex", flex_direction:"column", margin:"0px 18px 0px 18px"}}, span({style:"color:white;font-size:0.7em"}, c), e);
+}
 function mkRgxOptions() {
   return div(div({style:merge(hzFlexWrapCentered, {margin:"0 0 9px 18px"})}, mkRgxMatchCase(), mkRgxOrAnd(), helpToggle("rgxHelpToggle", "Show/hide app help")), ul({class:cF(function(c) {
     return "help " + slideInRule(c, c.md.fmUp("rgxHelpToggle").onOff);
@@ -8698,12 +8705,6 @@ function mkRgxOrAnd() {
   }), onclick:function(c) {
     return c.value = !c.value;
   }, onchange:rebuildRgxTrees}, {name:"rgxOrAnd", value:cI(!0)}), label({for:"rgxOrAnd"}, "allow or/and"));
-}
-function labeledRow(c, d) {
-  for (var e = [], f = 1; f < arguments.length; ++f) {
-    e[f - 1] = arguments[f];
-  }
-  return div({style:{display:"flex", flex_direction:"column", margin:"0px 18px 0px 18px"}}, span({style:"color:white;font-size:0.5em"}, c), e);
 }
 var regexHelp = ["Press <kbd style='background:cornsilk;font-size:1em'>Enter</kbd> or <kbd style='background:cornsilk;font-size:1em'>Tab</kbd> to activate, including after clearing.", "Separate <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions'>JS RegExp-legal</a> terms with <b>||</b> or <b>&&</b> (higher priority) to combine expressions.", "'Allow or/and' option treats those as ||/&& for easier mobile entry.", "Regex terms are split on comma and passed to <code>new RegExp(pattern,flags)</code>.", 
 "e.g. Enter <b>taipei,i</b> for case-insensitive search."];
@@ -8740,15 +8741,15 @@ function rebuildRgxTree(c) {
   return Object.assign.apply(Object, [{}].concat($jscomp.arrayFromIterable(d)));
 }
 function WhoIsHiring() {
-  return [header(span({class:"askhn"}, "Ask HN:"), span({class:"who"}, "Who&rsquo;s Hiring?")), div({style:"margin:0px; background:#ffb57d"}, appHelper(), jobListingLoader(), pickAMonth(), div({class:cF(function(c) {
+  return div(header(helpToggle("appHelpToggle", "Show/hide app info/help", {style:"cursor:pointer; font-size:0.3em; margin:6px 0 0 6px", content:"help"}), span({class:"askhn"}, "Ask HN:"), span({class:"who"}, "Who&rsquo;s Hiring?")), div({style:"margin:0px; background:#ffb57d"}, appHelper(), jobListingLoader(), pickAMonth(), div({class:cF(function(c) {
     return slideInRule(c, c.md.fmUp("searchMonth").value);
   }), style:cF(function(c) {
     return "display:" + (c.md.fmUp("searchMonth").value ? "block" : "none");
-  })}, controlPanel(), jobList()))];
+  })}, controlPanel(), jobList())));
 }
 window.WhoIsHiring = WhoIsHiring;
 function appHelper() {
-  return div({style:hzFlexWrap}, helpToggle("appHelpToggle", "Show/hide app help"), appHelp());
+  return div({style:hzFlexWrap}, appHelp());
 }
 function appHelp() {
   return ul({class:cF(function(c) {
@@ -8756,8 +8757,8 @@ function appHelp() {
   }), style:cF(function(c) {
     return "list-style:circle; display:" + (c.md.fmUp("appHelpToggle").onOff ? "block" : "none");
   })}, appHelpEntry.map(function(c) {
-    return li(c);
+    return li({style:"margin-bottom:9px;"}, c);
   }));
 }
-var appHelpEntry = "Click any job header to show or hide the full listing.{All filters are ANDed.{Your notes and stars are kept in local storage; stick to one browser.{Static page scrape may fall behind actual jobs during the early rush, so...{...clone the <a href='https://github.com/kennytilton/whoshiring'>GitHub project</a> and run yourself to control currency.{RFEs welcome and can be raised <a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. {Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>Matrix Inside&trade;</a>.{This page is not affiliated with Hacker News, except...{Thanks to the HN crew for their assistance. All screw-ups remain <a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton's</a>.".split("{");
+var appHelpEntry = "Click any job header to show or hide the full listing.{All filters are ANDed.{Your notes and stars are kept in local storage; stick to one browser.{Static page scrape may fall behind actual jobs during the early rush, so...{...clone the <a href='https://github.com/kennytilton/whoshiring'>GitHub project</a> and run yourself to control currency.{RFEs welcome and can be raised <a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. {Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>Matrix Inside&trade;</a>.{This page is not affiliated with Hacker News, except...{..thanks to the HN crew for their assistance. All screw-ups remain <a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton's</a>.{Graphic design by <a href='https://www.mloboscoart.com'>Michael Lobosco</a>. Implementation screw-ups are Kenny's</a>.".split("{");
 

@@ -33,6 +33,22 @@ function mkListingRgx(prop, lbl, desc, debug) {
         , c=> c.md.fmUp(prop+"rgx").history.map( hs => option( {value: hs}))))
 }
 
+// todo lose this breakout
+function labeledRow(label, ...children) {
+    return div({
+            style: {
+                display: "flex"
+                , flex_direction: "column"
+                , margin: "0px 18px 0px 18px"
+
+            }
+        }
+        , span({style: "color:white;font-size:0.7em"}, label)
+        , children
+    )
+}
+
+
 function mkRgxOptions () {
     return div(
         div({style: merge( hzFlexWrapCentered, {margin: "0 0 9px 18px"})}
@@ -81,21 +97,6 @@ function mkRgxOrAnd() {
                 , value: cI( true)
             }),
         label({for: "rgxOrAnd"}, "allow or/and"))
-}
-
-// todo lose this breakout
-function labeledRow(label, ...children) {
-    return div({
-            style: {
-                display: "flex"
-        , flex_direction: "column"
-        , margin: "0px 18px 0px 18px"
-
-            }
-        }
-        , span({style: "color:white;font-size:0.5em"}, label)
-        , children
-    )
 }
 
 const regexHelp = [

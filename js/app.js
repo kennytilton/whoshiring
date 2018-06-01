@@ -75,7 +75,7 @@ function appHelp () {
             class: cF( c=> "help " + slideInRule(c, c.md.fmUp("appHelpToggle").onOff))
             , style: cF( c=> "list-style:circle; display:" + (c.md.fmUp("appHelpToggle").onOff? "block":"none"))
         }
-        , appHelpEntry.map( e=> li(e)))
+        , appHelpEntry.map( e=> li({style: "margin-bottom:9px;"}, e)))
 }
 
 const appHelpEntry = [

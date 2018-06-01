@@ -57,10 +57,11 @@ header .who {
 }
 
 .help {
-    margin: 6px 6px 6px 6px;
+    margin: 6px;
+    padding: 6px;
     background-color: PAPAYAWHIP;
     color: black;
-    list-style circle;
+    list-style: none;
 }
 
 .selector {
