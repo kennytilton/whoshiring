@@ -83,12 +83,13 @@ const hzFlexWrapCentered = {
     , align_items: "center"
 }
 
-function helpToggle ( name, title) {
-    return b({ style: "cursor:pointer; margin-left:9px; font-family:Arial; font-size:1em;"
-            , onclick: mx => mx.onOff = !mx.onOff
+function helpToggle ( name, title, attrs={}) {
+    return b( merge({
+            style: "cursor:pointer; margin-left:9px;"
+            , onclick: mx=> mx.onOff = !mx.onOff
             , title: title
-            , content: cF( c=> c.md.onOff? "&#x00bf":"&#xfe56")
-        }
+            , content: cF(c => c.md.onOff ? "&#x00bf" : "&#xfe56")
+        }, attrs)
         , { name: name
             , onOff: cI( false)})
 }

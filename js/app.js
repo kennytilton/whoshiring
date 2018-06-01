@@ -37,8 +37,12 @@ function merge(...maps) {
     ]
 }*/
 function WhoIsHiring() {
-    return [header(
-        span( {class: "askhn"}, "Ask HN:")
+    return div(
+        header(
+        helpToggle( "appHelpToggle", "Show/hide app info/help"
+        , {style: "cursor:pointer; font-size:0.3em; margin:6px 0 0 6px"
+        , content: "help"})
+        , span( {class: "askhn"}, "Ask HN:")
         , span( {class: "who"}, "Who&rsquo;s Hiring?")
     )
         , div( {
@@ -51,7 +55,7 @@ function WhoIsHiring() {
                     , style: cF( c=> "display:" + (c.md.fmUp("searchMonth").value? "block":"none"))}
                 , controlPanel()
                 , jobList())
-        )]
+        ))
 }
 
 window['WhoIsHiring'] = WhoIsHiring;
@@ -60,7 +64,7 @@ window['WhoIsHiring'] = WhoIsHiring;
 
 function appHelper () {
     return div( {style: hzFlexWrap}
-        , helpToggle( "appHelpToggle", "Show/hide app help")
+        // , helpToggle( "appHelpToggle", "Show/hide app help")
         , appHelp())
 }
 
@@ -86,8 +90,10 @@ const appHelpEntry = [
     "<a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. "
     , "Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>Matrix Inside&trade;</a>."
     , "This page is not affiliated with Hacker News, except..."
-    , "Thanks to the HN crew for their assistance. All screw-ups remain " +
+    , "..thanks to the HN crew for their assistance. All screw-ups remain " +
     "<a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton's</a>."
+    , "Graphic design by <a href='https://www.mloboscoart.com'>Michael Lobosco</a>. Implementation screw-ups are " +
+    "Kenny's</a>."
 ]
 
 
