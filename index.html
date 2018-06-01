@@ -5,53 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>mxWeb&trade; HN Hiring Browser</title>
+    <link rel="stylesheet" href="css/whoshiring.css">
 
     <script src="dist/whoishiring.js"></script>
-
-    <STYLE type="text/css">
-        html * {
-            font-family: Arial;
-        }
-        .selector {
-            background-color: PAPAYAWHIP;
-            min-width:104px;
-            margin-right:9px;
-            padding:4px;
-        }
-
-        .slideIn {
-            animation-duration: 1s;
-            animation-name: slideFadeIn;
-        }
-        .slideOut {
-            animation-duration: 1s;
-            animation-name: slideFadeIn;
-            animation-direction: reverse;
-        }
-        @keyframes slideFadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 100%;
-            }
-        }
-        @keyframes fazeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-        .fazer {
-            animation-duration: 2s;
-            animation-name: fazeIn;
-            animation-fill-mode: forwards;
-        }
-    </STYLE>
-
-
+    
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
 
@@ -62,9 +19,9 @@
 <p>Please check the browser console for diagnostics.</p>
 <script>
     var gMonthlies = [
-        { hnId: "16967543", desc: "May, 2018 ", pgCount: 9}
-        , { hnId: "16735011", desc: "April, 2018 "}
-        , { hnId: "16492994", desc: "March, 2018 "}
+        { hnId: "17205865", desc: "June, 2018&nbsp;", pgCount: 2}
+        , { hnId: "16967543", desc: "May, 2018&nbsp;", pgCount: 9}
+        , { hnId: "16735011", desc: "April, 2018&nbsp;"}
     ]
     document.body.innerHTML = tag2html( window.WhoIsHiring());
 </script>

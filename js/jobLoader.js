@@ -16,7 +16,7 @@ function pickAMonth() {
 
         , select( {
                 name: "searchMonth"
-                , style: "font-size:1.5em; min-width:128px; margin:0 12px 6px 0;"
+                , class: "searchMonth" // style: "font-size:1.5em; min-width:128px; margin:0 12px 6px 0;"
                 , value: cI( gMonthlies[SEARCH_MO_IDX].hnId)
                 , onchange: (mx,e) => {
                     let pgr = mx.fmUp("progress")

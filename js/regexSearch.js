@@ -19,7 +19,8 @@ function mkListingRgx(prop, lbl, desc, debug) {
         , list: prop+"list"
         , onchange: buildRgxTree
         , value: debug || ''
-        , style: "min-width:72px;width:300px;font-size:1em"
+            // , style: "min-width:72px;width:300px;font-size:1em"
+            , style: "min-width:72px;font-size:1em; height:2em"
     }, {
         name: prop + "rgx"
         , rgxRaw: cI(null)
@@ -34,13 +35,13 @@ function mkListingRgx(prop, lbl, desc, debug) {
 
 function mkRgxOptions () {
     return div(
-        div({style: merge( hzFlexWrapCentered, {margin: "4px 96px 20px 12px"})}
+        div({style: merge( hzFlexWrapCentered, {margin: "0 0 9px 18px"})}
             , mkRgxMatchCase()
             , mkRgxOrAnd()
             , helpToggle( "rgxHelpToggle", "Show/hide app help"))
 
         , ul({
-                class: cF(c => slideInRule(c, c.md.fmUp("rgxHelpToggle").onOff))
+                class: cF(c => "help " + slideInRule(c, c.md.fmUp("rgxHelpToggle").onOff))
                 , style: cF(c => "display:" + (c.md.fmUp("rgxHelpToggle").onOff ? "block" : "none"))
             }
             , regexHelp.map(h => li(h))))
@@ -48,7 +49,7 @@ function mkRgxOptions () {
 
 function mkRgxMatchCase() {
     return div({
-            style: "margin:0 18px 0 24px; display:flex; flex-wrap: wrap; align-items:center"
+            style: "margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center"
         }
         , input({
                 id: "rgxMatchCase"
@@ -64,7 +65,7 @@ function mkRgxMatchCase() {
 }
 function mkRgxOrAnd() {
     return div({
-            style: "margin:0 48px 0 24px; display:flex; flex-wrap: wrap; align-items:center"
+            style: "margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center"
             , title: "Replace 'or/and' with '||/&&' for easier mobile entry."
 
         }
@@ -79,7 +80,7 @@ function mkRgxOrAnd() {
                 name: "rgxOrAnd"
                 , value: cI( true)
             }),
-        label({for: "rgxOrAnd"}, "convert or/and to ||/&&"))
+        label({for: "rgxOrAnd"}, "allow or/and"))
 }
 
 // todo lose this breakout
@@ -87,12 +88,12 @@ function labeledRow(label, ...children) {
     return div({
             style: {
                 display: "flex"
-                , flex_wrap: "wrap"
-                , "margin" : "9px 0px 0px 24px"
-                , "align-items": "center"
+        , flex_direction: "column"
+        , margin: "0px 18px 0px 18px"
+
             }
         }
-        , span({style: "min-width:104px"}, label)
+        , span({style: "color:white;font-size:0.5em"}, label)
         , children
     )
 }
@@ -101,6 +102,7 @@ const regexHelp = [
     "Press <kbd style='background:cornsilk;font-size:1em'>Enter</kbd> or <kbd style='background:cornsilk;font-size:1em'>Tab</kbd> to activate, including after clearing."
     , "Separate <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions'>JS RegExp-legal</a> terms with <b>||</b> or " +
     "<b>&&</b> (higher priority) to combine expressions."
+    , "'Allow or/and' option treats those as ||/&& for easier mobile entry."
     , "Regex terms are split on comma and passed to <code>new RegExp(pattern,flags)</code>."
     , "e.g. Enter <b>taipei,i</b> for case-insensitive search."
 ]

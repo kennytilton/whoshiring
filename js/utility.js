@@ -33,13 +33,21 @@ function openShutCase( name, title, initOpen, echo, ...cases) {
     let toggleName = name+"-toggle";
     return div(
         div({class: "selector", style: hzFlexWrap}
+            , span( {style: "margin-left:9px"}, title)
             , toggleChar( toggleName, "Show/hide "+title, initOpen, "&#x25be", "&#x25b8")
-            , span( {style: "margin-left:9px;min-width:48px"}, title)
             , echo)
-        , div( {
-                class: cF( c=> slideInRule(c, c.md.fmUp(toggleName).onOff))
-                , style: cF( c=> "display:" + (c.md.fmUp(toggleName).onOff? "block":"none"))}
+        , div( { class: cF( c=> "osBody " + slideInRule(c, c.md.fmUp(toggleName).onOff))
+                , style: cF( c=> "background:#ff6600;display:" + (c.md.fmUp(toggleName).onOff? "block":"none"))}
             , cases.map( c=> c())))
+}
+
+function openCase( name, title, ...cases) {
+    let toggleName = name+"-toggle";
+    return div(
+            span( {
+                style: "margin-left:9px;min-width:48px"
+            }, title)
+        , cases.map( c=> c()))
 }
 
 function onOffCheckbox( nameTooltip) {
@@ -91,7 +99,7 @@ function viewOnHN ( uri, attrs={}) {
             , href: uri
             , title: "View on the HN site"
         }, attrs)
-        , img({ src: "dist/hn24.jpg"}))
+        , img({ src: "dist/hn24.png"}))
 }
 
 

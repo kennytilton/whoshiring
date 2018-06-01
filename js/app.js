@@ -15,29 +15,51 @@ goog.require('Hiring.regexSearch')
 function merge(...maps) {
     return Object.assign({}, ...maps)
 }
-
-function WhoIsHiring() {
-    return div( {
-            style: "margin:0px;padding:36px;"
-        }
-        , appHeader()
-        , jobListingLoader() // hidden iFrame where we load HN page for scraping
-        , pickAMonth()
-        , div( { class: cF( c=> slideInRule(c, c.md.fmUp("searchMonth").value))
-                , style: cF( c=> "display:" + (c.md.fmUp("searchMonth").value? "block":"none"))}
-            , controlPanel()
-            , jobList())
+/*function WhoIsHiring() {
+    return [header(
+        span( {class: "askhn"}, "Ask HN:")
+        , span( {class: "who"}, "Who's Hiring?")
     )
+        , div ( {}, {name: "body"}
+            , div( {class: "sideBar"}
+                , jobListingLoader() // hidden iFrame where we load HN page for scraping
+                , pickAMonth()
+                , controlPanel())
+            , div( {class: "results"}
+                , resultsBar()
+                , div( {
+                        class: "resultsScroller"
+                    }
+                    , div( {
+                            class: cF( c=> "resultsList " + slideInRule(c, c.md.fmUp("searchMonth").value))
+                            , style: cF( c=> "display:" + (c.md.fmUp("searchMonth").value? "block":"none"))}
+                        , jobList()))))
+    ]
+}*/
+function WhoIsHiring() {
+    return [header(
+        span( {class: "askhn"}, "Ask HN:")
+        , span( {class: "who"}, "Who&rsquo;s Hiring?")
+    )
+        , div( {
+                style: "margin:0px; background:#ffb57d"
+            }
+            , appHelper()
+            , jobListingLoader() // hidden iFrame where we load HN page for scraping
+            , pickAMonth()
+            , div( { class: cF( c=> slideInRule(c, c.md.fmUp("searchMonth").value))
+                    , style: cF( c=> "display:" + (c.md.fmUp("searchMonth").value? "block":"none"))}
+                , controlPanel()
+                , jobList())
+        )]
 }
 
 window['WhoIsHiring'] = WhoIsHiring;
 
 // --- app header ---------------------------------------------
 
-function appHeader () {
+function appHelper () {
     return div( {style: hzFlexWrap}
-        , span({style: "padding:4px;font-size:1.5em; margin-bottom:12px;background:orange"}
-            , "Ask HN: Who Is Hiring?")
         , helpToggle( "appHelpToggle", "Show/hide app help")
         , appHelp())
 }
@@ -46,7 +68,7 @@ function appHeader () {
 
 function appHelp () {
     return ul({
-            class: cF( c=> slideInRule(c, c.md.fmUp("appHelpToggle").onOff))
+            class: cF( c=> "help " + slideInRule(c, c.md.fmUp("appHelpToggle").onOff))
             , style: cF( c=> "list-style:circle; display:" + (c.md.fmUp("appHelpToggle").onOff? "block":"none"))
         }
         , appHelpEntry.map( e=> li(e)))

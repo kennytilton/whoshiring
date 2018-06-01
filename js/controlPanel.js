@@ -5,8 +5,8 @@ goog.require('Hiring.utility')
 goog.provide('Hiring.controlPanel')
 
 function controlPanel() {
-    return div(
-        openShutCase("os-filters", "filters", true
+    return div( { style: "background-color:#ffb57d"}
+        , openShutCase("os-filters", "Filters", true
              , i({style: "margin-left:12px"
                 , content: cF( c=> {
                 if (c.md.fmUp("os-filters-toggle").onOff) {
@@ -27,34 +27,10 @@ function controlPanel() {
                 }
             })})
             , mkTitleSelects, mkUserSelects )
-        , openShutCase("rgx-filters", "search", false
-            , i({style: "margin-left:12px"
-                , content: cF( c=> {
-                    if (c.md.fmUp("rgx-filters-toggle").onOff) {
-                        return ""
-                    } else {
-                        let rgxs = document.getElementsByClassName("listing-regex")
-                            , ons = [];
-                        Array.prototype.map.call(rgxs, rgx => {
-                            if ( rgx.value) ons.push( rgx.value)
-                        });
-
-                        return ons.join(' and ')
-                    }
-                })})
+        , openCase("rgx-filters", "Search"
             , mkTitleRgx, mkFullRgx, mkRgxOptions)
 
-        , openShutCase("job-sorts", "sorting", false
-            , i({style: "margin-left:12px"
-                , content: cF( c=> {
-                    if (c.md.fmUp("job-sorts-toggle").onOff) {
-                        return ""
-                    } else {
-                        let s = c.md.fmUp("sortby").selection;
-                        return s.title + " " + (s.order === -1? "&#x2798":"&#x279a")
-                    }
-                })})
-            , sortBar)
+        , sortBar
 
         , jobListingControlBar
     )
@@ -63,8 +39,6 @@ function controlPanel() {
 
 window['controlPanel'] = controlPanel;
 
-
-
 const jobSorts = [
     {title: "Creation", keyFn: jobHnIdKey}
     , {title: "Stars", compFn: jobStarsCompare}
@@ -72,8 +46,13 @@ const jobSorts = [
     ]
 
 function sortBar() {
-    return ul({
-            style: merge(hzFlexWrap, { padding:0, margin_left: "24px"})
+    return div( {style: { padding: "0 0 0 0", margin: "15px 0 0 9px"
+            , display: "flex"}}
+    , span("Sort&nbsp")
+    , ul({
+            style: merge(hzFlexWrap, {
+                 padding: "0 0 0 0"
+                , margin: "0 0 0 0"})
         }
         , {
             name: "sortby"
@@ -83,7 +62,7 @@ function sortBar() {
         }
         , jobSorts.map(js => button({
             selected: cF(c => c.md.par.selection.title === js.title)
-            , style: cF(c => "margin-right:9px;min-width:72px;" + (c.md.selected ? "background:#ddf" : ""))
+            , style: cF(c => "margin-right:4px;min-width:72px;")
             , onclick: mx => {
                 let currSel = mx.par.selection;
                 if ( currSel.title === js.title ) {
@@ -95,32 +74,34 @@ function sortBar() {
             , content: cF( c=> {
                 let spec = c.md.par.sortSpec;;
                 if (spec.title === js.title) {
-                    return js.title + " sort " + (spec.order===-1 ? "&#x2798":"&#x279a")
+                    return js.title + (spec.order===-1 ? " &#x2798":" &#x279a")
                 } else {
-                    return js.title
+                    return js.title + " &nbsp;"
                 }
             })
         })))
+    )
 }
 
 function jobListingControlBar() {
     return div({
             style: merge( hzFlexWrapCentered, {
                 margin:"12px 0 0 0px"
-                , padding: "6px"
-                , border_style: "ridge"
+                , padding: "3px"
+                , border_style: "inset"
                 , border_color: "khaki"
                 , border_width: "2px"
-                , background: "#f8f8f8"
+                , background: "PAPAYAWHIP"
                 , justify_content: "space-between"
                 , align_items: "center"})}
 
-        , span({ content: cF(c => "Matches: " + c.md.fmUp("job-list").selectedJobs.length)})
+        , span({ style: "margin-right:6px"
+            , content: cF(c => "Matches: " + c.md.fmUp("job-list").selectedJobs.length)})
         , resultMax()
         , button({
                 style: cF(c=> {
                     let pgr = c.md.fmUp("progress")
-                    return "margin-left:24px;display:"+ (pgr.hidden? "block":"none")
+                    return "display:"+ (pgr.hidden? "block":"none")
                 })
                 , onclick: mx => {
                     let all = document.getElementsByClassName('listing-toggle');
@@ -128,14 +109,14 @@ function jobListingControlBar() {
                     mx.expanded = !mx.expanded
                 }
 
-                , content: cF( c=> c.md.expanded? "Collapse all":"Expand all")
+                , content: cF( c=> c.md.expanded? "Collapse":"Expand")
             }
             , { name: "expander", expanded: cI(true)}))
 }
 
 function resultMax() {
-    return div( {style: merge( hzFlexWrap, {margin_left: "18px"})}
-        , span("Display limit:")
+    return div( {style: merge( hzFlexWrap, {margin_right: "6px"})}
+        , span({},"Show:")
         , input({
                 value: cF( c=> c.md.results)
                 , style:"max-width:24px;margin-left:6px;margin-right:6px"
