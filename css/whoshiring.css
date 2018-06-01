@@ -22,7 +22,15 @@ header {
 
     background-color: #ff6600;
     min-height: 100px;
-    /*padding: 9px;*/
+
+}
+header .about {
+    color: #fcfcfc;
+    font-size: 0.7em;
+    cursor: pointer;
+    margin: 0 0 0 24px;
+}
+header .headermain {
     font-size: 2.5em;
     display: flex;
     flex-wrap: no-wrap;
@@ -31,7 +39,7 @@ header .askhn {
     display: inline-block;
     color: #fcfcfc;
     border: 3px solid #fcfcfc;
-    margin: 15px 0 10px 30px;
+    margin: 0px 0 10px 30px;
     padding: 6px;
 }
 header .who {

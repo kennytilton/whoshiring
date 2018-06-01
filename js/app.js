@@ -12,38 +12,17 @@ goog.require('Hiring.regexSearch')
 
 // --- main ---------------------------------------
 
-function merge(...maps) {
-    return Object.assign({}, ...maps)
-}
-/*function WhoIsHiring() {
-    return [header(
-        span( {class: "askhn"}, "Ask HN:")
-        , span( {class: "who"}, "Who's Hiring?")
-    )
-        , div ( {}, {name: "body"}
-            , div( {class: "sideBar"}
-                , jobListingLoader() // hidden iFrame where we load HN page for scraping
-                , pickAMonth()
-                , controlPanel())
-            , div( {class: "results"}
-                , resultsBar()
-                , div( {
-                        class: "resultsScroller"
-                    }
-                    , div( {
-                            class: cF( c=> "resultsList " + slideInRule(c, c.md.fmUp("searchMonth").value))
-                            , style: cF( c=> "display:" + (c.md.fmUp("searchMonth").value? "block":"none"))}
-                        , jobList()))))
-    ]
-}*/
 function WhoIsHiring() {
     return div(
         header(
-        helpToggle( "appHelpToggle", "Show/hide app info/help"
-        , {style: "cursor:pointer; font-size:0.3em; margin:6px 0 0 6px"
-        , content: "help"})
+        helpToggle( "appHelpToggle", "Show/hide app info/help", {
+            class: "about"
+            , content: "about/help"})
+        , div( {
+                    class: "headermain"
+                }
         , span( {class: "askhn"}, "Ask HN:")
-        , span( {class: "who"}, "Who&rsquo;s Hiring?")
+        , span( {class: "who"}, "Who&rsquo;s Hiring?"))
     )
         , div( {
                 style: "margin:0px; background:#ffb57d"

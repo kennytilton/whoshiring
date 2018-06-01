@@ -12,7 +12,7 @@ const SEARCH_MO_IDX = 0;
 function pickAMonth() {
     return div ({style: merge( hzFlexWrapCentered, {
             align_items: "center"
-            , margin: "0px 0px 9px 24px"})}
+            , margin: "9px 0px 9px 40px"})}
 
         , select( {
                 name: "searchMonth"

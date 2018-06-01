@@ -117,3 +117,8 @@ function myRange( start, end) {
         return r
     }
 }
+
+function merge(...maps) {
+    return Object.assign({}, ...maps)
+}
+
