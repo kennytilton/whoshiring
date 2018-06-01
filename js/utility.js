@@ -96,8 +96,7 @@ function helpToggle ( name, title, attrs={}) {
 
 function viewOnHN ( uri, attrs={}) {
     return a( merge({
-            style: "margin-left:12px"
-            , href: uri
+            href: uri
             , title: "View on the HN site"
         }, attrs)
         , img({ src: "dist/hn24.png"}))

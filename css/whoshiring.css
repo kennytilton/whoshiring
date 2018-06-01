@@ -14,6 +14,14 @@ html * {
     , "Lucida Sans", Tahoma, sans-serif;
 }
 
+body {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px
+}
+
+
 header {
     /*position:fixed;*/
     top: 0;
@@ -27,25 +35,27 @@ header {
 header .about {
     color: #fcfcfc;
     font-size: 0.7em;
+    /*float: right;*/
     cursor: pointer;
-    margin: 0 0 0 24px;
+    margin: 6px 6px 0 0;
 }
 header .headermain {
-    font-size: 2.5em;
+    font-size: 1.5em;
+    -webkit-font-smoothing: antialiased;
     display: flex;
+    background:gray;
     flex-wrap: no-wrap;
 }
 header .askhn {
     display: inline-block;
     color: #fcfcfc;
     border: 3px solid #fcfcfc;
-    margin: 0px 0 10px 30px;
+    margin: 15px 0 10px 30px;
     padding: 6px;
 }
 header .who {
     color: #000;
-    -webkit-font-smoothing: antialiased;
-    margin: 15px 0 0 0;
+    margin: 17px 0 0 0;
     padding: 6px;
 }
 .searchMonth {
@@ -57,7 +67,7 @@ header .who {
     border-color: transparent;
     /*opacity: 0.5;*/
     background: linear-gradient(#ffe7d6, #ffb59d);
-    /*margin: 0 12px 6px 0;*/
+    margin: 0 12px 0 0;
 }
 
 .osBody {
@@ -70,6 +80,14 @@ header .who {
     background-color: PAPAYAWHIP;
     color: black;
     list-style: none;
+}
+
+.userAnnotations {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 6px 0 6px;
 }
 
 .selector {

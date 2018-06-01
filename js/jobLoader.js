@@ -16,7 +16,7 @@ function pickAMonth() {
 
         , select( {
                 name: "searchMonth"
-                , class: "searchMonth" // style: "font-size:1.5em; min-width:128px; margin:0 12px 6px 0;"
+                , class: "searchMonth"
                 , value: cI( gMonthlies[SEARCH_MO_IDX].hnId)
                 , onchange: (mx,e) => {
                     let pgr = mx.fmUp("progress")
@@ -41,7 +41,7 @@ function pickAMonth() {
             , viewOnHN( cF( c=> `https://news.ycombinator.com/item?id=${c.md.fmUp("searchMonth").value}`)
                 , { hidden: cF( c=> !c.md.fmUp("searchMonth").value)})
             , span({
-                style: "margin: 0 12px 0 12px"
+                style: "color: #fcfcfc; margin: 0 12px 0 12px"
                 , hidden: cF( c=> !c.md.fmUp("searchMonth").value)
                 , content: cF(c => {
                     let pgr = c.md.fmUp("progress")

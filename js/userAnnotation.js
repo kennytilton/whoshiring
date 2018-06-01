@@ -59,7 +59,7 @@ const UNote = UserNotes.loadFromStorage();
 function userAnnotations(j) {
     //clg('uannot', j.hnId, j.company)
     return div( {style: "display:flex; flex-direction: column"}
-        , div ({style: "display:flex; flex-wrap:wrap; align-items:center"}
+        , div ( { class: "userAnnotations"}
             // , excludeJob(j)
             , jobStars(j)
             , applied(j)
