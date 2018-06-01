@@ -85,6 +85,9 @@ const appHelpEntry = [
     , "RFEs welcome and can be raised " +
     "<a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. "
     , "Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>Matrix Inside&trade;</a>."
+    , "This page is not affiliated with Hacker News, except..."
+    , "Thanks to the HN crew for their assistance. All screw-ups remain " +
+    "<a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton's</a>."
 ]
 
 
