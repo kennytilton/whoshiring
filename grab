@@ -36,6 +36,16 @@ cp -r files/temp/$1 files/$1
 
 ls -al files/$1
 
+git status
+
+git add files/$1
+
+git commit -am "scrape HN askHn $1"
+
+git push
+
+git status
+
 exit #-----------------------------------------------------
 
 if [ ! -f temp/$1.tmp ]; then

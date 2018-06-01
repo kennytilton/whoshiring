@@ -108,6 +108,7 @@ function mkPageLoader( par, hnId, pgNo) {
                 } else if ( pgNo === undefined) {
                     return `files/${hnId}/${hnId}.html`
                 } else {
+                    clg(`iframe seeking files/${hnId}/${pgNo}.html`)
                     return `files/${hnId}/${pgNo}.html`
                 }
             })
@@ -129,7 +130,9 @@ function domAthings( dom) {
 }
 
 function jobsCollect(md) {
+    clg('collecting', md.pgNo)
     if (md.dom.contentDocument) {
+        clg('collecting dom', md.pgNo)
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
         let chunkSize = PARSE_CHUNK_SIZE
             , listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'))
@@ -184,11 +187,13 @@ function parseListings( md, listing, tempJobs, chunkSize, progressBar) {
                 window.requestAnimationFrame(() => chunker( offset + jct))
             else {
                 md.jobs = tempJobs;
+                clg('page loaded', md.pgNo, tempJobs.length)
                 frameZap(md);
                 //clg('post dom zap!!', domAthings(md.dom).length);
             }
         } else {
             md.jobs = tempJobs;
+            clg('page loaded', md.pgNo, tempJobs.length)
             frameZap(md);
         }
     }
