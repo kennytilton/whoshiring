@@ -160,7 +160,7 @@ function applied(j) {
 
 function excludeJob(j) {
     return span({
-            content: "&#x20e0"
+            content: "♪ &#x20E0;"
             , style: cF( c=> "font-size:2em; color:" + (j.excluded ? "red":"gray"))
             , onclick: mx => {
                 clg('bam')
