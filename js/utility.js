@@ -85,10 +85,10 @@ const hzFlexWrapCentered = {
 
 function helpToggle ( name, title, attrs={}) {
     return b( merge({
-            style: "cursor:pointer; margin-left:9px;"
+            style: "color:white; cursor:pointer; margin-left:9px;"
             , onclick: mx=> mx.onOff = !mx.onOff
             , title: title
-            , content: cF(c => c.md.onOff ? "&#x00bf" : "&#xfe56")
+            , content: cF(c => c.md.onOff ? "hide" : "help")
         }, attrs)
         , { name: name
             , onOff: cI( false)})

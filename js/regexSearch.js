@@ -15,7 +15,6 @@ function mkFullRgx() {
 function mkListingRgx(prop, lbl, desc, debug) {
     return labeledRow(lbl, input({
         placeholder: `Regex for ${desc} search`
-        , class: "listing-regex"
         , list: prop+"list"
         , onchange: buildRgxTree
         , value: debug || ''
@@ -39,7 +38,7 @@ function labeledRow(label, ...children) {
             style: {
                 display: "flex"
                 , flex_direction: "column"
-                , margin: "0px 18px 0px 18px"
+                , margin: "6px 18px 0px 18px"
 
             }
         }
@@ -65,7 +64,7 @@ function mkRgxOptions () {
 
 function mkRgxMatchCase() {
     return div({
-            style: "margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center"
+            style: "color: #fcfcfc; margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center"
         }
         , input({
                 id: "rgxMatchCase"
@@ -81,7 +80,7 @@ function mkRgxMatchCase() {
 }
 function mkRgxOrAnd() {
     return div({
-            style: "margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center"
+            style: "color: white; margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center"
             , title: "Replace 'or/and' with '||/&&' for easier mobile entry."
 
         }

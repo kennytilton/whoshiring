@@ -78,6 +78,10 @@ header .who {
     margin: 0 12px 0 0;
 }
 
+.listingRgx {
+    margin-top: 6px;
+}
+
 .osBody {
     padding: 6px;
 }

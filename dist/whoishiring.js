@@ -8229,10 +8229,10 @@ function onOffCheckbox(c) {
 var hzFlexWrap = {display:"flex", flex_wrap:"wrap"}, hzFlexWrapCentered = {display:"flex", flex_wrap:"wrap", align_items:"center"};
 function helpToggle(c, d, e) {
   e = void 0 === e ? {} : e;
-  return b(merge({style:"cursor:pointer; margin-left:9px;", onclick:function(c) {
+  return b(merge({style:"color:white; cursor:pointer; margin-left:9px;", onclick:function(c) {
     return c.onOff = !c.onOff;
   }, title:d, content:cF(function(c) {
-    return c.md.onOff ? "&#x00bf" : "&#xfe56";
+    return c.md.onOff ? "hide" : "help";
   })}, e), {name:c, onOff:cI(!1)});
 }
 function viewOnHN(c, d) {
@@ -8688,7 +8688,7 @@ function mkFullRgx() {
   return mkListingRgx("listing", "Full Listing", "title and listing");
 }
 function mkListingRgx(c, d, e, f) {
-  return labeledRow(d, input({placeholder:"Regex for " + e + " search", class:"listing-regex", list:c + "list", onchange:buildRgxTree, value:f || "", style:"min-width:72px;font-size:1em; height:2em"}, {name:c + "rgx", rgxRaw:cI(null), rgxTree:cI(null), history:cI([])}), datalist({id:c + "list"}, function(d) {
+  return labeledRow(d, input({placeholder:"Regex for " + e + " search", list:c + "list", onchange:buildRgxTree, value:f || "", style:"min-width:72px;font-size:1em; height:2em"}, {name:c + "rgx", rgxRaw:cI(null), rgxTree:cI(null), history:cI([])}), datalist({id:c + "list"}, function(d) {
     return d.md.fmUp(c + "rgx").history.map(function(c) {
       return option({value:c});
     });
@@ -8698,7 +8698,7 @@ function labeledRow(c, d) {
   for (var e = [], f = 1; f < arguments.length; ++f) {
     e[f - 1] = arguments[f];
   }
-  return div({style:{display:"flex", flex_direction:"column", margin:"0px 18px 0px 18px"}}, span({style:"color:white;font-size:0.7em"}, c), e);
+  return div({style:{display:"flex", flex_direction:"column", margin:"6px 18px 0px 18px"}}, span({style:"color:white;font-size:0.7em"}, c), e);
 }
 function mkRgxOptions() {
   return div(div({style:merge(hzFlexWrapCentered, {margin:"0 0 9px 18px"})}, mkRgxMatchCase(), mkRgxOrAnd(), helpToggle("rgxHelpToggle", "Show/hide app help")), ul({class:cF(function(c) {
@@ -8710,12 +8710,12 @@ function mkRgxOptions() {
   })));
 }
 function mkRgxMatchCase() {
-  return div({style:"margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center"}, input({id:"rgxMatchCase", type:"checkbox", onclick:function(c) {
+  return div({style:"color: #fcfcfc; margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center"}, input({id:"rgxMatchCase", type:"checkbox", onclick:function(c) {
     return c.value = !c.value;
   }, onchange:rebuildRgxTrees}, {name:"rgxMatchCase", value:cI(!1)}), label({for:"rgxMatchCase"}, "match case"));
 }
 function mkRgxOrAnd() {
-  return div({style:"margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center", title:"Replace 'or/and' with '||/&&' for easier mobile entry."}, input({id:"rgxOrAnd", type:"checkbox", checked:cF(function(c) {
+  return div({style:"color: white; margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center", title:"Replace 'or/and' with '||/&&' for easier mobile entry."}, input({id:"rgxOrAnd", type:"checkbox", checked:cF(function(c) {
     return c.md.value;
   }), onclick:function(c) {
     return c.value = !c.value;
