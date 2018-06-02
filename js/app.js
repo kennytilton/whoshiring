@@ -16,16 +16,18 @@ function WhoIsHiring() {
     return div(
         header(
             div( {
-                class: "about"
-                , onclick: mx=> mx.onOff = !mx.onOff
-                , title: title
-                , content: "about"
+                    class: "about"
+                    , onclick: mx=> mx.onOff = !mx.onOff
+                    , title: title
+                    , content: "about"
                 }
                 , { name: "appHelpToggle"
                     , onOff: cI( false)})
-        , div( { class: "headermain"}
+            , div( { class: "headermain"}
         , span( {class: "askhn"}, "Ask HN:")
-        , span( {class: "who"}, "Who&rsquo;s Hiring?")))
+        , span( {class: "who"}, "Who&rsquo;s Hiring?")
+            )
+            )
 
         , div( {
                 style: "margin:0px; background:#ffb57d"
