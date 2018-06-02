@@ -8198,7 +8198,7 @@ function openShutCase(c, d, e, f, g) {
     h[k - 4] = arguments[k];
   }
   var l = c + "-toggle";
-  return div(div({class:"selector", style:hzFlexWrap}, span({style:"margin-left:9px"}, d), toggleChar(l, "Show/hide " + d, e, "&#x25be", "&#x25b8"), f), div({class:cF(function(c) {
+  return div(div({class:"selector"}, span(d), toggleChar(l, "Show/hide " + d, e, "&#x25be", "&#x25b8"), f), div({class:cF(function(c) {
     return "osBody " + slideInRule(c, c.md.fmUp(l).onOff);
   }), style:cF(function(c) {
     return "background:#ff6600;display:" + (c.md.fmUp(l).onOff ? "block" : "none");
@@ -8210,7 +8210,7 @@ function openCase(c, d, e) {
   for (var f = [], g = 2; g < arguments.length; ++g) {
     f[g - 2] = arguments[g];
   }
-  return div(span({style:"margin-left:9px;min-width:48px"}, d), f.map(function(c) {
+  return div(span({style:"margin-left:24px;min-width:48px"}, d), f.map(function(c) {
     return c();
   }));
 }
@@ -8237,7 +8237,7 @@ function helpToggle(c, d, e) {
 }
 function viewOnHN(c, d) {
   d = void 0 === d ? {} : d;
-  return a(merge({style:"margin-left:12px", href:c, title:"View on the HN site"}, d), img({src:"dist/hn24.png"}));
+  return a(merge({href:c, title:"View on the HN site"}, d), img({src:"dist/hn24.png"}));
 }
 function myRange(c, d) {
   if (void 0 === c) {
@@ -8251,6 +8251,12 @@ function myRange(c, d) {
     e.push(n);
   }
   return e;
+}
+function merge(c) {
+  for (var d = [], e = 0; e < arguments.length; ++e) {
+    d[e - 0] = arguments[e];
+  }
+  return Object.assign.apply(Object, [{}].concat($jscomp.arrayFromIterable(d)));
 }
 ;Hiring.usernote = {};
 var UNOTE = "whoishiring.unote.", UserNotes = function(c) {
@@ -8279,7 +8285,7 @@ UserNotes.loadFromStorage = function() {
 };
 var UNote = UserNotes.loadFromStorage();
 function userAnnotations(c) {
-  return div({style:"display:flex; flex-direction: column"}, div({style:"display:flex; flex-wrap:wrap; align-items:center"}, jobStars(c), applied(c), noteToggle(c), viewOnHN("https://news.ycombinator.com/item?id=" + c.hnId)), noteEditor(c));
+  return div({style:"display:flex; flex-direction: column"}, div({class:"userAnnotations"}, jobStars(c), applied(c), noteToggle(c), viewOnHN("https://news.ycombinator.com/item?id=" + c.hnId)), noteEditor(c));
 }
 function noteToggle(c) {
   var d = UNote.dict[c.hnId];
@@ -8373,7 +8379,7 @@ function mkUserSelects() {
 function mkJobSelects(c, d, e, f) {
   f = void 0 === f ? {} : f;
   return div({style:merge(hzFlexWrap, {margin:"8px 0 8px 24px"}, f)}, e.map(function(d) {
-    return div({style:"min-width:96px"}, input({id:d[0] + "ID", class:c + "-jSelect", style:"", type:"checkbox", checked:cF(function(c) {
+    return div({style:"color: white; min-width:96px; align-items:center"}, input({id:d[0] + "ID", class:c + "-jSelect", style:"background:#eee", type:"checkbox", checked:cF(function(c) {
       return c.md.onOff;
     }), title:d[1], onclick:function(c) {
       return c.onOff = !c.onOff;
@@ -8434,7 +8440,7 @@ function jobSpecExtend(c, d, e) {
 ;Hiring.jobLoader = {};
 var SEARCH_MO_IDX = 0;
 function pickAMonth() {
-  return div({style:merge(hzFlexWrapCentered, {align_items:"center", margin:"0px 0px 9px 24px"})}, select({name:"searchMonth", class:"searchMonth", value:cI(gMonthlies[SEARCH_MO_IDX].hnId), onchange:function(c, d) {
+  return div({class:"pickAMonth"}, select({name:"searchMonth", class:"searchMonth", value:cI(gMonthlies[SEARCH_MO_IDX].hnId), onchange:function(c, d) {
     var e = c.fmUp("progress");
     ast(e);
     e.value = 0;
@@ -8448,7 +8454,7 @@ function pickAMonth() {
     return "https://news.ycombinator.com/item?id=" + c.md.fmUp("searchMonth").value;
   }), {hidden:cF(function(c) {
     return !c.md.fmUp("searchMonth").value;
-  })}), span({style:"margin: 0 12px 0 12px", hidden:cF(function(c) {
+  })}), span({style:"color: #fcfcfc; margin: 0 12px 0 12px", hidden:cF(function(c) {
     return !c.md.fmUp("searchMonth").value;
   }), content:cF(function(c) {
     var d = c.md.fmUp("progress");
@@ -8483,7 +8489,14 @@ function jobListingLoader() {
 }
 function mkPageLoader(c, d, e) {
   return iframe({src:cF(function(f) {
-    return null === d ? (clg("no modef.hnId!!!", c.pgNo, e), "") : void 0 === e ? "files/" + d + "/" + d + ".html" : "files/" + d + "/" + e + ".html";
+    if (null === d) {
+      return clg("no modef.hnId!!!", c.pgNo, e), "";
+    }
+    if (void 0 === e) {
+      return "files/" + d + "/" + d + ".html";
+    }
+    clg("iframe seeking files/" + d + "/" + e + ".html");
+    return "files/" + d + "/" + e + ".html";
   }), style:"display: none", onload:function(c) {
     return jobsCollect(c);
   }}, {jobs:cI(null), pgNo:e});
@@ -8494,7 +8507,9 @@ function domAthings(c) {
   return Array.prototype.slice.call(c.querySelectorAll(".athing"));
 }
 function jobsCollect(c) {
+  clg("collecting", c.pgNo);
   if (c.dom.contentDocument) {
+    clg("collecting dom", c.pgNo);
     hnBody = c.dom.contentDocument.getElementsByTagName("body")[0];
     var d = Array.prototype.slice.call(hnBody.querySelectorAll(".athing")), e = [], f = c.fmUp("progress");
     0 < d.length ? (f.maxN += Math.floor(d.length / PARSE_CHUNK_SIZE), parseListings(c, d, e, PARSE_CHUNK_SIZE, f)) : c.jobs = [];
@@ -8518,9 +8533,9 @@ function parseListings(c, d, e, f, g) {
       g.value += 1;
       30000 > e.length ? window.requestAnimationFrame(function() {
         return k(l + m);
-      }) : (c.jobs = e, frameZap(c));
+      }) : (c.jobs = e, clg("page loaded", c.pgNo, e.length), frameZap(c));
     } else {
-      c.jobs = e, frameZap(c);
+      c.jobs = e, clg("page loaded", c.pgNo, e.length), frameZap(c);
     }
   };
   k(0);
@@ -8555,7 +8570,7 @@ function controlPanel() {
 window.controlPanel = controlPanel;
 var jobSorts = [{title:"Creation", keyFn:jobHnIdKey}, {title:"Stars", compFn:jobStarsCompare}, {title:"Company", keyFn:jobCompanyKey}];
 function sortBar() {
-  return div({style:{padding:"0 0 0 0", margin:"15px 0 0 9px", display:"flex"}}, span("Sort&nbsp"), ul({style:merge(hzFlexWrap, {padding:"0 0 0 0", margin:"0 0 0 0"})}, {name:"sortby", order:cI(1), selection:cI(jobSorts[0]), sortSpec:cF(function(c) {
+  return div({style:{padding:"0 0 0 0", margin:"15px 0 0 24px", display:"flex"}}, span("Sort&nbsp"), ul({style:merge(hzFlexWrap, {padding:"0 0 0 0", margin:"0 0 0 0"})}, {name:"sortby", order:cI(1), selection:cI(jobSorts[0]), sortSpec:cF(function(c) {
     return merge(c.md.selection, {order:c.md.order});
   })}, jobSorts.map(function(c) {
     return button({selected:cF(function(d) {
@@ -8734,14 +8749,10 @@ function rebuildRgxTree(c) {
     });
   });
 }
-;function merge(c) {
-  for (var d = [], e = 0; e < arguments.length; ++e) {
-    d[e - 0] = arguments[e];
-  }
-  return Object.assign.apply(Object, [{}].concat($jscomp.arrayFromIterable(d)));
-}
-function WhoIsHiring() {
-  return div(header(helpToggle("appHelpToggle", "Show/hide app info/help", {style:"cursor:pointer; font-size:0.3em; margin:6px 0 0 6px", content:"help"}), span({class:"askhn"}, "Ask HN:"), span({class:"who"}, "Who&rsquo;s Hiring?")), div({style:"margin:0px; background:#ffb57d"}, appHelper(), jobListingLoader(), pickAMonth(), div({class:cF(function(c) {
+;function WhoIsHiring() {
+  return div(header(div({class:"about", onclick:function(c) {
+    return c.onOff = !c.onOff;
+  }, title:title, content:"about"}, {name:"appHelpToggle", onOff:cI(!1)}), div({class:"headermain"}, span({class:"askhn"}, "Ask HN:"), span({class:"who"}, "Who&rsquo;s Hiring?"))), div({style:"margin:0px; background:#ffb57d"}, appHelper(), jobListingLoader(), pickAMonth(), div({class:cF(function(c) {
     return slideInRule(c, c.md.fmUp("searchMonth").value);
   }), style:cF(function(c) {
     return "display:" + (c.md.fmUp("searchMonth").value ? "block" : "none");
