@@ -57,23 +57,20 @@ function appHelp () {
             class: cF( c=> "help " + slideInRule(c, c.md.fmUp("appHelpToggle").onOff))
             , style: cF( c=> "list-style:circle; display:" + (c.md.fmUp("appHelpToggle").onOff? "block":"none"))
         }
-        , appHelpEntry.map( e=> li({style: "margin-bottom:9px;"}, e)))
+        , appHelpEntry.map( e=> li({style: "padding:6px;margin-bottom:9px;"}, e)))
 }
 
 const appHelpEntry = [
     "Click any job header to show or hide the full listing."
-    , "All filters are ANDed."
-    , "Your notes and stars are kept in local storage; stick to one browser."
-    ,"Static page scrape may fall behind actual jobs during the early rush, so..."
-    , "...clone the " +
-    "<a href='https://github.com/kennytilton/whoshiring'>GitHub project</a> " +
-    "and run yourself to control currency."
+    , "All filters are ANDed except as you direct in RegExp fields."
+    , "Your edits are kept in local storage, so stick to one browser."
+    ,"Works off page scrapes taken every fifteen minutes. Ping kentilton at gmail if they seem stopped."
     , "RFEs welcome and can be raised " +
     "<a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. "
-    , "Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>Matrix Inside&trade;</a>."
+    , "Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>Matrix Inside</a>&trade;."
     , "This page is not affiliated with Hacker News, except..."
     , "..thanks to the HN crew for their assistance. All screw-ups remain " +
-    "<a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton's</a>."
+    "<a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton</a>'s."
     , "Graphic design by <a href='https://www.mloboscoart.com'>Michael Lobosco</a>. Implementation screw-ups are " +
     "Kenny's</a>."
 ]

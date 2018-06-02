@@ -34,11 +34,11 @@ header {
 }
 header .about {
     color: #fcfcfc;
-    font-size: 0.7em;
+    font-size: 1em;
     /*float: right;*/
     cursor: pointer;
     text-align: right;
-    margin: 6px 6px 0 0;
+    margin: 0px 18px 0 0;
 }
 header .headermain {
     font-size: 1.7em;
@@ -62,7 +62,7 @@ header .who {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin: 9px 0 9px 24px;
+    margin: 9px 0 9px 30px;
 }
 
 .searchMonth {

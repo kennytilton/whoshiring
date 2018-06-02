@@ -100,12 +100,10 @@ function mkPageLoader( par, hnId, pgNo) {
     return iframe({
             src: cF(c => {
                 if  (hnId === null) {
-                    clg('no modef.hnId!!!', par.pgNo, pgNo)
                     return ""
                 } else if ( pgNo === undefined) {
                     return `files/${hnId}/${hnId}.html`
                 } else {
-                    clg(`iframe seeking files/${hnId}/${pgNo}.html`)
                     return `files/${hnId}/${pgNo}.html`
                 }
             })
@@ -127,9 +125,7 @@ function domAthings( dom) {
 }
 
 function jobsCollect(md) {
-    clg('collecting', md.pgNo)
     if (md.dom.contentDocument) {
-        clg('collecting dom', md.pgNo)
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
         let chunkSize = PARSE_CHUNK_SIZE
             , listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'))
@@ -152,7 +148,6 @@ function parseListings( md, listing, tempJobs, chunkSize, progressBar) {
         , totchar =0
         , chunker = offset => {
         let jct = Math.min( total - offset, chunkSize)
-        //clg('chunker', jct, total, offset)
 
         if (jct > 0) {
             for (jn = 0; jn < jct; ++jn) {

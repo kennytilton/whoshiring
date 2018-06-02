@@ -38,7 +38,7 @@ function labeledRow(label, ...children) {
             style: {
                 display: "flex"
                 , flex_direction: "column"
-                , margin: "6px 18px 0px 18px"
+                , margin: "6px 18px 0px 30px"
 
             }
         }
@@ -50,7 +50,7 @@ function labeledRow(label, ...children) {
 
 function mkRgxOptions () {
     return div(
-        div({style: merge( hzFlexWrapCentered, {margin: "0 0 9px 18px"})}
+        div({style: merge( hzFlexWrapCentered, {padding_right:"12px", margin: "4px 0 9px 30px"})}
             , mkRgxMatchCase()
             , mkRgxOrAnd()
             , helpToggle( "rgxHelpToggle", "Show/hide app help"))
