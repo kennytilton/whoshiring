@@ -30,7 +30,7 @@ class UserNotes extends MXStorable {
 
     static storableProperties() {
         // created and deleted are provided by MXStorable
-        return ["id", "hnId", "stars", "hidden", "applied", "notes"].concat(super.storableProperties());
+        return ["id", "hnId", "excluded", "stars", "hidden", "applied", "notes"].concat(super.storableProperties());
     }
 
     static loadFromStorage() {
@@ -60,10 +60,9 @@ function userAnnotations(j) {
     //clg('uannot', j.hnId, j.company)
     return div( {style: "display:flex; flex-direction: column"}
         , div ( { class: "userAnnotations"}
-            // , excludeJob(j)
+            , excludeJob(j)
             , jobStars(j)
             , applied(j)
-            , excludeJob(j)
             , noteToggle(j)
             , viewOnHN(`https://news.ycombinator.com/item?id=${j.hnId}`))
         // beneath that
@@ -160,10 +159,13 @@ function applied(j) {
 
 function excludeJob(j) {
     return span({
-            content: "♪ &#x20E0;"
-            , style: cF( c=> "font-size:2em; color:" + (j.excluded ? "red":"gray"))
+            content: "&#x20E0;"
+            , style: cF( c=> {
+                let unote = UNote.dict[j.hnId];
+                return "font-size:1.5em;" +
+                    (unote.excluded ? "color:red;font-weight:bolder" : "color:black")
+            })
             , onclick: mx => {
-                clg('bam')
                 let unote = UNote.dict[j.hnId]
                     , newv = !(unote.excluded || false);
                 clg('bam', (unote.excluded || false), newv)
