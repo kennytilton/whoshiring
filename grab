@@ -5,6 +5,7 @@ if [ ! $1 ]; then
     exit
 fi
 
+
 echo "FYI: PWD is $PWD"
 
 if [ ! ${PWD##*/} = "whoshiring" ]; then
@@ -22,29 +23,36 @@ mkdir -p files/backup/$1
 rm files/temp/$1/*.*
 touch files/temp/$1/hn.js
 
-for ((x=1;x<=MAX_P;x++)); do
-      echo "x=$x"
-      curl  "https://news.ycombinator.com/item?id=$1&p=$x" > files/temp/$1/$x.html
-      ./iframify files/temp/$1/$x.html
+while true
+do
+  rm files/temp/$1/*.html
+  for ((x=1;x<=MAX_P;x++)); do
+        echo "x=$x"
+        curl  "https://news.ycombinator.com/item?id=$1&p=$x" > files/temp/$1/$x.html
+        ./iframify files/temp/$1/$x.html
+  done
+
+  rm -r files/backup/$1
+  cp -r files/$1 files/backup/$1
+
+  rm -r files/$1
+  cp -r files/temp/$1 files/$1
+
+  ls -al files/$1
+
+  git status
+
+  git add files/$1
+
+  git commit -am "scrape HN askHn $1"
+
+  git push
+
+  git status
+  echo "sleeping"
+  sleep 60
 done
 
-rm -r files/backup/$1
-cp -r files/$1 files/backup/$1
-
-rm -r files/$1
-cp -r files/temp/$1 files/$1
-
-ls -al files/$1
-
-git status
-
-git add files/$1
-
-git commit -am "scrape HN askHn $1"
-
-git push
-
-git status
 
 exit #-----------------------------------------------------
 
