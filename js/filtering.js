@@ -15,6 +15,7 @@ function jobListFilter(mx, jobs) {
         , onsiteok = mx.fmUp("ONSITE").onOff
         , visaok = mx.fmUp("VISA").onOff
         , internok = mx.fmUp("INTERNS").onOff
+        , excluded = mx.fmUp("Excluded").onOff
         , starred = mx.fmUp("Starred").onOff
         , applied = mx.fmUp("Applied").onOff
         , noted = mx.fmUp("Noted").onOff
@@ -43,6 +44,7 @@ function jobListFilter(mx, jobs) {
         .filter(j => !visaok || j.visa)
         .filter(j => !internok || j.intern)
         .filter(j => !applied || UNote.dict[j.hnId].applied)
+        .filter(j => excluded || !UNote.dict[j.hnId].excluded)
         .filter(j => !starred || UNote.dict[j.hnId].stars > 0)
         .filter(j => !noted || UNote.dict[j.hnId].notes)
 
@@ -73,13 +75,16 @@ const titleSelects = [["REMOTE", "Does regex search of title for remote jobs"]
     , ["INTERNS", "Does regex search of title for internships"]
     , ["VISA", "Does regex search of title for Visa sponsors"]]
 
-const userSelects = [["Starred", "Show only jobs you have rated with stars"]
+const userSelects = [
+    ["Excluded", "Show jobs you exluded from view"]
+    , ["Starred", "Show only jobs you have rated with stars"]
     , ["Applied", "Show only jobs you have marked as applied to"]
     , ["Noted", "Show only jobs on which you have made a note"]]
 
 function mkTitleSelects() {
     return mkJobSelects("title", "Title selects", titleSelects)
 }
+
 function mkUserSelects() {
     return mkJobSelects("user", "User selects", userSelects)
 }

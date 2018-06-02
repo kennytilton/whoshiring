@@ -60,7 +60,7 @@ function userAnnotations(j) {
     //clg('uannot', j.hnId, j.company)
     return div( {style: "display:flex; flex-direction: column"}
         , div ( { class: "userAnnotations"}
-            , excludeJob(j)
+            //, excludeJob(j)
             , jobStars(j)
             , applied(j)
             , noteToggle(j)
@@ -110,9 +110,9 @@ function noteEditor (j) {
 const MAX_STARS = 3;
 
 function jobStars(j) {
-    return div({style: "margin-left:6px; display:flex; flex-wrap:wrap"}
+    return div({style: hzFlexWrapCentered}
         , c => {
-            let stars = []
+            let stars = [excludeJob(j)]
                 , unote = UNote.dict[j.hnId];
             //clg('starring', j.hnId, j.company)
             for (let n = 0; n < MAX_STARS; ++n)
@@ -128,6 +128,27 @@ function jobStars(j) {
                 , {starN: n + 1}))
             return stars
         })
+}
+
+// --- exclude from view by default -----------------------------------
+
+function excludeJob(j) {
+    return span({
+            content: "&#x20E0;"
+            , style: cF( c=> {
+                let unote = UNote.dict[j.hnId];
+                return "margin-right:4px;font-size:1em;" +
+                    (unote.excluded ? "color:red;font-weight:bolder" : "color:black")
+            })
+            , onclick: mx => {
+                let unote = UNote.dict[j.hnId]
+                    , newv = !(unote.excluded || false);
+                clg('bam', (unote.excluded || false), newv)
+                unote.excluded = newv
+            }
+
+        }
+        , {name: "excluded?"})
 }
 
 
@@ -155,23 +176,3 @@ function applied(j) {
         label({for: "applied?"+j.hnId}, "Applied"))
 }
 
-// --- exclude from view by default -----------------------------------
-
-function excludeJob(j) {
-    return span({
-            content: "&#x20E0;"
-            , style: cF( c=> {
-                let unote = UNote.dict[j.hnId];
-                return "font-size:1.5em;" +
-                    (unote.excluded ? "color:red;font-weight:bolder" : "color:black")
-            })
-            , onclick: mx => {
-                let unote = UNote.dict[j.hnId]
-                    , newv = !(unote.excluded || false);
-                clg('bam', (unote.excluded || false), newv)
-                unote.excluded = newv
-            }
-
-        }
-        , {name: "excluded?"})
-}
