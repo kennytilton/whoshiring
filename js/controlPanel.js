@@ -46,7 +46,7 @@ const jobSorts = [
     ]
 
 function sortBar() {
-    return div( {style: { padding: "0 0 0 0", margin: "15px 0 0 9px"
+    return div( {style: { padding: "0 0 0 0", margin: "15px 0 0 24px"
             , display: "flex"}}
     , span("Sort&nbsp")
     , ul({

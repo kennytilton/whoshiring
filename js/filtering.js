@@ -86,11 +86,11 @@ function mkUserSelects() {
 
 function mkJobSelects( key, lbl, jSelects, styling = {}) {
     return div( { style: merge( hzFlexWrap, {"margin":"8px 0 8px 24px"}, styling)}
-        , jSelects.map( info => div( {style: "min-width:96px"}
+        , jSelects.map( info => div( {style: "color: white; min-width:96px; align-items:center"}
             , input({
                     id: info[0]+"ID"
                     , class: key + "-jSelect"
-                    , style: ""
+                    , style: "background:#eee"
                     , type: "checkbox"
                     , checked: cF(c => c.md.onOff)
                     , title: info[1]

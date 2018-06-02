@@ -10,10 +10,7 @@ goog.provide('Hiring.jobLoader')
 const SEARCH_MO_IDX = 0;
 
 function pickAMonth() {
-    return div ({style: merge( hzFlexWrapCentered, {
-            align_items: "center"
-            , margin: "9px 0px 9px 40px"})}
-
+    return div ({ class: "pickAMonth"}
         , select( {
                 name: "searchMonth"
                 , class: "searchMonth"

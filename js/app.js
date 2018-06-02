@@ -15,12 +15,15 @@ goog.require('Hiring.regexSearch')
 function WhoIsHiring() {
     return div(
         header(
-        helpToggle( "appHelpToggle", "Show/hide app info/help", {
-            class: "about"
-            , content: "about/help"})
-        , div( {
-                    class: "headermain"
+            div( {
+                class: "about"
+                , onclick: mx=> mx.onOff = !mx.onOff
+                , title: title
+                , content: "about"
                 }
+                , { name: "appHelpToggle"
+                    , onOff: cI( false)})
+        , div( { class: "headermain"}
         , span( {class: "askhn"}, "Ask HN:")
         , span( {class: "who"}, "Who&rsquo;s Hiring?"))
     )
