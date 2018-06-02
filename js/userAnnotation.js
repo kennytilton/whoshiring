@@ -63,6 +63,7 @@ function userAnnotations(j) {
             // , excludeJob(j)
             , jobStars(j)
             , applied(j)
+            , excludeJob(j)
             , noteToggle(j)
             , viewOnHN(`https://news.ycombinator.com/item?id=${j.hnId}`))
         // beneath that
@@ -155,21 +156,20 @@ function applied(j) {
         label({for: "applied?"+j.hnId}, "Applied"))
 }
 
-// function excludeJob(j) {
-//     return span({
-//                 id: "excluded?"+j.hnId
-//         , content: "&#x20e0"
-//         , style: cF( c=> "color:" + (c.md.onOff ? "red":"gray"))
-//                 , checked: cF(c => {
-//                     let unote = UNote.dict[j.hnId];
-//                     return unote.excluded || false
-//                 })
-//                 , onclick: mx => {
-//                     let unote = UNote.dict[j.hnId]
-//                         , newv = !unote.excluded;
-//                     unote.excluded = newv
-//                 }
-//
-//             }
-//             , {name: "excluded?"})
-// }
+// --- exclude from view by default -----------------------------------
+
+function excludeJob(j) {
+    return span({
+            content: "&#x20e0"
+            , style: cF( c=> "font-size:2em; color:" + (j.excluded ? "red":"gray"))
+            , onclick: mx => {
+                clg('bam')
+                let unote = UNote.dict[j.hnId]
+                    , newv = !(unote.excluded || false);
+                clg('bam', (unote.excluded || false), newv)
+                unote.excluded = newv
+            }
+
+        }
+        , {name: "excluded?"})
+}
