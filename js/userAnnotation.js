@@ -110,7 +110,7 @@ function noteEditor (j) {
 const MAX_STARS = 3;
 
 function jobStars(j) {
-    return div({style: hzFlexWrapCentered}
+    return div({style: hzFlexWrapBottom}
         , c => {
             let stars = [excludeJob(j)]
                 , unote = UNote.dict[j.hnId];
@@ -118,7 +118,7 @@ function jobStars(j) {
             for (let n = 0; n < MAX_STARS; ++n)
                 stars.push( span({
                     content: "&#x2605"
-                    , style: cF( c=> "cursor:pointer;color:" +
+                    , style: cF( c=> "margin-top:6px;cursor:pointer;color:" +
                         (unote.stars >= c.md.starN ? "red;":"gray;"))
                     , onclick: mx => {
                         let li = mx.fmUp("job-listing")
@@ -137,7 +137,7 @@ function excludeJob(j) {
             content: "&#x20E0;"
             , style: cF( c=> {
                 let unote = UNote.dict[j.hnId];
-                return "margin-right:4px;font-size:1em;" +
+                return "margin:4px 4px 8px 0;font-size:1em;" +
                     (unote.excluded ? "color:red;font-weight:bolder" : "color:black")
             })
             , onclick: mx => {

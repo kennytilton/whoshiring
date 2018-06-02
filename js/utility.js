@@ -83,6 +83,12 @@ const hzFlexWrapCentered = {
     , align_items: "center"
 }
 
+const hzFlexWrapBottom = {
+    display: "flex"
+    , flex_wrap: "wrap"
+    , align_items: "bottom"
+}
+
 function helpToggle ( name, title, attrs={}) {
     return b( merge({
             style: "color:white; cursor:pointer; margin-left:9px;"

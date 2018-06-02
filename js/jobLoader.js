@@ -60,7 +60,7 @@ function pickAMonth() {
 
 
 function jobListingLoader() {
-    return div( {}
+    return div( { style: "visibility:collapsed;"}
     , {
             name: "jobLoader"
             , jobs: cF(c => {

@@ -25,14 +25,14 @@ function WhoIsHiring() {
                     , onOff: cI( false)})
         , div( { class: "headermain"}
         , span( {class: "askhn"}, "Ask HN:")
-        , span( {class: "who"}, "Who&rsquo;s Hiring?"))
-    )
+        , span( {class: "who"}, "Who&rsquo;s Hiring?")))
+
         , div( {
                 style: "margin:0px; background:#ffb57d"
             }
-            , appHelper()
-            , jobListingLoader() // hidden iFrame where we load HN page for scraping
+            , helpList(appHelpEntry,"appHelpToggle")
             , pickAMonth()
+            , jobListingLoader() // hidden iFrame where we load HN page for scraping
             , div( { class: cF( c=> slideInRule(c, c.md.fmUp("searchMonth").value))
                     , style: cF( c=> "display:" + (c.md.fmUp("searchMonth").value? "block":"none"))}
                 , controlPanel()
@@ -41,24 +41,6 @@ function WhoIsHiring() {
 }
 
 window['WhoIsHiring'] = WhoIsHiring;
-
-// --- app header ---------------------------------------------
-
-function appHelper () {
-    return div( {style: hzFlexWrap}
-        // , helpToggle( "appHelpToggle", "Show/hide app help")
-        , appHelp())
-}
-
-// --- app help ----------------------------------------------
-
-function appHelp () {
-    return ul({
-            class: cF( c=> "help " + slideInRule(c, c.md.fmUp("appHelpToggle").onOff))
-            , style: cF( c=> "list-style:circle; display:" + (c.md.fmUp("appHelpToggle").onOff? "block":"none"))
-        }
-        , appHelpEntry.map( e=> li({style: "padding:6px;margin-bottom:9px;"}, e)))
-}
 
 const appHelpEntry = [
     "Click any job header to show or hide the full listing."

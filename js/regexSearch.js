@@ -53,13 +53,23 @@ function mkRgxOptions () {
         div({style: merge( hzFlexWrapCentered, {padding_right:"12px", margin: "4px 0 9px 30px"})}
             , mkRgxMatchCase()
             , mkRgxOrAnd()
-            , helpToggle( "rgxHelpToggle", "Show/hide app help"))
+            , helpToggle( "rgxHelpToggle", "Show/hide RegExp help"))
+        , helpList(regexHelp,"rgxHelpToggle")
+    )
+}
 
-        , ul({
-                class: cF(c => "help " + slideInRule(c, c.md.fmUp("rgxHelpToggle").onOff))
-                , style: cF(c => "display:" + (c.md.fmUp("rgxHelpToggle").onOff ? "block" : "none"))
-            }
-            , regexHelp.map(h => li(h))))
+function helpList ( helpItems, toggleName) {
+    return div( {
+            class: cF( c=> "help " + slideInRule(c, c.md.fmUp( toggleName).onOff))
+            , style: cF( c=> "display:" + (c.md.fmUp(toggleName).onOff? "block":"none"))
+            , onclick: mx => mx.fmUp(toggleName).onOff = false
+        }
+        ,div({style: "cursor:pointer;text-align: right;"
+            , onclick: mx => mx.fmUp(toggleName).onOff = false}, "X")
+        , ul({ style: "list-style:none"}
+            , helpItems.map( e=> li({style: "padding:0px;margin-bottom:9px;"}, e)))
+
+    )
 }
 
 function mkRgxMatchCase() {
