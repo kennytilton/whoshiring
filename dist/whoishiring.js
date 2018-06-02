@@ -8226,7 +8226,7 @@ function onOffCheckbox(c) {
     return c.onOff = !c.onOff;
   }}, {name:c, onOff:cI(!1)}), label({for:name + "ID" + f, title:d}, e));
 }
-var hzFlexWrap = {display:"flex", flex_wrap:"wrap"}, hzFlexWrapCentered = {display:"flex", flex_wrap:"wrap", align_items:"center"};
+var hzFlexWrap = {display:"flex", flex_wrap:"wrap"}, hzFlexWrapCentered = {display:"flex", flex_wrap:"wrap", align_items:"center"}, hzFlexWrapBottom = {display:"flex", flex_wrap:"wrap", align_items:"bottom"};
 function helpToggle(c, d, e) {
   e = void 0 === e ? {} : e;
   return b(merge({style:"color:white; cursor:pointer; margin-left:9px;", onclick:function(c) {
@@ -8307,11 +8307,11 @@ function noteEditor(c) {
 }
 var MAX_STARS = 3;
 function jobStars(c) {
-  return div({style:hzFlexWrapCentered}, function(d) {
+  return div({style:hzFlexWrapBottom}, function(d) {
     d = [excludeJob(c)];
     for (var e = UNote.dict[c.hnId], f = 0; f < MAX_STARS; ++f) {
       d.push(span({content:"&#x2605", style:cF(function(c) {
-        return "cursor:pointer;color:" + (e.stars >= c.md.starN ? "red;" : "gray;");
+        return "margin-top:6px;cursor:pointer;color:" + (e.stars >= c.md.starN ? "red;" : "gray;");
       }), onclick:function(c) {
         c.fmUp("job-listing");
         e.stars = e.stars === c.starN ? 0 : c.starN;
@@ -8322,7 +8322,7 @@ function jobStars(c) {
 }
 function excludeJob(c) {
   return span({content:"&#x20E0;", style:cF(function(d) {
-    return "margin-right:4px;font-size:1em;" + (UNote.dict[c.hnId].excluded ? "color:red;font-weight:bolder" : "color:black");
+    return "margin:4px 4px 8px 0;font-size:1em;" + (UNote.dict[c.hnId].excluded ? "color:red;font-weight:bolder" : "color:black");
   }), onclick:function(d) {
     d = UNote.dict[c.hnId];
     var e = !d.excluded;
@@ -8357,7 +8357,7 @@ function jobListFilter(c, d) {
   }).filter(function(c) {
     return !m || UNote.dict[c.hnId].applied;
   }).filter(function(c) {
-    return k || !UNote.dict[c.hnId].excluded;
+    return k === UNote.dict[c.hnId].excluded;
   }).filter(function(c) {
     return !l || 0 < UNote.dict[c.hnId].stars;
   }).filter(function(c) {
@@ -8479,7 +8479,7 @@ function pickAMonth() {
   }), value:cI(0)}, {name:"progress", maxN:cI(0), seen:cI(new Set)})));
 }
 function jobListingLoader() {
-  return div({}, {name:"jobLoader", jobs:cF(function(c) {
+  return div({style:"visibility:collapsed;"}, {name:"jobLoader", jobs:cF(function(c) {
     c = c.md.kids.map(function(c) {
       return c.jobs;
     });
@@ -8704,12 +8704,19 @@ function labeledRow(c, d) {
   return div({style:{display:"flex", flex_direction:"column", margin:"6px 18px 0px 30px"}}, span({style:"color:white;font-size:0.7em"}, c), e);
 }
 function mkRgxOptions() {
-  return div(div({style:merge(hzFlexWrapCentered, {padding_right:"12px", margin:"4px 0 9px 30px"})}, mkRgxMatchCase(), mkRgxOrAnd(), helpToggle("rgxHelpToggle", "Show/hide app help")), ul({class:cF(function(c) {
-    return "help " + slideInRule(c, c.md.fmUp("rgxHelpToggle").onOff);
+  return div(div({style:merge(hzFlexWrapCentered, {padding_right:"12px", margin:"4px 0 9px 30px"})}, mkRgxMatchCase(), mkRgxOrAnd(), helpToggle("rgxHelpToggle", "Show/hide RegExp help")), helpList(regexHelp, "rgxHelpToggle"));
+}
+function helpList(c, d) {
+  return div({class:cF(function(c) {
+    return "help " + slideInRule(c, c.md.fmUp(d).onOff);
   }), style:cF(function(c) {
-    return "display:" + (c.md.fmUp("rgxHelpToggle").onOff ? "block" : "none");
-  })}, regexHelp.map(function(c) {
-    return li(c);
+    return "display:" + (c.md.fmUp(d).onOff ? "block" : "none");
+  }), onclick:function(c) {
+    return c.fmUp(d).onOff = !1;
+  }}, div({style:"cursor:pointer;text-align: right;", onclick:function(c) {
+    return c.fmUp(d).onOff = !1;
+  }}, "X"), ul({style:"list-style:none"}, c.map(function(c) {
+    return li({style:"padding:0px;margin-bottom:9px;"}, c);
   })));
 }
 function mkRgxMatchCase() {
@@ -8755,24 +8762,12 @@ function rebuildRgxTree(c) {
 ;function WhoIsHiring() {
   return div(header(div({class:"about", onclick:function(c) {
     return c.onOff = !c.onOff;
-  }, title:title, content:"about"}, {name:"appHelpToggle", onOff:cI(!1)}), div({class:"headermain"}, span({class:"askhn"}, "Ask HN:"), span({class:"who"}, "Who&rsquo;s Hiring?"))), div({style:"margin:0px; background:#ffb57d"}, appHelper(), jobListingLoader(), pickAMonth(), div({class:cF(function(c) {
+  }, title:title, content:"about"}, {name:"appHelpToggle", onOff:cI(!1)}), div({class:"headermain"}, span({class:"askhn"}, "Ask HN:"), span({class:"who"}, "Who&rsquo;s Hiring?"))), div({style:"margin:0px; background:#ffb57d"}, helpList(appHelpEntry, "appHelpToggle"), pickAMonth(), jobListingLoader(), div({class:cF(function(c) {
     return slideInRule(c, c.md.fmUp("searchMonth").value);
   }), style:cF(function(c) {
     return "display:" + (c.md.fmUp("searchMonth").value ? "block" : "none");
   })}, controlPanel(), jobList())));
 }
 window.WhoIsHiring = WhoIsHiring;
-function appHelper() {
-  return div({style:hzFlexWrap}, appHelp());
-}
-function appHelp() {
-  return ul({class:cF(function(c) {
-    return "help " + slideInRule(c, c.md.fmUp("appHelpToggle").onOff);
-  }), style:cF(function(c) {
-    return "list-style:circle; display:" + (c.md.fmUp("appHelpToggle").onOff ? "block" : "none");
-  })}, appHelpEntry.map(function(c) {
-    return li({style:"padding:6px;margin-bottom:9px;"}, c);
-  }));
-}
 var appHelpEntry = "Click any job header to show or hide the full listing.{All filters are ANDed except as you direct in RegExp fields.{Your edits are kept in local storage, so stick to one browser.{Works off page scrapes taken every fifteen minutes. Ping kentilton at gmail if they seem stopped.{RFEs welcome and can be raised <a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. {Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>Matrix Inside</a>&trade;.{This page is not affiliated with Hacker News, except...{..thanks to the HN crew for their assistance. All screw-ups remain <a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton</a>'s.{Graphic design by <a href='https://www.mloboscoart.com'>Michael Lobosco</a>. Implementation screw-ups are Kenny's</a>.".split("{");
 
