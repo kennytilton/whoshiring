@@ -51,7 +51,13 @@ function jobListItem(c, j) {
 }
 
 function jobHeader(j) {
-    return div( { style: "cursor:pointer; display:flex"}
+    return div( {
+            style: "cursor:pointer; display:flex"
+            , onclick: mx => {
+                let mol = mx.fmDown("showDetails")
+                mol.onOff = !mol.onOff
+            }
+        }
         , toggleFullListing( )
 
         // if the job is collapsed so we cannot see the stars, at least
@@ -63,14 +69,16 @@ function jobHeader(j) {
                 return "color:red;max-height:16px;margin-right:9px; display:" +
                     ( ((mol.onOff || !un || !un.stars || un.stars === 0))? "none":"block") // || (un && un.stars===0)
             })}
-        ,"&#x2b51")
+            ,"&#x2b51")
 
         // .. and now the job header much as it appears on HN
-        , span({onclick: mx=> {
-            let mol = mx.fmUp("showDetails")
-            mol.onOff = !mol.onOff
+        , span({
+            onclick: mx=> {
+                let mol = mx.fmUp("showDetails")
+                mol.onOff = !mol.onOff
 
-        }}, j.titlesearch))
+            }
+        }, j.titlesearch))
 }
 
 function jobDetails (j) {

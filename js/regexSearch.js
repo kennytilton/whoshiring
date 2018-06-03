@@ -17,6 +17,7 @@ function mkListingRgx(prop, lbl, desc, debug) {
         placeholder: `Regex for ${desc} search`
         , list: prop+"list"
         , onchange: buildRgxTree
+        , onfocus: mx => mx.dom.setSelectionRange(0, mx.dom.value.length)
         , value: debug || ''
             // , style: "min-width:72px;width:300px;font-size:1em"
             , style: "min-width:72px;font-size:1em; height:2em"

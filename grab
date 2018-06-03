@@ -40,17 +40,14 @@ do
 
   ls -al files/$1
 
-  git status
+  if [ ! -z "$2" ]; then
+    s=$(( 60*$2 ))
+   echo "sleeping $2 minutes"
+   sleep $s
+  else
+   break
+  fi
 
-  git add files/$1
-
-  git commit -am "scrape HN askHn $1"
-
-  git push
-
-  git status
-  echo "sleeping 15min..."
-  sleep 900
 done
 
 
