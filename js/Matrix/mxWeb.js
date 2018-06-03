@@ -136,7 +136,7 @@ var AttrAliases = new Map([['class','className']]);
 function obsAttrGlobal (property, md, newv, oldv, c) {
     if (oldv===kUnbound) return; // on awaken all HTML is assembled at once
     let trueAttr = AttrAliases.get(property) || property;
-    domlog( 'attr global', property, newv, oldv);
+   // clg( 'attr global', property, newv, oldv);
     md.dom[trueAttr] = newv;
 }
 

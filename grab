@@ -13,7 +13,7 @@ if [ ! ${PWD##*/} = "whoshiring" ]; then
     exit
 fi
 
-MAX_P=4
+MAX_P=3
 
 echo "Grabbing HN message $1 at URLs https://news.ycombinator.com/item?id=$1/p=1..$MAX_P"
 

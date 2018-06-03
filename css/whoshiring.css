@@ -85,6 +85,10 @@ header .who {
     padding: 6px;
 }
 
+.workingworking {
+    cursor:wait;
+}
+
 .help {
     margin: 0px;
     padding: 6px;

@@ -11,6 +11,8 @@ function jobListFilter(mx, jobs) {
     if ( !jobs) return []
     //clg("jobListFilter sees job ct", jobs.length, jobs[0])
 
+    // document.getElementsByTagName('body')[0].class += " workingworking"
+
     let remoteok = mx.fmUp("REMOTE").onOff
         , onsiteok = mx.fmUp("ONSITE").onOff
         , visaok = mx.fmUp("VISA").onOff
@@ -24,22 +26,8 @@ function jobListFilter(mx, jobs) {
         , listingRgx = mx.fmUp("listingrgx").rgxTree;
 
 
-/*    if (titleRgx) {
-        clg('inputs', jobs.length, titleRgx.join(',"'));
 
-        jobs.map( j => {
-        if (j.titlesearch.match( /skim/i )) {
-            clg('BAM2', j.hnId, j.company, j.titlesearch)
-        } else if (j.titlesearch.search("SKIM") !== -1) {
-            clg('BAM3', j.hnId, j.company, j.titlesearch)
-        } else if (rgxTreeMatch(j.titlesearch, titleRgx)) {
-            clg('BAM4', j.company, j.titlesearch)
-        }
-    })}*/
-
-    //return jobs.filter(j => !titleRgx || rgxTreeMatch(j.titlesearch, titleRgx))
-
-    return jobs.filter(j => !remoteok || j.remote)
+    let result = jobs.filter(j => !remoteok || j.remote)
         .filter(j => !onsiteok || j.onsite)
         .filter(j => !visaok || j.visa)
         .filter(j => !internok || j.intern)
@@ -51,7 +39,11 @@ function jobListFilter(mx, jobs) {
         .filter(j => !titleRgx || rgxTreeMatch(j.titlesearch, titleRgx))
         .filter(j => !listingRgx
             || rgxTreeMatch(j.titlesearch, listingRgx)
-            || rgxTreeMatch(j.bodysearch, listingRgx))
+            || rgxTreeMatch(j.bodysearch, listingRgx));
+
+    // document.getElementsByTagName('body')[0].class -= " workingworking"
+
+    return result
 }
 
 function rgxTreeMatch(s, ors) {
@@ -99,7 +91,11 @@ function mkJobSelects( key, lbl, jSelects, styling = {}) {
                     , type: "checkbox"
                     , checked: cF(c => c.md.onOff)
                     , title: info[1]
-                    , onclick: mx => mx.onOff = !mx.onOff
+                    , onclick: mx => {
+                        let currv = mx.onOff;
+                        mx.dom.checked = !currv
+                        window.requestAnimationFrame(() => mx.onOff = !mx.onOff)
+                    }
                 }
                 , {name: info[0], onOff: cI(false)})
             , label( {
