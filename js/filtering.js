@@ -62,27 +62,29 @@ function mkUserDefaults() {
             , uDefault.map( info => onOffCheckbox(info))))
 }
 
-const titleSelects = [["REMOTE", "Does regex search of title for remote jobs"]
-    , ["ONSITE", "Does regex search of title for on-site jobs"]
-    , ["INTERNS", "Does regex search of title for internships"]
-    , ["VISA", "Does regex search of title for Visa sponsors"]]
+const titleSelects = [
+    [["REMOTE", "Does regex search of title for remote jobs"]
+    , ["ONSITE", "Does regex search of title for on-site jobs"]]
+    , [["INTERNS", "Does regex search of title for internships"]
+    , ["VISA", "Does regex search of title for Visa sponsors"]]]
 
 const userSelects = [
-    ["Excluded", "Show jobs you exluded from view"]
-    , ["Starred", "Show only jobs you have rated with stars"]
-    , ["Applied", "Show only jobs you have marked as applied to"]
+    [["Starred", "Show only jobs you have rated with stars"]
     , ["Noted", "Show only jobs on which you have made a note"]]
+    , [["Applied", "Show only jobs you have marked as applied to"]
+    , ["Excluded", "Show jobs you exluded from view"]]]
 
 function mkTitleSelects() {
-    return mkJobSelects("title", "Title selects", titleSelects)
+    return mkJobSelectsEx("title", "Title selects", titleSelects)
 }
 
 function mkUserSelects() {
-    return mkJobSelects("user", "User selects", userSelects)
+    return mkJobSelectsEx("user", "User selects", userSelects)
 }
 
-function mkJobSelects( key, lbl, jSelects, styling = {}) {
+function mkJobSelectsEx( key, lbl, jMajorSelects, styling = {}) {
     return div( { style: merge( hzFlexWrap, {"margin":"8px 0 8px 24px"}, styling)}
+    , jMajorSelects.map( jSelects => div( {style: "display:flex; flex:nowrap;"}
         , jSelects.map( info => div( {style: "color: white; min-width:96px; align-items:center"}
             , input({
                     id: info[0]+"ID"
@@ -94,13 +96,15 @@ function mkJobSelects( key, lbl, jSelects, styling = {}) {
                     , onclick: mx => {
                         let currv = mx.onOff;
                         mx.dom.checked = !currv
-                        window.requestAnimationFrame(() => mx.onOff = !mx.onOff)
+                        //window.requestAnimationFrame(() => mx.onOff = !mx.onOff)
+                        setTimeout(()=>mx.onOff = !mx.onOff, 0)
                     }
                 }
                 , {name: info[0], onOff: cI(false)})
             , label( {
                 for: info[0]+"ID"
                 , title: info[1]
-            }, info[0]))))
+            }, info[0]))))))
 }
+
 

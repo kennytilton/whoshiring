@@ -58,16 +58,21 @@ function mkRgxOptions () {
     )
 }
 
+function helpOff( mx, toggleName, tag='anon') {
+    clg('helpoff doing', toggleName, tag)
+    mx.fmUp(toggleName).onOff = false
+}
+
 function helpList ( helpItems, toggleName) {
     return div( {
             class: cF( c=> "help " + slideInRule(c, c.md.fmUp( toggleName).onOff))
             , style: cF( c=> "display:" + (c.md.fmUp(toggleName).onOff? "block":"none"))
-            , onclick: mx => mx.fmUp(toggleName).onOff = false
+            , onclick: mx => helpOff(mx, toggleName, 'outerdiv')
         }
-        ,div({style: "cursor:pointer;text-align: right;"
-            , onclick: mx => mx.fmUp(toggleName).onOff = false}, "X")
-        , ul({ style: "list-style:none"}
-            , helpItems.map( e=> li({style: "padding:0px;margin-bottom:9px;"}, e)))
+        ,div({style: "cursor:pointer;text-align: right;margin-right:18px;"
+            , onclick: mx => helpOff(mx, toggleName, 'Xchar')}, "X")
+        , ul({ style: "list-style:none; margin-left:0"}
+            , helpItems.map( e=> li({style: "padding:0px;margin: 0 18px 9px 0;"}, e)))
 
     )
 }
@@ -100,12 +105,16 @@ function mkRgxOrAnd() {
                 , checked: cF(c => c.md.value)
                 , onclick: mx => mx.value = !mx.value
                 , onchange: rebuildRgxTrees
+                , title: "Replace 'or/and' with '||/&&' for easier mobile entry."
             }
             , {
                 name: "rgxOrAnd"
                 , value: cI( true)
             }),
-        label({for: "rgxOrAnd"}, "allow or/and"))
+        label({
+            for: "rgxOrAnd"
+            , title: "Replace 'or/and' with '||/&&' for easier mobile entry."
+        }, "allow or/and"))
 }
 
 const regexHelp = [

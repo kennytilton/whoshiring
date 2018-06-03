@@ -2171,7 +2171,7 @@ function obsTagEventHandler(c, d, e, f, g) {
 }
 var AttrAliases = new Map([["class", "className"]]);
 function obsAttrGlobal(c, d, e, f, g) {
-  f !== kUnbound && (g = AttrAliases.get(c) || c, domlog("attr global", c, e, f), d.dom[g] = e);
+  f !== kUnbound && (c = AttrAliases.get(c) || c, d.dom[c] = e);
 }
 function obsStyleAttr(c, d, e, f, g) {
   f !== kUnbound && (c = tagStyleString(d), d.dom.style = c);
@@ -8258,6 +8258,14 @@ function merge(c) {
   }
   return Object.assign.apply(Object, [{}].concat($jscomp.arrayFromIterable(d)));
 }
+function mobileCheck() {
+  var c = !1, d = navigator.userAgent || navigator.vendor || window.opera;
+  if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(d) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(d.substr(0, 
+  4))) {
+    c = !0;
+  }
+  return c;
+}
 ;Hiring.usernote = {};
 var UNOTE = "whoishiring.unote.", UserNotes = function(c) {
   MXStorable.call(this, Object.assign({lsPrefix:UNOTE}, c, {hnId:c.hnId, stars:cI(c.stars || 0), hidden:cI(c.hidden || !1), excluded:cI(c.excluded || !1), applied:cI(c.applied || !1), notes:cI(c.notes)}));
@@ -8285,7 +8293,7 @@ UserNotes.loadFromStorage = function() {
 };
 var UNote = UserNotes.loadFromStorage();
 function userAnnotations(c) {
-  return div({style:"display:flex; flex-direction: column"}, div({class:"userAnnotations"}, jobStars(c), applied(c), noteToggle(c), viewOnHN("https://news.ycombinator.com/item?id=" + c.hnId)), noteEditor(c));
+  return div({style:"display:flex; flex-direction: column"}, div({class:"userAnnotations"}, jobStars(c), applied(c), noteToggle(c), excludeJob(c)), noteEditor(c));
 }
 function noteToggle(c) {
   var d = UNote.dict[c.hnId];
@@ -8308,10 +8316,10 @@ function noteEditor(c) {
 var MAX_STARS = 3;
 function jobStars(c) {
   return div({style:hzFlexWrapBottom}, function(d) {
-    d = [excludeJob(c)];
+    d = [];
     for (var e = UNote.dict[c.hnId], f = 0; f < MAX_STARS; ++f) {
       d.push(span({content:"&#x2605", style:cF(function(c) {
-        return "margin-top:6px;cursor:pointer;color:" + (e.stars >= c.md.starN ? "red;" : "gray;");
+        return "margin-top:0px;cursor:pointer;color:" + (e.stars >= c.md.starN ? "red;" : "gray;");
       }), onclick:function(c) {
         c.fmUp("job-listing");
         e.stars = e.stars === c.starN ? 0 : c.starN;
@@ -8336,7 +8344,9 @@ function applied(c) {
   }), onclick:function(d) {
     d = UNote.dict[c.hnId];
     d.applied = !d.applied;
-  }}, {name:"applied?"}), label({for:"applied?" + c.hnId}, "Applied"));
+  }}, {name:"applied?"}), label({for:"applied?" + c.hnId, style:cF(function(d) {
+    return "color:" + (UNote.dict[c.hnId].applied ? "red" : "black");
+  })}, "Applied"));
 }
 ;Hiring.filtering = {};
 function jobListFilter(c, d) {
@@ -8381,21 +8391,26 @@ function mkUserDefaults() {
     return onOffCheckbox(c);
   })));
 }
-var titleSelects = [["REMOTE", "Does regex search of title for remote jobs"], ["ONSITE", "Does regex search of title for on-site jobs"], ["INTERNS", "Does regex search of title for internships"], ["VISA", "Does regex search of title for Visa sponsors"]], userSelects = [["Excluded", "Show jobs you exluded from view"], ["Starred", "Show only jobs you have rated with stars"], ["Applied", "Show only jobs you have marked as applied to"], ["Noted", "Show only jobs on which you have made a note"]];
+var titleSelects = [[["REMOTE", "Does regex search of title for remote jobs"], ["ONSITE", "Does regex search of title for on-site jobs"]], [["INTERNS", "Does regex search of title for internships"], ["VISA", "Does regex search of title for Visa sponsors"]]], userSelects = [[["Starred", "Show only jobs you have rated with stars"], ["Noted", "Show only jobs on which you have made a note"]], [["Applied", "Show only jobs you have marked as applied to"], ["Excluded", "Show jobs you exluded from view"]]];
 function mkTitleSelects() {
-  return mkJobSelects("title", "Title selects", titleSelects);
+  return mkJobSelectsEx("title", "Title selects", titleSelects);
 }
 function mkUserSelects() {
-  return mkJobSelects("user", "User selects", userSelects);
+  return mkJobSelectsEx("user", "User selects", userSelects);
 }
-function mkJobSelects(c, d, e, f) {
+function mkJobSelectsEx(c, d, e, f) {
   f = void 0 === f ? {} : f;
   return div({style:merge(hzFlexWrap, {margin:"8px 0 8px 24px"}, f)}, e.map(function(d) {
-    return div({style:"color: white; min-width:96px; align-items:center"}, input({id:d[0] + "ID", class:c + "-jSelect", style:"background:#eee", type:"checkbox", checked:cF(function(c) {
-      return c.md.onOff;
-    }), title:d[1], onclick:function(c) {
-      return c.onOff = !c.onOff;
-    }}, {name:d[0], onOff:cI(!1)}), label({for:d[0] + "ID", title:d[1]}, d[0]));
+    return div({style:"display:flex; flex:nowrap;"}, d.map(function(d) {
+      return div({style:"color: white; min-width:96px; align-items:center"}, input({id:d[0] + "ID", class:c + "-jSelect", style:"background:#eee", type:"checkbox", checked:cF(function(c) {
+        return c.md.onOff;
+      }), title:d[1], onclick:function(c) {
+        c.dom.checked = !c.onOff;
+        setTimeout(function() {
+          return c.onOff = !c.onOff;
+        }, 0);
+      }}, {name:d[0], onOff:cI(!1)}), label({for:d[0] + "ID", title:d[1]}, d[0]));
+    }));
   }));
 }
 ;Hiring.jobDomParse = {};
@@ -8573,13 +8588,11 @@ function controlPanel() {
 window.controlPanel = controlPanel;
 var jobSorts = [{title:"Creation", keyFn:jobHnIdKey}, {title:"Stars", compFn:jobStarsCompare}, {title:"Company", keyFn:jobCompanyKey}];
 function sortBar() {
-  return div({style:{padding:"0 0 0 0", margin:"15px 0 0 24px", display:"flex"}}, span("Sort&nbsp"), ul({style:merge(hzFlexWrap, {padding:"0 0 0 0", margin:"0 0 0 0"})}, {name:"sortby", order:cI(1), selection:cI(jobSorts[0]), sortSpec:cF(function(c) {
+  return div({style:{padding:"0 0 0 0", margin:"15px 0 0 24px", display:"flex"}}, span("Sort &nbsp"), ul({style:merge(hzFlexWrap, {padding:"0 0 0 0", margin:"0 0 0 0"})}, {name:"sortby", order:cI(1), selection:cI(jobSorts[0]), sortSpec:cF(function(c) {
     return merge(c.md.selection, {order:c.md.order});
   })}, jobSorts.map(function(c) {
-    return button({selected:cF(function(d) {
+    return button({class:"sortOption", selected:cF(function(d) {
       return d.md.par.selection.title === c.title;
-    }), style:cF(function(c) {
-      return "margin-right:4px;min-width:72px;";
     }), onclick:function(d) {
       d.par.selection.title === c.title ? d.par.order = -d.par.order : d.par.selection = c;
     }, content:cF(function(d) {
@@ -8592,7 +8605,7 @@ function jobListingControlBar() {
   return div({style:merge(hzFlexWrapCentered, {margin:"12px 0 0 0px", padding:"3px", border_style:"inset", border_color:"khaki", border_width:"2px", background:"PAPAYAWHIP", justify_content:"space-between", align_items:"center"})}, span({style:"margin-right:6px", content:cF(function(c) {
     return "Matches: " + c.md.fmUp("job-list").selectedJobs.length;
   })}), resultMax(), button({style:cF(function(c) {
-    return "display:" + (c.md.fmUp("progress").hidden ? "block" : "none");
+    return "min-width:96px; display:" + (c.md.fmUp("progress").hidden ? "block" : "none");
   }), onclick:function(c) {
     var d = document.getElementsByClassName("listing-toggle");
     Array.prototype.map.call(d, function(d) {
@@ -8601,7 +8614,7 @@ function jobListingControlBar() {
     c.expanded = !c.expanded;
   }, content:cF(function(c) {
     return c.md.expanded ? "Collapse" : "Expand";
-  })}, {name:"expander", expanded:cI(!0)}));
+  })}, {name:"expander", expanded:cI(!mobileCheck())}));
 }
 function resultMax() {
   return div({style:merge(hzFlexWrap, {margin_right:"6px"})}, span({}, "Show:"), input({value:cF(function(c) {
@@ -8625,6 +8638,9 @@ function jobList() {
     return c.kidValuesKids();
   });
 }
+var jumpToHN = function(c) {
+  return window.open("https://news.ycombinator.com/item?id=" + c, "_blank");
+};
 function jobListItem(c, d) {
   return li({style:cF(function(c) {
     return "cursor:pointer;padding:12px;background-color:" + (c.md.fmUp("job-list").kidValues.indexOf(d) % 2 ? "#f8f8f8" : "#eee");
@@ -8648,7 +8664,9 @@ function jobDetails(c) {
     return c.pv === kUnbound ? d ? "slideIn" : "" : d ? "slideIn" : "slideOut";
   }), style:cF(function(c) {
     return "margin:6px;background:#fff; display:" + (c.md.fmUp("showDetails").onOff ? "block" : "none");
-  })}, userAnnotations(c), div({style:"margin:6px"}, function(d) {
+  })}, userAnnotations(c), div({style:"margin:6px", ondblclick:function(d) {
+    return jumpToHN(c.hnId);
+  }}, function(d) {
     return d.md.fmUp("showDetails") ? c.body.map(function(c, d) {
       if (1 === c.nodeType) {
         return "<p>" + c.innerHTML + "</p>";
@@ -8706,17 +8724,21 @@ function labeledRow(c, d) {
 function mkRgxOptions() {
   return div(div({style:merge(hzFlexWrapCentered, {padding_right:"12px", margin:"4px 0 9px 30px"})}, mkRgxMatchCase(), mkRgxOrAnd(), helpToggle("rgxHelpToggle", "Show/hide RegExp help")), helpList(regexHelp, "rgxHelpToggle"));
 }
+function helpOff(c, d, e) {
+  clg("helpoff doing", d, void 0 === e ? "anon" : e);
+  c.fmUp(d).onOff = !1;
+}
 function helpList(c, d) {
   return div({class:cF(function(c) {
     return "help " + slideInRule(c, c.md.fmUp(d).onOff);
   }), style:cF(function(c) {
     return "display:" + (c.md.fmUp(d).onOff ? "block" : "none");
   }), onclick:function(c) {
-    return c.fmUp(d).onOff = !1;
-  }}, div({style:"cursor:pointer;text-align: right;", onclick:function(c) {
-    return c.fmUp(d).onOff = !1;
-  }}, "X"), ul({style:"list-style:none"}, c.map(function(c) {
-    return li({style:"padding:0px;margin-bottom:9px;"}, c);
+    return helpOff(c, d, "outerdiv");
+  }}, div({style:"cursor:pointer;text-align: right;margin-right:18px;", onclick:function(c) {
+    return helpOff(c, d, "Xchar");
+  }}, "X"), ul({style:"list-style:none; margin-left:0"}, c.map(function(c) {
+    return li({style:"padding:0px;margin: 0 18px 9px 0;"}, c);
   })));
 }
 function mkRgxMatchCase() {
@@ -8729,7 +8751,7 @@ function mkRgxOrAnd() {
     return c.md.value;
   }), onclick:function(c) {
     return c.value = !c.value;
-  }, onchange:rebuildRgxTrees}, {name:"rgxOrAnd", value:cI(!0)}), label({for:"rgxOrAnd"}, "allow or/and"));
+  }, onchange:rebuildRgxTrees, title:"Replace 'or/and' with '||/&&' for easier mobile entry."}, {name:"rgxOrAnd", value:cI(!0)}), label({for:"rgxOrAnd", title:"Replace 'or/and' with '||/&&' for easier mobile entry."}, "allow or/and"));
 }
 var regexHelp = ["Press <kbd style='background:cornsilk;font-size:1em'>Enter</kbd> or <kbd style='background:cornsilk;font-size:1em'>Tab</kbd> to activate, including after clearing.", "Separate <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions'>JS RegExp-legal</a> terms with <b>||</b> or <b>&&</b> (higher priority) to combine expressions.", "'Allow or/and' option treats those as ||/&& for easier mobile entry.", "Regex terms are split on comma and passed to <code>new RegExp(pattern,flags)</code>.", 
 "e.g. Enter <b>taipei,i</b> for case-insensitive search."];
@@ -8760,14 +8782,15 @@ function rebuildRgxTree(c) {
   });
 }
 ;function WhoIsHiring() {
-  return div(header(div({class:"about", onclick:function(c) {
-    return c.onOff = !c.onOff;
-  }, title:title, content:"about"}, {name:"appHelpToggle", onOff:cI(!1)}), div({class:"headermain"}, span({class:"askhn"}, "Ask HN:"), span({class:"who"}, "Who&rsquo;s Hiring?"))), div({style:"margin:0px; background:#ffb57d"}, helpList(appHelpEntry, "appHelpToggle"), pickAMonth(), jobListingLoader(), div({class:cF(function(c) {
-    return slideInRule(c, c.md.fmUp("searchMonth").value);
-  }), style:cF(function(c) {
-    return "display:" + (c.md.fmUp("searchMonth").value ? "block" : "none");
-  })}, controlPanel(), jobList())));
+  return div(appBanner(), div({style:"margin:0px; background:#ffb57d"}, pickAMonth(), jobListingLoader(), controlPanel(), jobList()));
 }
 window.WhoIsHiring = WhoIsHiring;
-var appHelpEntry = "Click any job header to show or hide the full listing.{All filters are ANDed except as you direct in RegExp fields.{Your edits are kept in local storage, so stick to one browser.{Works off page scrapes taken every fifteen minutes. Ping kentilton at gmail if they seem stopped.{RFEs welcome and can be raised <a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. {Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>Matrix Inside</a>&trade;.{This page is not affiliated with Hacker News, except...{..thanks to the HN crew for their assistance. All screw-ups remain <a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton</a>'s.{Graphic design by <a href='https://www.mloboscoart.com'>Michael Lobosco</a>. Implementation screw-ups are Kenny's</a>.".split("{");
+function appBanner() {
+  return div(header(div({class:"about", onclick:function(c) {
+    return c.onOff = !c.onOff;
+  }, title:"Usage hints, and credit where due.", content:cF(function(c) {
+    return c.md.onOff ? "hide" : "Pro tips";
+  })}, {name:"appHelpToggle", onOff:cI(!1)}), div({class:"headermain"}, span({class:"askhn"}, "Ask HN:"), span({class:"who"}, "Who&rsquo;s Hiring?"))), helpList(appHelpEntry, "appHelpToggle"));
+}
+var appHelpEntry = "Click any job header to show or hide the full listing.{Double-click job description to open listing on HN in new tab.{All filters are ANDed except as you direct within RegExp fields.{Your edits are kept in local storage, so stick to one browser.{Works off page scrapes taken every two hours. E-mail <a href='mailto:kentilton@gmail.com'>Kenny</a> if they seem stopped.{RFEs welcome and can be raised <a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. {Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>Matrix Inside</a>&trade;.{This page is not affiliated with Hacker News, except...{..thanks to the HN crew for their assistance. All screw-ups remain <a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton</a>'s.{Graphic design by <a href='https://www.mloboscoart.com'>Michael Lobosco</a>.".split("{");
 

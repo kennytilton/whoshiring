@@ -48,7 +48,7 @@ const jobSorts = [
 function sortBar() {
     return div( {style: { padding: "0 0 0 0", margin: "15px 0 0 24px"
             , display: "flex"}}
-    , span("Sort&nbsp")
+    , span("Sort &nbsp")
     , ul({
             style: merge(hzFlexWrap, {
                  padding: "0 0 0 0"
@@ -61,8 +61,8 @@ function sortBar() {
             , sortSpec: cF( c=> merge( c.md.selection, {order: c.md.order}))
         }
         , jobSorts.map(js => button({
-            selected: cF(c => c.md.par.selection.title === js.title)
-            , style: cF(c => "margin-right:4px;min-width:72px;")
+            class: "sortOption"
+                , selected: cF(c => c.md.par.selection.title === js.title)
             , onclick: mx => {
                 let currSel = mx.par.selection;
                 if ( currSel.title === js.title ) {
@@ -101,7 +101,7 @@ function jobListingControlBar() {
         , button({
                 style: cF(c=> {
                     let pgr = c.md.fmUp("progress")
-                    return "display:"+ (pgr.hidden? "block":"none")
+                    return "min-width:96px; display:"+ (pgr.hidden? "block":"none")
                 })
                 , onclick: mx => {
                     let all = document.getElementsByClassName('listing-toggle');
@@ -111,7 +111,7 @@ function jobListingControlBar() {
 
                 , content: cF( c=> c.md.expanded? "Collapse":"Expand")
             }
-            , { name: "expander", expanded: cI(true)}))
+            , { name: "expander", expanded: cI( !mobileCheck() )}))
 }
 
 function resultMax() {

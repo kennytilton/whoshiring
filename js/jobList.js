@@ -1,6 +1,7 @@
 goog.require('Matrix.Cells')
 goog.require('Matrix.Model')
 goog.require('Matrix.mxWeb')
+goog.require('Hiring.utility')
 goog.provide('Hiring.jobListItem')
 
 // --- jobList ------------------------
@@ -28,18 +29,21 @@ function jobList () {
 
 // --- jobListItem ---------------------------------------------------------
 
+const jumpToHN = hnId => window.open(`https://news.ycombinator.com/item?id=${hnId}`, '_blank');
+
 function jobListItem(c, j) {
     return li({
-        // shade alternate rows differently
-            style: cF(c=> {
+            // shade alternate rows differently
+            style: cF(c => {
                 let kn = c.md.fmUp("job-list").kidValues.indexOf(j)
-                return "cursor:pointer;padding:12px;background-color:" + (kn % 2? "#f8f8f8":"#eee")
+                return "cursor:pointer;padding:12px;background-color:" + (kn % 2 ? "#f8f8f8" : "#eee")
             })
 
-            , onclick: mx=> {
+            , onclick: mx => {
                 let mol = mx.fmDown("showDetails")
                 mol.onOff = !mol.onOff
-            }}
+            }
+        }
         , { name: "job-listing", job: j}
         , jobHeader(j)
         , jobDetails(j)
@@ -83,11 +87,10 @@ function jobDetails (j) {
 
         }
         , userAnnotations(j)
-        // , div( { style: "margin:6px"}
-        //     // here rather than toggling hidden we avoid even building the hidden
-        //     // structure until the user requests it. Performance advantage merely guessed at.
-        //     , c=> c.md.fmUp("showDetails") ? j.body : null))
-        , div( { style: "margin:6px"}
+        , div( {
+                style: "margin:6px"
+                , ondblclick: mx => jumpToHN( j.hnId)
+        }
         // here rather than toggling hidden we avoid even building the hidden
         // structure until the user requests it. Performance advantage merely guessed at.
         , c=> c.md.fmUp("showDetails") ?

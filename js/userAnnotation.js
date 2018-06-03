@@ -60,11 +60,12 @@ function userAnnotations(j) {
     //clg('uannot', j.hnId, j.company)
     return div( {style: "display:flex; flex-direction: column"}
         , div ( { class: "userAnnotations"}
-            //, excludeJob(j)
+            // , viewOnHN(`https://news.ycombinator.com/item?id=${j.hnId}`)
             , jobStars(j)
             , applied(j)
             , noteToggle(j)
-            , viewOnHN(`https://news.ycombinator.com/item?id=${j.hnId}`))
+            , excludeJob(j)
+            )
         // beneath that
         , noteEditor(j))
 }
@@ -112,13 +113,13 @@ const MAX_STARS = 3;
 function jobStars(j) {
     return div({style: hzFlexWrapBottom}
         , c => {
-            let stars = [excludeJob(j)]
+            let stars = []
                 , unote = UNote.dict[j.hnId];
             //clg('starring', j.hnId, j.company)
             for (let n = 0; n < MAX_STARS; ++n)
                 stars.push( span({
                     content: "&#x2605"
-                    , style: cF( c=> "margin-top:6px;cursor:pointer;color:" +
+                    , style: cF( c=> "margin-top:0px;cursor:pointer;color:" +
                         (unote.stars >= c.md.starN ? "red;":"gray;"))
                     , onclick: mx => {
                         let li = mx.fmUp("job-listing")
@@ -173,6 +174,9 @@ function applied(j) {
 
             }
             , {name: "applied?"}),
-        label({for: "applied?"+j.hnId}, "Applied"))
+        label({for: "applied?"+j.hnId
+        , style: cF( c=> {
+                return "color:"+ ( UNote.dict[j.hnId].applied ? "red":"black")
+            })}, "Applied"))
 }
 
