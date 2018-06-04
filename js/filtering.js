@@ -85,7 +85,7 @@ function mkUserSelects() {
 function mkJobSelectsEx( key, lbl, jMajorSelects, styling = {}) {
     return div( { style: merge( hzFlexWrap, {"margin":"8px 0 8px 24px"}, styling)}
     , jMajorSelects.map( jSelects => div( {style: "display:flex; flex:nowrap;"}
-        , jSelects.map( info => div( {style: "color: white; min-width:96px; align-items:center"}
+        , jSelects.map( info => div( {style: "color: white; min-width:96px; display:flex; align-items:center"}
             , input({
                     id: info[0]+"ID"
                     , class: key + "-jSelect"

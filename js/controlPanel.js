@@ -61,7 +61,8 @@ function sortBar() {
             , sortSpec: cF( c=> merge( c.md.selection, {order: c.md.order}))
         }
         , jobSorts.map(js => button({
-            class: "sortOption"
+                style: cF( c=> "color:" + (c.md.selected ? "blue":"#222"))
+                , class: "sortOption"
                 , selected: cF(c => c.md.par.selection.title === js.title)
             , onclick: mx => {
                 let currSel = mx.par.selection;
@@ -87,7 +88,8 @@ function jobListingControlBar() {
     return div({
             style: merge( hzFlexWrapCentered, {
                 margin:"12px 0 0 0px"
-                , padding: "3px"
+                , font_size: "1em"
+                , padding: "4px"
                 , border_style: "inset"
                 , border_color: "khaki"
                 , border_width: "2px"
@@ -101,7 +103,7 @@ function jobListingControlBar() {
         , button({
                 style: cF(c=> {
                     let pgr = c.md.fmUp("progress")
-                    return "min-width:96px; display:"+ (pgr.hidden? "block":"none")
+                    return "font-size:1em; min-width:96px; display:"+ (pgr.hidden? "block":"none")
                 })
                 , onclick: mx => {
                     let all = document.getElementsByClassName('listing-toggle');
@@ -109,17 +111,17 @@ function jobListingControlBar() {
                     mx.expanded = !mx.expanded
                 }
 
-                , content: cF( c=> c.md.expanded? "Collapse":"Expand")
+                , content: cF( c=> c.md.expanded? "Collapse All":"Expand All")
             }
             , { name: "expander", expanded: cI( !mobileCheck() )}))
 }
 
 function resultMax() {
-    return div( {style: merge( hzFlexWrap, {margin_right: "6px"})}
+    return div( {style: merge( hzFlexWrapCentered, {margin_right: "6px"})}
         , span({},"Show:")
         , input({
                 value: cF( c=> c.md.results)
-                , style:"max-width:24px;margin-left:6px;margin-right:6px"
+                , style:"font-size:1em;max-width:24px;margin-left:6px;margin-right:6px"
                 , onchange: (mx,e) => mx.results = parseInt( e.target.value)
             }
             , {
