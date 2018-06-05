@@ -32,7 +32,7 @@ function jobListFilter(mx, jobs) {
         .filter(j => !visaok || j.visa)
         .filter(j => !internok || j.intern)
         .filter(j => !applied || UNote.dict[j.hnId].applied)
-        .filter(j => excluded === UNote.dict[j.hnId].excluded)
+        .filter(j => !excluded || UNote.dict[j.hnId].excluded) // but conditionally hide as list is built
         .filter(j => !starred || UNote.dict[j.hnId].stars > 0)
         .filter(j => !noted || UNote.dict[j.hnId].notes)
 

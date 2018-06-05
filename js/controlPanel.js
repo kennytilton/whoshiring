@@ -99,6 +99,17 @@ function jobListingControlBar() {
 
         , span({ style: "margin-right:6px"
             , content: cF(c => "Matches: " + c.md.fmUp("job-list").selectedJobs.length)})
+        , span( {
+            style: cF( c=> "visibility:" + (c.md.excludedCt > 0 ? "visible;" : "hidden;") +
+            "border:" + (c.md.onOff ? "thin solid red;":"none;"))
+            , content: cF( c=> "&#x20E0;: "+ c.md.excludedCt)
+            , onclick: md => md.onOff = !md.onOff
+            , title: "Show/hide items you have excluded"
+        }, {
+            name: "showExcluded"
+            , onOff: cI( false)
+            , excludedCt: cF( c=> c.md.fmUp("job-list").selectedJobs.filter( j=> UNote.dict[j.hnId].excluded).length)
+    })
         , resultMax()
         , button({
                 style: cF(c=> {

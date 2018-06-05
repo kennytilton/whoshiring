@@ -36,7 +36,10 @@ function jobListItem(c, j) {
             // shade alternate rows differently
             style: cF(c => {
                 let kn = c.md.fmUp("job-list").kidValues.indexOf(j)
-                return "cursor:pointer;padding:12px;background-color:" + (kn % 2 ? "#f8f8f8" : "#eee")
+                    , uj = UNote.dict[j.hnId]
+                    , viz = (uj.excluded && !c.md.fmUp("showExcluded").onOff)? "none;":"block;";
+                return "cursor:pointer;padding:12px;background-color:" + (kn % 2 ? "#f8f8f8;" : "#eee;") +
+                    "display:" + viz
             })
 
             , onclick: mx => {

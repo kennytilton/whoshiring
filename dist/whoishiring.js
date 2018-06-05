@@ -8367,7 +8367,7 @@ function jobListFilter(c, d) {
   }).filter(function(c) {
     return !m || UNote.dict[c.hnId].applied;
   }).filter(function(c) {
-    return k === UNote.dict[c.hnId].excluded;
+    return !k || UNote.dict[c.hnId].excluded;
   }).filter(function(c) {
     return !l || 0 < UNote.dict[c.hnId].stars;
   }).filter(function(c) {
@@ -8402,7 +8402,7 @@ function mkJobSelectsEx(c, d, e, f) {
   f = void 0 === f ? {} : f;
   return div({style:merge(hzFlexWrap, {margin:"8px 0 8px 24px"}, f)}, e.map(function(d) {
     return div({style:"display:flex; flex:nowrap;"}, d.map(function(d) {
-      return div({style:"color: white; min-width:96px; align-items:center"}, input({id:d[0] + "ID", class:c + "-jSelect", style:"background:#eee", type:"checkbox", checked:cF(function(c) {
+      return div({style:"color: white; min-width:96px; display:flex; align-items:center"}, input({id:d[0] + "ID", class:c + "-jSelect", style:"background:#eee", type:"checkbox", checked:cF(function(c) {
         return c.md.onOff;
       }), title:d[1], onclick:function(c) {
         c.dom.checked = !c.onOff;
@@ -8591,7 +8591,9 @@ function sortBar() {
   return div({style:{padding:"0 0 0 0", margin:"15px 0 0 24px", display:"flex"}}, span("Sort &nbsp"), ul({style:merge(hzFlexWrap, {padding:"0 0 0 0", margin:"0 0 0 0"})}, {name:"sortby", order:cI(1), selection:cI(jobSorts[0]), sortSpec:cF(function(c) {
     return merge(c.md.selection, {order:c.md.order});
   })}, jobSorts.map(function(c) {
-    return button({class:"sortOption", selected:cF(function(d) {
+    return button({style:cF(function(c) {
+      return "color:" + (c.md.selected ? "blue" : "#222");
+    }), class:"sortOption", selected:cF(function(d) {
       return d.md.par.selection.title === c.title;
     }), onclick:function(d) {
       d.par.selection.title === c.title ? d.par.order = -d.par.order : d.par.selection = c;
@@ -8602,10 +8604,20 @@ function sortBar() {
   })));
 }
 function jobListingControlBar() {
-  return div({style:merge(hzFlexWrapCentered, {margin:"12px 0 0 0px", padding:"3px", border_style:"inset", border_color:"khaki", border_width:"2px", background:"PAPAYAWHIP", justify_content:"space-between", align_items:"center"})}, span({style:"margin-right:6px", content:cF(function(c) {
+  return div({style:merge(hzFlexWrapCentered, {margin:"12px 0 0 0px", font_size:"1em", padding:"4px", border_style:"inset", border_color:"khaki", border_width:"2px", background:"PAPAYAWHIP", justify_content:"space-between", align_items:"center"})}, span({style:"margin-right:6px", content:cF(function(c) {
     return "Matches: " + c.md.fmUp("job-list").selectedJobs.length;
+  })}), span({style:cF(function(c) {
+    return "visibility:" + (0 < c.md.excludedCt ? "visible;" : "hidden;") + "border:" + (c.md.onOff ? "thin solid red;" : "none;");
+  }), content:cF(function(c) {
+    return "&#x20E0;: " + c.md.excludedCt;
+  }), onclick:function(c) {
+    return c.onOff = !c.onOff;
+  }, title:"Show/hide items you have excluded"}, {name:"showExcluded", onOff:cI(!1), excludedCt:cF(function(c) {
+    return c.md.fmUp("job-list").selectedJobs.filter(function(c) {
+      return UNote.dict[c.hnId].excluded;
+    }).length;
   })}), resultMax(), button({style:cF(function(c) {
-    return "min-width:96px; display:" + (c.md.fmUp("progress").hidden ? "block" : "none");
+    return "font-size:1em; min-width:96px; display:" + (c.md.fmUp("progress").hidden ? "block" : "none");
   }), onclick:function(c) {
     var d = document.getElementsByClassName("listing-toggle");
     Array.prototype.map.call(d, function(d) {
@@ -8613,13 +8625,13 @@ function jobListingControlBar() {
     });
     c.expanded = !c.expanded;
   }, content:cF(function(c) {
-    return c.md.expanded ? "Collapse" : "Expand";
+    return c.md.expanded ? "Collapse All" : "Expand All";
   })}, {name:"expander", expanded:cI(!mobileCheck())}));
 }
 function resultMax() {
-  return div({style:merge(hzFlexWrap, {margin_right:"6px"})}, span({}, "Show:"), input({value:cF(function(c) {
+  return div({style:merge(hzFlexWrapCentered, {margin_right:"6px"})}, span({}, "Show:"), input({value:cF(function(c) {
     return c.md.results;
-  }), style:"max-width:24px;margin-left:6px;margin-right:6px", onchange:function(c, d) {
+  }), style:"font-size:1em;max-width:24px;margin-left:6px;margin-right:6px", onchange:function(c, d) {
     return c.results = parseInt(d.target.value);
   }}, {name:"resultmax", results:cI(42)}));
 }
@@ -8643,14 +8655,19 @@ var jumpToHN = function(c) {
 };
 function jobListItem(c, d) {
   return li({style:cF(function(c) {
-    return "cursor:pointer;padding:12px;background-color:" + (c.md.fmUp("job-list").kidValues.indexOf(d) % 2 ? "#f8f8f8" : "#eee");
+    var e = c.md.fmUp("job-list").kidValues.indexOf(d);
+    c = UNote.dict[d.hnId].excluded && !c.md.fmUp("showExcluded").onOff ? "none;" : "block;";
+    return "cursor:pointer;padding:12px;background-color:" + (e % 2 ? "#f8f8f8;" : "#eee;") + "display:" + c;
   }), onclick:function(c) {
     c = c.fmDown("showDetails");
     c.onOff = !c.onOff;
   }}, {name:"job-listing", job:d}, jobHeader(d), jobDetails(d));
 }
 function jobHeader(c) {
-  return div({style:"cursor:pointer; display:flex"}, toggleFullListing(), span({style:cF(function(d) {
+  return div({style:"cursor:pointer; display:flex", onclick:function(c) {
+    c = c.fmDown("showDetails");
+    c.onOff = !c.onOff;
+  }}, toggleFullListing(), span({style:cF(function(d) {
     var e = UNote.dict[c.hnId];
     return "color:red;max-height:16px;margin-right:9px; display:" + (!d.md.fmUp("showDetails").onOff && e && e.stars && 0 !== e.stars ? "block" : "none");
   })}, "&#x2b51"), span({onclick:function(c) {
@@ -8709,7 +8726,9 @@ function mkFullRgx() {
   return mkListingRgx("listing", "Full Listing", "title and listing");
 }
 function mkListingRgx(c, d, e, f) {
-  return labeledRow(d, input({placeholder:"Regex for " + e + " search", list:c + "list", onchange:buildRgxTree, value:f || "", style:"min-width:72px;font-size:1em; height:2em"}, {name:c + "rgx", rgxRaw:cI(null), rgxTree:cI(null), history:cI([])}), datalist({id:c + "list"}, function(d) {
+  return labeledRow(d, input({placeholder:"Regex for " + e + " search", list:c + "list", onchange:buildRgxTree, onfocus:function(c) {
+    return c.dom.setSelectionRange(0, c.dom.value.length);
+  }, value:f || "", style:"min-width:72px;font-size:1em; height:2em"}, {name:c + "rgx", rgxRaw:cI(null), rgxTree:cI(null), history:cI([])}), datalist({id:c + "list"}, function(d) {
     return d.md.fmUp(c + "rgx").history.map(function(c) {
       return option({value:c});
     });
