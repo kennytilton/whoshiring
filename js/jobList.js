@@ -7,7 +7,7 @@ goog.provide('Hiring.jobListItem')
 // --- jobList ------------------------
 
 function jobList () {
-    return ul({style: "list-style-type: none; background-color:#eee; padding:0"}
+    return ul({style: "list-style-type: none; background-color:#eee; padding:0; margin:0;"}
         , {
             name: "job-list"
             , selectedJobs: cF(c => {

@@ -8604,10 +8604,10 @@ function sortBar() {
   })));
 }
 function jobListingControlBar() {
-  return div({style:merge(hzFlexWrapCentered, {margin:"12px 0 0 0px", font_size:"1em", padding:"4px", border_style:"inset", border_color:"khaki", border_width:"2px", background:"PAPAYAWHIP", justify_content:"space-between", align_items:"center"})}, span({style:"margin-right:6px", content:cF(function(c) {
-    return "Matches: " + c.md.fmUp("job-list").selectedJobs.length;
+  return div({style:merge(hzFlexWrapCentered, {margin:"12px 0 0 0px", font_size:"1em", padding:"4px", border_style:"groove", border_color:"khaki", border_width:"2px", background:"PAPAYAWHIP", justify_content:"space-between", align_items:"center"})}, div({style:merge(hzFlexWrapCentered, {flex_wrap:"wrap"})}, span({style:"font-size:1em;margin-right:12px", content:cF(function(c) {
+    return "Jobs: " + c.md.fmUp("job-list").selectedJobs.length;
   })}), span({style:cF(function(c) {
-    return "visibility:" + (0 < c.md.excludedCt ? "visible;" : "hidden;") + "border:" + (c.md.onOff ? "thin solid red;" : "none;");
+    return "padding-bottom:4px;cursor:pointer;display:flex;align-items:center;font-size:1em;visibility:" + (0 < c.md.excludedCt ? "visible;" : "hidden;") + "border:" + (c.md.onOff ? "thin solid red;" : "none;");
   }), content:cF(function(c) {
     return "&#x20E0;: " + c.md.excludedCt;
   }), onclick:function(c) {
@@ -8616,7 +8616,7 @@ function jobListingControlBar() {
     return c.md.fmUp("job-list").selectedJobs.filter(function(c) {
       return UNote.dict[c.hnId].excluded;
     }).length;
-  })}), resultMax(), button({style:cF(function(c) {
+  })})), resultMax(), button({style:cF(function(c) {
     return "font-size:1em; min-width:96px; display:" + (c.md.fmUp("progress").hidden ? "block" : "none");
   }), onclick:function(c) {
     var d = document.getElementsByClassName("listing-toggle");
@@ -8637,7 +8637,7 @@ function resultMax() {
 }
 ;Hiring.jobListItem = {};
 function jobList() {
-  return ul({style:"list-style-type: none; background-color:#eee; padding:0"}, {name:"job-list", selectedJobs:cF(function(c) {
+  return ul({style:"list-style-type: none; background-color:#eee; padding:0; margin:0;"}, {name:"job-list", selectedJobs:cF(function(c) {
     var d = c.md.fmUp("jobLoader").jobs;
     return jobListFilter(c.md, d);
   }), kidValues:cF(function(c) {

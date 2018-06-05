@@ -90,26 +90,27 @@ function jobListingControlBar() {
                 margin:"12px 0 0 0px"
                 , font_size: "1em"
                 , padding: "4px"
-                , border_style: "inset"
+                , border_style: "groove"
                 , border_color: "khaki"
                 , border_width: "2px"
                 , background: "PAPAYAWHIP"
                 , justify_content: "space-between"
                 , align_items: "center"})}
 
-        , span({ style: "margin-right:6px"
-            , content: cF(c => "Matches: " + c.md.fmUp("job-list").selectedJobs.length)})
-        , span( {
-            style: cF( c=> "visibility:" + (c.md.excludedCt > 0 ? "visible;" : "hidden;") +
-            "border:" + (c.md.onOff ? "thin solid red;":"none;"))
-            , content: cF( c=> "&#x20E0;: "+ c.md.excludedCt)
-            , onclick: md => md.onOff = !md.onOff
-            , title: "Show/hide items you have excluded"
-        }, {
-            name: "showExcluded"
-            , onOff: cI( false)
-            , excludedCt: cF( c=> c.md.fmUp("job-list").selectedJobs.filter( j=> UNote.dict[j.hnId].excluded).length)
-    })
+        ,div( { style: merge( hzFlexWrapCentered, {flex_wrap:"wrap"})}
+        , span({ style: "font-size:1em;margin-right:12px"
+                , content: cF(c => "Jobs: " + c.md.fmUp("job-list").selectedJobs.length)})
+            , span( {
+                style: cF( c=> "padding-bottom:4px;cursor:pointer;display:flex;align-items:center;font-size:1em;visibility:" + (c.md.excludedCt > 0 ? "visible;" : "hidden;") +
+                    "border:" + (c.md.onOff ? "thin solid red;":"none;"))
+                , content: cF( c=> "&#x20E0;: "+ c.md.excludedCt)
+                , onclick: md => md.onOff = !md.onOff
+                , title: "Show/hide items you have excluded"
+            }, {
+                name: "showExcluded"
+                , onOff: cI( false)
+                , excludedCt: cF( c=> c.md.fmUp("job-list").selectedJobs.filter( j=> UNote.dict[j.hnId].excluded).length)
+            }))
         , resultMax()
         , button({
                 style: cF(c=> {
