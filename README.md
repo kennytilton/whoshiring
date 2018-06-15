@@ -1,14 +1,20 @@
 # whoshiring
-Welcome to "whoshiring", a browser for Hacker News's monthly Ask HN: Who's Hiring pages built atop the Matrix mxWeb&trade; web application un-framework -- just a thin, pass-through wrapper for HTML, CSS, JS, and AJAX.)
+Welcome to "whoshiring", a browser for Hacker News's monthly Ask HN: Who's Hiring pages. 
+
+### Implementation
+Whoshiring is built atop the Matrix mxWeb&trade; web application un-framework -- just a thin, pass-through wrapper for HTML, CSS, JS, and AJAX.
+
+### Live (JS) Version
+This is a port to CLJS/re-frame of a live [JS/Matrix version](https://kennytilton.github.io/whoishiring/).
 
 ### Running it yourself
 Easy.
 ````bash
 git clone https://github.com/kennytilton/whoshiring.git
 ````
-Now open `whoshiring/index-es6.html` in FireFox. Other browsers refuse to deal with HN pages being pulled into an `iframe` for scraping. Ideas on generalizing to other browsers for development are welcome.
+Now open `whoshiring/index-es6.html` in FireFox. Other browsers reject pulling HN pages from a local directory into an `iframe` for scraping. Ideas on generalizing to other browsers for development are welcome.
 
-You can play with the source*, save, and refresh the page back in the browser. That is how I work, FWIW. I am also working on a CLJS/re-frame version where figwheel will hot load changes.
+You can now play with the source*, save, and refresh the page back in the browser. That is how I work, FWIW. I am also have on a CLJS/re-frame version where figwheel will hot load changes.
 
 #### Staying current
 The app works by scraping saved HN page sources. The files directory has a subdirectory for each HN message ID in which they ask Who's Hiring. That subirectory has multiple HTML files retrieved with the additional query parameter `p=<n>` where `<n>` is 1 to however many pages of answers (job listings) they have. They do about 200 jobs per page, and recently had about 870 jobs all told. Anyway...
