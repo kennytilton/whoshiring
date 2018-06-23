@@ -162,3 +162,10 @@ header .who {
     appearance:none;
     cursor:pointer;
 }
+
+.jobli:nth-child(odd) {
+    background: #f8f8f8;
+}
+.jobli:nth-child(even) {
+    background: #eee;
+}

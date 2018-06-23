@@ -15,7 +15,7 @@ function dom2mx(dom, mustFind=true) {
     //clg('dom2mx dom id',dom.id);
 	let js = mxDom[dom.id];
 	if ( !js && mustFind) {
-	    clg('trying parent', dom.parentNode)
+	    // clg('trying parent', dom.parentNode)
 	    let parent = dom.parentNode
         if (parent)
             return dom2mx( dom.parentNode, true)
@@ -191,6 +191,7 @@ class Tag extends Model {
 		super( parent, (name || islots.name), superSlots, false);
 
 		this.sid = ++sid;
+		// clg('bam tag constructor')
 		// if (!this.tag) this.tag = 'anon';
 		// if (!this.content) this.content = null;
 
@@ -231,7 +232,7 @@ class Tag extends Model {
 					ast(this.domCache, "Unable to locate DOM for Tag via Tag.id " + this.id);
 					if (!this.domCache) {
 					    clg('no dom', name);
-					    throw 'Tag unanble find DOM';
+					    throw 'Tag unable to find its DOM';
                     }
 				}
 				return this.domCache;}});

@@ -18,8 +18,6 @@ function WhoIsHiring() {
         , div( {style: "margin:0px; background:#ffb57d"}
             , pickAMonth()
             , jobListingLoader() // hidden iFrames where we load HN page for scraping
-            // , div( { class: cF( c=> slideInRule(c, c.md.fmUp("searchMonth").value))
-            //         , style: cF( c=> "display:" + (c.md.fmUp("searchMonth").value? "block":"none"))}
             , controlPanel()
             , jobList()))
 }

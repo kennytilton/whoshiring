@@ -6,11 +6,12 @@ goog.provide('Hiring.jobListItem')
 
 // --- jobList ------------------------
 
-function jobList () {
+function jobList() {
     return ul({style: "list-style-type: none; background-color:#eee; padding:0; margin:0;"}
         , {
             name: "job-list"
             , selectedJobs: cF(c => {
+                clg('recomputing seljobs!!!!!!!!!!!!!!!!!!!');
                 let rawjobs = c.md.fmUp("jobLoader").jobs
                     , seljobs = jobListFilter(c.md, rawjobs);
                 // clg( 'got seljobs', seljobs.length)
@@ -19,9 +20,11 @@ function jobList () {
             , kidValues: cF(c => {
                 let jsort = jobListSort(c.md, c.md.selectedJobs) || []
                     , mxlim = c.md.fmUp("resultmax");
-                return jsort.slice(0,mxlim.results)
+                clg('got new sort')
+                return jsort.slice(0, mxlim.results)
             })
-            , kidKey: li => li.job
+            , kidKey: li => li.job.hnId
+            , kidValueKey: job => job.hnId
             , kidFactory: jobListItem
         }
         , c => c.kidValuesKids())
@@ -32,14 +35,20 @@ function jobList () {
 const jumpToHN = hnId => window.open(`https://news.ycombinator.com/item?id=${hnId}`, '_blank');
 
 function jobListItem(c, j) {
+    clg('rebuilding JLI!!!!!!!');
     return li({
             // shade alternate rows differently
-            style: cF(c => {
-                let kn = c.md.fmUp("job-list").kidValues.indexOf(j)
-                    , uj = UNote.dict[j.hnId]
-                    , viz = (uj.excluded && !c.md.fmUp("showExcluded").onOff)? "none;":"block;";
-                return "cursor:pointer;padding:12px;background-color:" + (kn % 2 ? "#f8f8f8;" : "#eee;") +
-                    "display:" + viz
+            class: "jobli"
+            , style: cF(c => {
+                let uj = UNote.dict[j.hnId]
+                    , viz = (uj.excluded && !c.md.fmUp("showExcluded").onOff) ? "none;" : "block;";
+                return "cursor:pointer;padding:12px;" + "display:" + viz + ";"
+
+                // let kn = c.md.fmUp("job-list").kidValues.indexOf(j)
+                //     , uj = UNote.dict[j.hnId]
+                //     , viz = (uj.excluded && !c.md.fmUp("showExcluded").onOff)? "none;":"block;";
+                // return "cursor:pointer;padding:12px;background-color:" + (kn % 2 ? "#f8f8f8;" : "#eee;") +
+                //     "display:" + viz
             })
 
             , onclick: mx => {
@@ -47,36 +56,39 @@ function jobListItem(c, j) {
                 mol.onOff = !mol.onOff
             }
         }
-        , { name: "job-listing", job: j}
+        , {name: "job-listing", job: j}
         , jobHeader(j)
-        , jobDetails(j)
+        //, jobDetails(j)
     )
 }
 
 function jobHeader(j) {
-    return div( {
+    //return span( j.hnId)
+    return div({
             style: "cursor:pointer; display:flex"
             , onclick: mx => {
                 let mol = mx.fmDown("showDetails")
                 mol.onOff = !mol.onOff
             }
         }
-        , toggleFullListing( )
+        , toggleFullListing()
 
         // if the job is collapsed so we cannot see the stars, at least
         // show one star iff there are any.
-        , span({style: cF( c=> {
-                let un = UNote.dict[j.hnId]
-                    , mol = c.md.fmUp("showDetails");
+        , span({
+                style: cF(c => {
+                    let un = UNote.dict[j.hnId]
+                        , mol = c.md.fmUp("showDetails");
 
-                return "color:red;max-height:16px;margin-right:9px; display:" +
-                    ( ((mol.onOff || !un || !un.stars || un.stars === 0))? "none":"block") // || (un && un.stars===0)
-            })}
-            ,"&#x2b51")
+                    return "color:red;max-height:16px;margin-right:9px; display:" +
+                        ( ((mol.onOff || !un || !un.stars || un.stars === 0)) ? "none" : "block") // || (un && un.stars===0)
+                })
+            }
+            , "&#x2b51")
 
         // .. and now the job header much as it appears on HN
         , span({
-            onclick: mx=> {
+            onclick: mx => {
                 let mol = mx.fmUp("showDetails")
                 mol.onOff = !mol.onOff
 
@@ -84,9 +96,9 @@ function jobHeader(j) {
         }, j.titlesearch))
 }
 
-function jobDetails (j) {
-    return div( {
-            class: cF( c=> {
+function jobDetails(j) {
+    return div({
+            class: cF(c => {
                 let show = c.md.fmUp('showDetails').onOff;
                 if (c.pv === kUnbound) {
                     return show ? "slideIn" : ""
@@ -94,33 +106,33 @@ function jobDetails (j) {
                     return show ? "slideIn" : "slideOut"
                 }
             })
-            , style: cF( c=> "margin:6px;background:#fff; display:"+ ( c.md.fmUp('showDetails').onOff? "block":"none"))
+            , style: cF(c => "margin:6px;background:#fff; display:" + ( c.md.fmUp('showDetails').onOff ? "block" : "none"))
 
         }
         , userAnnotations(j)
-        , div( {
-                style: "margin:6px"
-                , ondblclick: mx => jumpToHN( j.hnId)
-        }
-        // here rather than toggling hidden we avoid even building the hidden
-        // structure until the user requests it. Performance advantage merely guessed at.
-        , c=> c.md.fmUp("showDetails") ?
-            j.body.map( (n,x) => {
-                if (n.nodeType === 1) { // Normal DOM
-                    return "<p>" + n.innerHTML + "</p>"
+        , div({
+                style: "margin:6px;overflow:auto;"
+                , ondblclick: mx => jumpToHN(j.hnId)
+            }
+            // here rather than toggling hidden we avoid even building the hidden
+            // structure until the user requests it. Performance advantage merely guessed at.
+            , c => c.md.fmUp("showDetails") ?
+                j.body.map((n, x) => {
+                    if (n.nodeType === 1) { // Normal DOM
+                        return "<p>" + n.innerHTML + "</p>"
 
-                } else if (n.nodeType === 3) { // string content
-                    return "<p>" + n.textContent + "</p>"
+                    } else if (n.nodeType === 3) { // string content
+                        return "<p>" + n.textContent + "</p>"
 
-                } else {
-                    clg('UNEXPECTED Node type', n.nodeType, n.nodeName, n.textContent)
-                }
-            }) : null))
+                    } else {
+                        clg('UNEXPECTED Node type', n.nodeType, n.nodeName, n.textContent)
+                    }
+                }) : null))
 }
 
 function toggleFullListing() {
     return toggleChar("showDetails", "Show/hide full listing"
-        , false, "","" //"&#x25be", "&#x25b8"
+        , false, "", "" //"&#x25be", "&#x25b8"
         , {class: "listing-toggle"}
         , {
             // cFI starts out formulaic to compute the initial value, but then
@@ -139,7 +151,7 @@ function jobListSort(mx, jobs) {
         let keyFn = sortBy.keyFn
             , compFn = sortBy.compFn
             , dir = sortBy.order;
-        return compFn? compFn( dir, j, k) :
+        return compFn ? compFn(dir, j, k) :
             dir * (keyFn(j) < keyFn(k) ? -1 : 1)
     });
 }
@@ -152,21 +164,21 @@ function jobCompanyKey(j) {
     return (j.company || '')
 }
 
-function jobStarsCompare( dir, j, k) {
+function jobStarsCompare(dir, j, k) {
     let uj = UNote.dict[j.hnId]
         , uk = UNote.dict[k.hnId];
 
     // regardless of sort direction,
     // force unstarred to end, in creation order
-    if ( uj.stars > 0) {
-        if ( uk.stars > 0) {
+    if (uj.stars > 0) {
+        if (uk.stars > 0) {
             return dir * (uj.stars < uk.stars ? -1 :
                 (uj.stars > uk.stars ? 1 :
                     (uj.hnId < uk.hnId ? -1 : 1)))
         } else {
             return -1;
         }
-    } else if ( uk.stars > 0) {
+    } else if (uk.stars > 0) {
         return 1;
     } else {
         return uj.hnId < uk.hnId ? -1 : 1

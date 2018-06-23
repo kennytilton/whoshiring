@@ -144,7 +144,6 @@ function excludeJob(j) {
             , onclick: mx => {
                 let unote = UNote.dict[j.hnId]
                     , newv = !(unote.excluded || false);
-                clg('bam', (unote.excluded || false), newv)
                 unote.excluded = newv
             }
 

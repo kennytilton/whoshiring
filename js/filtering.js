@@ -5,7 +5,7 @@ goog.require('Hiring.utility')
 goog.require('Hiring.usernote')
 goog.provide('Hiring.filtering')
 
-// --- filtering and sorting ------------------------------------------------
+// --- filtering ------------------------------------------------
 
 function jobListFilter(mx, jobs) {
     if ( !jobs) return []

@@ -8,7 +8,6 @@ function whoshiringTester () {
             , whsubmits: cF(c => {
             let who = c.md.whoishiring.okResult;
             if (who) {
-                clg('bam wh sub5 ', who.id, who.submitted.slice(0, 5))
                 who.submitted.slice(0, 500).map(submit => {
                     return xhrJson(hnItemUrl(submit)
                         , {

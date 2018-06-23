@@ -2106,7 +2106,6 @@ function domlog(c) {
 function dom2mx(c, d) {
   var e = mxDom[c.id];
   if (!e && (void 0 === d || d)) {
-    clg("trying parent", c.parentNode);
     if (c.parentNode) {
       return dom2mx(c.parentNode, !0);
     }
@@ -8187,9 +8186,6 @@ function toggleChar(c, d, e, f, g, h, k, l) {
     return c.md.onOff ? f : g;
   })}, h), Object.assign({name:c, onOff:cI(e)}, k));
 }
-function displayStyle(c, d) {
-  return "display:" + (c ? "block" : void 0 === d ? "none" : d) + ";";
-}
 function slideInRule(c, d) {
   return c.pv === kUnbound ? d ? "slideIn" : "" : d ? "slideIn" : "slideOut";
 }
@@ -8266,6 +8262,23 @@ function mobileCheck() {
   }
   return c;
 }
+function helpOff(c, d, e) {
+  clg("helpoff doing", d, void 0 === e ? "anon" : e);
+  c.fmUp(d).onOff = !1;
+}
+function helpList(c, d) {
+  return div({class:cF(function(c) {
+    return "help " + slideInRule(c, c.md.fmUp(d).onOff);
+  }), style:cF(function(c) {
+    return "display:" + (c.md.fmUp(d).onOff ? "block" : "none");
+  }), onclick:function(c) {
+    return helpOff(c, d, "outerdiv");
+  }}, div({style:"cursor:pointer;text-align: right;margin-right:18px;", onclick:function(c) {
+    return helpOff(c, d, "Xchar");
+  }}, "X"), ul({style:"list-style:none; margin-left:0"}, c.map(function(c) {
+    return li({style:"padding:0px;margin: 0 18px 9px 0;"}, c);
+  })));
+}
 ;Hiring.usernote = {};
 var UNOTE = "whoishiring.unote.", UserNotes = function(c) {
   MXStorable.call(this, Object.assign({lsPrefix:UNOTE}, c, {hnId:c.hnId, stars:cI(c.stars || 0), hidden:cI(c.hidden || !1), excluded:cI(c.excluded || !1), applied:cI(c.applied || !1), notes:cI(c.notes)}));
@@ -8333,9 +8346,7 @@ function excludeJob(c) {
     return "margin:4px 4px 8px 0;font-size:1em;" + (UNote.dict[c.hnId].excluded ? "color:red;font-weight:bolder" : "color:black");
   }), onclick:function(d) {
     d = UNote.dict[c.hnId];
-    var e = !d.excluded;
-    clg("bam", d.excluded || !1, e);
-    d.excluded = e;
+    d.excluded = !d.excluded;
   }}, {name:"excluded?"});
 }
 function applied(c) {
@@ -8414,9 +8425,7 @@ function mkJobSelectsEx(c, d, e, f) {
   }));
 }
 ;Hiring.jobDomParse = {};
-function escH(c) {
-  return c;
-}
+var internOK = new RegExp(/((internship|intern)(?=|s,\)))/i), nointernOK = new RegExp(/((no internship|no intern)(?=|s,\)))/i), visaOK = new RegExp(/((visa|visas)(?=|s,\)))/i), novisaOK = new RegExp(/((no visa|no visas)(?=|s,\)))/i), onsiteOK = new RegExp(/(on.?site)/i), remoteOK = new RegExp(/(remote)/i), noremoteOK = new RegExp(/(no remote)/i);
 function jobSpecExtend(c, d, e) {
   var f = d.className;
   if (3 === f.length && -1 !== "c5a,cae,c00,c9c,cdd,c73,c88".search(f)) {
@@ -8429,7 +8438,7 @@ function jobSpecExtend(c, d, e) {
     if (3 === g[0].nodeType && 1 < g[0].textContent.split("|").length) {
       c.body = [];
       for (var l = 0; l < g.length; l++) {
-        w = g[l], h ? 1 === w.nodeType && "P" === w.nodeName ? (h = !1, c.body.push(w)) : k.push(w) : c.body.push(w);
+        r = g[l], h ? 1 === r.nodeType && "P" === r.nodeName ? (h = !1, c.body.push(r)) : k.push(r) : c.body.push(r);
       }
       g = k.map(function(c) {
         return c.textContent;
@@ -8437,11 +8446,7 @@ function jobSpecExtend(c, d, e) {
       var m = g.split("|").map(function(c) {
         return c.trim();
       });
-      h = new RegExp(/((internship|intern)(?=|s,\)))/i);
-      k = new RegExp(/((visa|visas)(?=|s,\)))/i);
-      l = new RegExp(/((no visa|no visas)(?=|s,\)))/i);
-      w = new RegExp(/(on.?site)/i);
-      var r = new RegExp(/(remote)/i), t = new RegExp(/(no remote)/i), v = function(c) {
+      h = function(c) {
         return m.some(function(d) {
           return null !== d.match(c);
         });
@@ -8452,20 +8457,20 @@ function jobSpecExtend(c, d, e) {
       c.bodysearch = c.body.map(function(c) {
         return c.textContent;
       }).join("*4*2*");
-      c.onsite = v(w);
-      c.remote = v(r) && !v(t);
-      c.visa = v(k) && !v(l);
-      c.intern = v(h) && !v(l);
+      c.onsite = h(onsiteOK);
+      c.remote = h(remoteOK) && !h(noremoteOK);
+      c.visa = h(visaOK) && !h(novisaOK);
+      c.intern = h(internOK) && !h(nointernOK);
     }
   }
   if ("reply" !== f) {
-    for (var w = 0; w < d.children.length; ++w) {
-      jobSpecExtend(c, d.children[w], e + 1);
+    for (var r = 0; r < d.children.length; ++r) {
+      jobSpecExtend(c, d.children[r], e + 1);
     }
   }
 }
 ;Hiring.jobLoader = {};
-var SEARCH_MO_IDX = 0;
+var SEARCH_MO_IDX = 1;
 function pickAMonth() {
   return div({class:"pickAMonth"}, select({name:"searchMonth", class:"searchMonth", value:cI(gMonthlies[SEARCH_MO_IDX].hnId), onchange:function(c, d) {
     var e = c.fmUp("progress");
@@ -8493,6 +8498,7 @@ function pickAMonth() {
     return !c.md.fmUp("searchMonth").value;
   }), value:cI(0)}, {name:"progress", maxN:cI(0), seen:cI(new Set)})));
 }
+var startLoad;
 function jobListingLoader() {
   return div({style:"visibility:collapsed;"}, {name:"jobLoader", jobs:cF(function(c) {
     c = c.md.kids.map(function(c) {
@@ -8506,6 +8512,7 @@ function jobListingLoader() {
   }, {observer:function(c, d, e) {
     e && (d.fmUp("progress").hidden = !0);
   }})}, function(c) {
+    startLoad = Date.now();
     var d = c.md.fmUp("searchMonth").value, e = gMonthlies.find(function(c) {
       return c.hnId === d;
     });
@@ -8541,19 +8548,23 @@ function parseListings(c, d, e, f, g) {
     if (0 < m) {
       for (jn = 0; jn < m; ++jn) {
         var r = d[l + jn];
-        if (!g.seen.has(r.id) && (g.seen.add(r.id), r = jobSpec(d[l + jn]), r.OK)) {
-          var t = r.hnId;
-          r.pgNo = c.pgNo;
-          UNote.dict[t] || (UNote.dict[t] = new UserNotes({hnId:t}));
-          e.push(r);
+        if (g.seen.has(r.id)) {
+          clg("hnID already seen; NOT aborting pageNo", r.id, c.pgNo);
+        } else {
+          if (g.seen.add(r.id), r = jobSpec(d[l + jn]), r.OK) {
+            var t = r.hnId;
+            r.pgNo = c.pgNo;
+            UNote.dict[t] || (UNote.dict[t] = new UserNotes({hnId:t}));
+            e.push(r);
+          }
         }
       }
       g.value += 1;
       30000 > e.length ? window.requestAnimationFrame(function() {
         return k(l + m);
-      }) : (c.jobs = e, clg("page loaded", c.pgNo, e.length), frameZap(c));
+      }) : (c.jobs = e, clg("page loaded", c.pgNo, e.length, "elapsed=", Date.now() - startLoad), frameZap(c));
     } else {
-      c.jobs = e, clg("page loaded", c.pgNo, e.length), frameZap(c);
+      c.jobs = e, clg("page loaded", c.pgNo, e.length, "elapsed=", Date.now() - startLoad), frameZap(c);
     }
   };
   k(0);
@@ -8681,7 +8692,7 @@ function jobDetails(c) {
     return c.pv === kUnbound ? d ? "slideIn" : "" : d ? "slideIn" : "slideOut";
   }), style:cF(function(c) {
     return "margin:6px;background:#fff; display:" + (c.md.fmUp("showDetails").onOff ? "block" : "none");
-  })}, userAnnotations(c), div({style:"margin:6px", ondblclick:function(d) {
+  })}, userAnnotations(c), div({style:"margin:6px;overflow:auto;", ondblclick:function(d) {
     return jumpToHN(c.hnId);
   }}, function(d) {
     return d.md.fmUp("showDetails") ? c.body.map(function(c, d) {
@@ -8743,23 +8754,6 @@ function labeledRow(c, d) {
 function mkRgxOptions() {
   return div(div({style:merge(hzFlexWrapCentered, {padding_right:"12px", margin:"4px 0 9px 30px"})}, mkRgxMatchCase(), mkRgxOrAnd(), helpToggle("rgxHelpToggle", "Show/hide RegExp help")), helpList(regexHelp, "rgxHelpToggle"));
 }
-function helpOff(c, d, e) {
-  clg("helpoff doing", d, void 0 === e ? "anon" : e);
-  c.fmUp(d).onOff = !1;
-}
-function helpList(c, d) {
-  return div({class:cF(function(c) {
-    return "help " + slideInRule(c, c.md.fmUp(d).onOff);
-  }), style:cF(function(c) {
-    return "display:" + (c.md.fmUp(d).onOff ? "block" : "none");
-  }), onclick:function(c) {
-    return helpOff(c, d, "outerdiv");
-  }}, div({style:"cursor:pointer;text-align: right;margin-right:18px;", onclick:function(c) {
-    return helpOff(c, d, "Xchar");
-  }}, "X"), ul({style:"list-style:none; margin-left:0"}, c.map(function(c) {
-    return li({style:"padding:0px;margin: 0 18px 9px 0;"}, c);
-  })));
-}
 function mkRgxMatchCase() {
   return div({style:"color: #fcfcfc; margin:0 9px 0 0; display:flex; flex-wrap: wrap; align-items:center"}, input({id:"rgxMatchCase", type:"checkbox", onclick:function(c) {
     return c.value = !c.value;
@@ -8776,7 +8770,7 @@ var regexHelp = ["Press <kbd style='background:cornsilk;font-size:1em'>Enter</kb
 "e.g. Enter <b>taipei,i</b> for case-insensitive search."];
 function buildRgxTree(c, d) {
   c.rgxRaw = d.target.value.trim();
-  "" === c.rgxRaw ? c.rgxTree = null : (-1 === c.history.indexOf(c.rgxRaw) && (clg("adding to rgx!!!!", c.rgxRaw), c.history = c.history.concat(c.rgxRaw)), rebuildRgxTree(c));
+  "" === c.rgxRaw ? c.rgxTree = null : (-1 === c.history.indexOf(c.rgxRaw) && (c.history = c.history.concat(c.rgxRaw)), rebuildRgxTree(c));
 }
 function rebuildRgxTrees(c) {
   ["titlergx", "listingrgx"].map(function(d) {

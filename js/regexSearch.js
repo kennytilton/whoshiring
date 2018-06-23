@@ -48,7 +48,6 @@ function labeledRow(label, ...children) {
     )
 }
 
-
 function mkRgxOptions () {
     return div(
         div({style: merge( hzFlexWrapCentered, {padding_right:"12px", margin: "4px 0 9px 30px"})}
@@ -56,25 +55,6 @@ function mkRgxOptions () {
             , mkRgxOrAnd()
             , helpToggle( "rgxHelpToggle", "Show/hide RegExp help"))
         , helpList(regexHelp,"rgxHelpToggle")
-    )
-}
-
-function helpOff( mx, toggleName, tag='anon') {
-    clg('helpoff doing', toggleName, tag)
-    mx.fmUp(toggleName).onOff = false
-}
-
-function helpList ( helpItems, toggleName) {
-    return div( {
-            class: cF( c=> "help " + slideInRule(c, c.md.fmUp( toggleName).onOff))
-            , style: cF( c=> "display:" + (c.md.fmUp(toggleName).onOff? "block":"none"))
-            , onclick: mx => helpOff(mx, toggleName, 'outerdiv')
-        }
-        ,div({style: "cursor:pointer;text-align: right;margin-right:18px;"
-            , onclick: mx => helpOff(mx, toggleName, 'Xchar')}, "X")
-        , ul({ style: "list-style:none; margin-left:0"}
-            , helpItems.map( e=> li({style: "padding:0px;margin: 0 18px 9px 0;"}, e)))
-
     )
 }
 
@@ -134,7 +114,7 @@ function buildRgxTree(mx, e) {
         mx.rgxTree = null // test
     } else {
         if (mx.history.indexOf( mx.rgxRaw) === -1) {
-            clg('adding to rgx!!!!', mx.rgxRaw)
+            //clg('adding to rgx!!!!', mx.rgxRaw)
             mx.history = mx.history.concat(mx.rgxRaw)
         }
         rebuildRgxTree(mx)
