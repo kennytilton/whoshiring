@@ -129,6 +129,13 @@ function mobileCheck () {
     return check;
 };
 
+function pnow() {
+    return performance.now();
+}
+function plapsed(tag, start) {
+    //clg('plapsed '+tag, pnow() - start);
+}
+
 // --------- help -------------------------
 function helpOff( mx, toggleName, tag='anon') {
     clg('helpoff doing', toggleName, tag)

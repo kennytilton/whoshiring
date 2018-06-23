@@ -11,16 +11,17 @@ function jobList() {
         , {
             name: "job-list"
             , selectedJobs: cF(c => {
-                clg('recomputing seljobs!!!!!!!!!!!!!!!!!!!');
+                //clg('recomputing seljobs!!!!!!!!!!!!!!!!!!!');
                 let rawjobs = c.md.fmUp("jobLoader").jobs
                     , seljobs = jobListFilter(c.md, rawjobs);
                 // clg( 'got seljobs', seljobs.length)
                 return seljobs
             })
             , kidValues: cF(c => {
-                let jsort = jobListSort(c.md, c.md.selectedJobs) || []
+                let go = pnow()
+                    , jsort = jobListSort(c.md, c.md.selectedJobs) || []
                     , mxlim = c.md.fmUp("resultmax");
-                clg('got new sort')
+                plapsed('got new sort afetr ', go)
                 return jsort.slice(0, mxlim.results)
             })
             , kidKey: li => li.job.hnId
@@ -35,7 +36,7 @@ function jobList() {
 const jumpToHN = hnId => window.open(`https://news.ycombinator.com/item?id=${hnId}`, '_blank');
 
 function jobListItem(c, j) {
-    clg('rebuilding JLI!!!!!!!');
+    //clg('rebuilding JLI!!!!!!!');
     return li({
             // shade alternate rows differently
             class: "jobli"
@@ -58,7 +59,7 @@ function jobListItem(c, j) {
         }
         , {name: "job-listing", job: j}
         , jobHeader(j)
-        //, jobDetails(j)
+        , jobDetails(j)
     )
 }
 

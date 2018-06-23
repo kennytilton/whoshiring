@@ -129,11 +129,16 @@ function rebuildRgxTrees( mx) {
     })
 }
 
+// new RegExp(search, 'g')
+
 function rebuildRgxTree( mx) {
 
     let matchCase = mx.fmUp("rgxMatchCase").value
         , cvtOrAnd = mx.fmUp("rgxOrAnd").value
-        , search =  cvtOrAnd? mx.rgxRaw.replace(/\sor\s/," || ").replace(/\sand\s/," && ") : mx.rgxRaw;
+        , rxor = RegExp(" or ", 'g')
+        , rxand = RegExp(" and ", 'g')
+        , search =  cvtOrAnd? mx.rgxRaw.replace(rxor," || ").replace(rxand," && ") : mx.rgxRaw
+        // , search =  cvtOrAnd? mx.rgxRaw.replace(/\sor\s/," || ").replace(/\sand\s/," && ") : mx.rgxRaw
 
     clg("building from search str", search);
 

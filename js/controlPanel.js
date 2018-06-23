@@ -142,7 +142,7 @@ function jobListingControlBar() {
             , {name: "expander", expanded: cI(!mobileCheck())}))
 }
 
-var RESULT_MAX = 400;
+var RESULT_MAX = 42;
 
 function resultMax() {
     return div({style: merge(hzFlexWrapCentered, {margin_right: "6px"})}

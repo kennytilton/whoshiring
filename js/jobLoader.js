@@ -126,8 +126,8 @@ function mkPageLoader(par, hnId, pgNo) {
     )
 }
 
-var PARSE_CHUNK_SIZE = 100
-var PAGE_JOBS_MAX = 500
+var PARSE_CHUNK_SIZE = 20
+var PAGE_JOBS_MAX = 10
 
 function domAthings(dom) {
     let hnBody = dom.contentDocument.getElementsByTagName('body')[0]
@@ -161,7 +161,7 @@ function parseListings(md, listing, tempJobs, chunkSize, progressBar) {
         , totchar = 0
         , chunker = offset => {
         let jct = Math.min(total - offset, chunkSize)
-        clg('doing chunk', offset, jct, tempJobs.length)
+        //clg('doing chunk', offset, jct, tempJobs.length)
 
         if (jct > 0) {
             for (jn = 0; jn < jct; ++jn) {
@@ -193,13 +193,13 @@ function parseListings(md, listing, tempJobs, chunkSize, progressBar) {
                 window.requestAnimationFrame(() => chunker(offset + jct))
             else {
                 md.jobs = tempJobs;
-                clg('page loaded 1', md.pgNo, tempJobs.length, "elapsed=", Date.now() - startLoad)
+                //clg('page loaded 1', md.pgNo, tempJobs.length, "elapsed=", Date.now() - startLoad)
                 frameZap(md);
                 //clg('post dom zap!!', domAthings(md.dom).length);
             }
         } else {
             md.jobs = tempJobs;
-            clg('page loaded 2', md.pgNo, tempJobs.length, "elapsed=", Date.now() - startLoad)
+            //clg('page loaded 2', md.pgNo, tempJobs.length, "elapsed=", Date.now() - startLoad)
             frameZap(md);
         }
     }

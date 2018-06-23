@@ -63,11 +63,14 @@ function obsKids (slot, md, newv, oldv, c) {
 
     ast(pdom);
 
+    //clg('redoig kids', md.tag)
+    var start = performance.now();
+
     for (let oldk of oldv)
         if (!find(oldk,newv)) {
-            domlog('dropping DOM', oldk.tag);
+            // clg('dropping MXW tagged', md.tag);
             notToBe(oldk);
-        }
+        } // else clg('keeping dom')
 
     for (let newk of newv) {
         if (find( newk, oldv)) {
@@ -77,11 +80,11 @@ function obsKids (slot, md, newv, oldv, c) {
 
                 throw('newk dom parent not = parent');
             }
-            frag.appendChild( pdom.removeChild(newk.dom));
+            frag.appendChild( newk.dom) //pdom.removeChild(newk.dom));
         } else {
             let incubator = document.createElement('div');
 
-            domlog( 'building new DOM', newk.tag);
+            //domlog( 'building new DOM', newk.tag);
 
             incubator.innerHTML = Tag.toHTML( newk);
 
@@ -92,6 +95,8 @@ function obsKids (slot, md, newv, oldv, c) {
 
     pdom.innerHTML = null;
     pdom.appendChild( frag);
+    //clg('redid kids', md.tag, performance.now() - start)
+
 }
 
 function obsDisabled (slot, md, newv, oldv, c) {

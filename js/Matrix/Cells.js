@@ -885,15 +885,15 @@ class Cell {
 	kidValuesKids( ) {
 		let c = this, md=c.md;
 		// "x" prefix throughout this function means "existing"
-		let xKid = (c.pv === kUnbound? [] : c.pv); // pv = "prior value", ie prior formula calculation (to-do items)
+		let go = pnow()
+            , xKid = (c.pv === kUnbound? [] : c.pv); // pv = "prior value", ie prior formula calculation (to-do items)
 
-		//performance.now()
-		// if (md.kidValues.length > aDistinct( md.kidValues).length) {
-		// 	throw 'Duplicate IDs not allowed in kidValues: '+ md.kidValues.join();
-		// }
-		//performance.now()
+		if (md.kidValues.length > aDistinct( md.kidValues).length) {
+			throw 'Duplicate IDs not allowed in kidValues: '+ md.kidValues.join();
+		}
+		plapsed('unique check', go)
 
-		return md.kidValues.map( kidValue => {
+		let newkids = c.md.kidValues.map( kidValue => {
 				let xIndex = xKid.findIndex(xk => {
 				    let kk = c.md.kidKey(xk)
                         , kvk = c.md.kidValueKey(kidValue);
@@ -902,7 +902,11 @@ class Cell {
                 });
 				//clg(`kidvalue ${kidValue} will be ${xIndex === -1 ? 'built new' : 'reused'}`);
 				return (xIndex === -1) ? md.kidFactory(c, kidValue) : xKid[xIndex];
-			})
+			});
+
+		plapsed('newkids build elapsed', go)
+
+        return newkids;
 	}
 
 	fm (what, how, key) { // short for "find model"
