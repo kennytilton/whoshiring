@@ -46,13 +46,13 @@ function appBanner () {
 const appHelpEntry = [
     "Click any job header to show or hide the full listing."
 
-    , "Double-click job description to open listing on HN in new tab."
+    , "Once visible, double-click the job description to open the listing on HN in a new tab."
 
     , "All filters are ANDed except as you direct within RegExp fields."
 
-    , "Your edits are kept in local storage, so stick to one browser."
+    , "Your annotations are kept in local storage, so stick to one browser."
 
-    ,"Works off page scrapes taken every two hours." +
+    ,"Works off page scrapes taken every couple of hours." +
     " E-mail <a href='mailto:kentilton@gmail.com'>Kenny</a> if they seem stopped."
 
     , "RFEs welcome and can be raised " +
@@ -61,7 +61,7 @@ const appHelpEntry = [
     , "Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>" +
     "Matrix Inside</a>&trade;."
 
-    , "This page is not affiliated with Hacker News, except..."
+    , "This page is not affiliated with Hacker News, but..."
 
     , "..thanks to the HN crew for their assistance. All screw-ups remain " +
     "<a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton</a>'s."

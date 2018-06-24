@@ -42,14 +42,11 @@ function jobListItem(c, j) {
             class: "jobli"
             , style: cF(c => {
                 let uj = UNote.dict[j.hnId]
-                    , viz = (uj.excluded && !c.md.fmUp("showExcluded").onOff) ? "none;" : "block;";
-                return "cursor:pointer;padding:12px;" + "display:" + viz + ";"
+                    , viz = (uj.excluded
+                    && !c.md.fmUp("showExcluded").onOff
+                    && !c.md.fmUp("Excluded").onOff) ? "none;" : "block;";
 
-                // let kn = c.md.fmUp("job-list").kidValues.indexOf(j)
-                //     , uj = UNote.dict[j.hnId]
-                //     , viz = (uj.excluded && !c.md.fmUp("showExcluded").onOff)? "none;":"block;";
-                // return "cursor:pointer;padding:12px;background-color:" + (kn % 2 ? "#f8f8f8;" : "#eee;") +
-                //     "display:" + viz
+                return "cursor:pointer;padding:12px;" + "display:" + viz + ";"
             })
 
             , onclick: mx => {

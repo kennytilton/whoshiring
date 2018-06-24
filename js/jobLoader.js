@@ -126,8 +126,8 @@ function mkPageLoader(par, hnId, pgNo) {
     )
 }
 
-var PARSE_CHUNK_SIZE = 20
-var PAGE_JOBS_MAX = 10
+var PARSE_CHUNK_SIZE = 100
+var PAGE_JOBS_MAX = 1000
 
 function domAthings(dom) {
     let hnBody = dom.contentDocument.getElementsByTagName('body')[0]
@@ -137,7 +137,7 @@ function domAthings(dom) {
 function jobsCollect(md) {
     if (md.dom.contentDocument) {
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
-        clg('doing page');
+
         let chunkSize = PARSE_CHUNK_SIZE
             , listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'))
             , tempJobs = []
@@ -168,7 +168,7 @@ function parseListings(md, listing, tempJobs, chunkSize, progressBar) {
                 let dom = listing[offset + jn];
 
                 if (progressBar.seen.has(dom.id)) {
-                    clg('hnID already seen; NOT aborting pageNo', dom.id, md.pgNo)
+                    // Thorn! clg('hnID already seen; NOT aborting pageNo', dom.id, md.pgNo)
                 } else {
                     progressBar.seen.add(dom.id)
 
