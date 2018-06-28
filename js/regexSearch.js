@@ -140,9 +140,6 @@ function rebuildRgxTree( mx) {
         , search =  cvtOrAnd? mx.rgxRaw.replace(rxor," || ").replace(rxand," && ") : mx.rgxRaw
         // , search =  cvtOrAnd? mx.rgxRaw.replace(/\sor\s/," || ").replace(/\sand\s/," && ") : mx.rgxRaw
 
-    clg("building from search str", search);
-
-
     mx.rgxTree = search.split('||').map(orx => orx.trim().split('&&').map(andx => {
         try {
             let [term, options=''] = andx.trim().split(',')

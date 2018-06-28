@@ -85,26 +85,37 @@ function mkUserSelects() {
 function mkJobSelectsEx( key, lbl, jMajorSelects, styling = {}) {
     return div( { style: merge( hzFlexWrap, {"margin":"8px 0 8px 24px"}, styling)}
     , jMajorSelects.map( jSelects => div( {style: "display:flex; flex:nowrap;"}
-        , jSelects.map( info => div( {style: "color: white; min-width:96px; display:flex; align-items:center"}
-            , input({
-                    id: info[0]+"ID"
-                    , class: key + "-jSelect"
-                    , style: "background:#eee"
-                    , type: "checkbox"
-                    , checked: cF(c => c.md.onOff)
-                    , title: info[1]
-                    , onclick: mx => {
-                        let currv = mx.onOff;
-                        mx.dom.checked = !currv
-                        //window.requestAnimationFrame(() => mx.onOff = !mx.onOff)
-                        setTimeout(()=>mx.onOff = !mx.onOff, 0)
-                    }
-                }
-                , {name: info[0], onOff: cI(false)})
-            , label( {
-                for: info[0]+"ID"
-                , title: info[1]
-            }, info[0]))))))
+        , jSelects.map( info => mkJobSelect( key, info) ))))
 }
 
+// function mkJobSelect( key, info) {
+//     return a({
+//         href: cF( c=> `#/${info[0].toLowerCase()}?on=${c.md.onOff}`)
+//         , style: "min-width:128px;color=red;text-decoration:none;"
+//         , content: info[0]}
+//     , {name: info[0], onOff: cI(false)})
+// }
 
+
+function mkJobSelect( key, info) {
+    return div( {style: "color: white; min-width:96px; display:flex; align-items:center"}
+        , input({
+                id: info[0]+"ID"
+                , class: key + "-jSelect"
+                , style: "background:#eee"
+                , type: "checkbox"
+                , checked: cF(c => c.md.onOff)
+                , title: info[1]
+                , onclick: mx => {
+                    let currv = mx.onOff;
+                    mx.dom.checked = !currv
+                    //window.requestAnimationFrame(() => mx.onOff = !mx.onOff)
+                    setTimeout(()=>mx.onOff = !mx.onOff, 0)
+                }
+            }
+            , {name: info[0], onOff: cI(false)})
+        , label( {
+            for: info[0]+"ID"
+            , title: info[1]
+        }, info[0]))
+}

@@ -8,6 +8,40 @@ var internOK = new RegExp(/((internship|intern)(?=|s,\)))/i)
     , remoteOK = new RegExp(/(remote)/i)
     , noremoteOK = new RegExp(/(no remote)/i);
 
+/*
+ziprecruiter just did not use bars
+victor opened with text and then did the bar headlines as two <p>s
+Cloudflare 17206564 looks OK
+Opencraft
+Muru
+Serverless
+SignedBlock
+SOUNDBOOKS
+Strava
+Curbside 17207702
+
+ */
+
+function jobSpec(dom) {
+    let spec = {hnId: dom.id, body: []};
+
+    if (true) { // dom.id === "17206564") { // todo SHIPCHECK
+        for (let n = 0; n < dom.children.length; ++n) {
+            jobSpecExtend(spec, dom.children[n], 0)
+        }
+    }
+    return spec
+}
+
+function charCount( s, c) {
+    let ct = 0;
+    for (var n = 0; n < s.length; ++n) {
+        if (s[n] === c)
+            ++ct;
+    }
+    return ct
+}
+
 function jobSpecExtend(spec, dom, depth) {
     var cn = dom.className;
     var clg = console.log;
@@ -20,46 +54,62 @@ function jobSpecExtend(spec, dom, depth) {
 
         var child = dom.childNodes
             , inHeader = true
+            , barCt = 0
+            , headerHasLink = false
             , titleSeg = [];
 
-        if (child[0].nodeType === 3
-            // && child[0].textContent.search("Instructure") !== -1
-            && child[0].textContent.split("|").length > 1) {
+        for (var i = 0; i < child.length; i++) {
+            n = child[i]
 
-            spec.body = []
+            if (inHeader) {
+                if (n.nodeType === 1 && n.nodeName === 'P') {
+                    var htext = titleSeg.map( function(h) { return h.textContent} ).join(" | ")
+                        , hseg = htext.split("|").map( function(s) { return s.trim()})
+                        , hsmatch = function (rx) { return hseg.some( function(hs) { return hs.match(rx) !== null})};
 
-            for (var i = 0; i < child.length; i++) {
-                n = child[i]
+                    inHeader = false
 
-                if (inHeader) {
-                    if (n.nodeType === 1 && n.nodeName === 'P') {
-                        inHeader = false
-                        spec.body.push(n) //("<p>" + escH(n.innerHTML)  + "</p>")
-                    } else {
-                        titleSeg.push(n)
+                    spec.onsite = hsmatch(onsiteOK);
+                    spec.remote = (hsmatch(remoteOK) && !hsmatch(noremoteOK));
+                    spec.visa = (hsmatch(visaOK) && !hsmatch(novisaOK));
+                    spec.intern = (hsmatch(internOK) && !hsmatch(nointernOK));
+
+                    if ( !headerHasLink && !(barCt || spec.onsite || spec.remote || spec.visa || spec.intern)) {
+                        // clg("aThing Not a job. breaking ", spec.hnId, depth
+                        // , titleSeg.map( function(h) { return h.textContent} ).join(" | "))
+                        break
                     }
+                    if (!barCt) {
+                        //clg("DUBIOUS allowed", titleSeg.map( function(h) { return h.textContent} ).join(" | "))
+                    }
+                    spec.OK = true // || spec.company.search("Privacy.com") === 0;
+
+                    spec.body.push(n) // first <p> s.b. start of body (some jobs fail this format req)
+
+                    // finish building spec
+
+                    spec.company = hseg[0];
+                    //clg('found job co/depth', spec.company, depth)
+
+                    spec.titlesearch = htext;
+                    spec.bodysearch = spec.body.map( function(n) { return n.textContent}).join('*4*2*');
+                    spec.onsite = hsmatch(onsiteOK);
+                    spec.remote = (hsmatch(remoteOK) && !hsmatch(noremoteOK));
+                    spec.visa = (hsmatch(visaOK) && !hsmatch(novisaOK));
+                    spec.intern = (hsmatch(internOK) && !hsmatch(nointernOK));
                 } else {
-                    spec.body.push(n)
+                    barCt += charCount( n.textContent, "|")
+                    if ( n.nodeType === 1 && n.nodeName === "A")
+                        headerHasLink = true;
+                    //clg("hdr node", depth, n.nodeType, n.nodeName, n.textContent)
+                    titleSeg.push(n)
                 }
+            } else {
+                spec.body.push(n)
             }
-
-            var htext = titleSeg.map( function(h) { return h.textContent} ).join(" | ")
-                , hseg = htext.split("|").map( function(s) { return s.trim()})
-                , hsmatch = function (rx) { return hseg.some( function(hs) { return hs.match(rx) !== null})};
-
-            spec.company = hseg[0];
-            // console.log('job ok!!!!', spec.hnId, spec.company)
-
-            spec.OK = true // || spec.company.search("Privacy.com") === 0;
-
-            spec.titlesearch = htext;
-            spec.bodysearch = spec.body.map( function(n) { return n.textContent}).join('*4*2*');
-            spec.onsite = hsmatch(onsiteOK);
-            spec.remote = (hsmatch(remoteOK) && !hsmatch(noremoteOK));
-            spec.visa = (hsmatch(visaOK) && !hsmatch(novisaOK));
-            spec.intern = (hsmatch(internOK) && !hsmatch(nointernOK));
         }
     }
+
     if (cn !== "reply") {
         for (var n = 0; n < dom.children.length; ++n) {
             //console.log('recur', dom.className, depth);

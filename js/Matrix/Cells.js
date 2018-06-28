@@ -891,7 +891,7 @@ class Cell {
 		if (md.kidValues.length > aDistinct( md.kidValues).length) {
 			throw 'Duplicate IDs not allowed in kidValues: '+ md.kidValues.join();
 		}
-		plapsed('unique check', go)
+		plaps('unique check', go)
 
 		let newkids = c.md.kidValues.map( kidValue => {
 				let xIndex = xKid.findIndex(xk => {
@@ -904,7 +904,7 @@ class Cell {
 				return (xIndex === -1) ? md.kidFactory(c, kidValue) : xKid[xIndex];
 			});
 
-		plapsed('newkids build elapsed', go)
+		plaps('newkids build elapsed', go)
 
         return newkids;
 	}

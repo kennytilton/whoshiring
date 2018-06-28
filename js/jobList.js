@@ -21,7 +21,7 @@ function jobList() {
                 let go = pnow()
                     , jsort = jobListSort(c.md, c.md.selectedJobs) || []
                     , mxlim = c.md.fmUp("resultmax");
-                plapsed('got new sort afetr ', go)
+                plaps('got new sort afetr ', go)
                 return jsort.slice(0, mxlim.results)
             })
             , kidKey: li => li.job.hnId

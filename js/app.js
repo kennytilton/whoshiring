@@ -12,6 +12,7 @@ goog.require('Hiring.regexSearch')
 
 // --- main ---------------------------------------
 
+
 function WhoIsHiring() {
     return div(
         appBanner()
@@ -55,18 +56,20 @@ const appHelpEntry = [
     ,"Works off page scrapes taken every couple of hours." +
     " E-mail <a href='mailto:kentilton@gmail.com'>Kenny</a> if they seem stopped."
 
+    ,"HIRERS! Not seeing your listing? Scraper determination is fuzzy." +
+    " E-mail <a href='mailto:kentilton@gmail.com'>Kenny</a> and we will sort it out."
+
     , "RFEs welcome and can be raised " +
     "<a href='https://github.com/kennytilton/whoshiring/issues'>here</a>. "
+
+    , "This page is not affiliated with Hacker News, but thanks to the HN crew for their assistance. All screw-ups remain " +
+    "<a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton</a>'s."
+
+    , "Graphic design by <a href='https://www.mloboscoart.com'>Michael Lobosco</a>."
 
     , "Built with <a href='https://github.com/kennytilton/matrix/blob/master/js/matrix/readme.md'>" +
     "Matrix Inside</a>&trade;."
 
-    , "This page is not affiliated with Hacker News, but..."
-
-    , "..thanks to the HN crew for their assistance. All screw-ups remain " +
-    "<a href='https://news.ycombinator.com/user?id=kennytilton'>kennytilton</a>'s."
-
-    , "Graphic design by <a href='https://www.mloboscoart.com'>Michael Lobosco</a>."
 ]
 
 

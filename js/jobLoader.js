@@ -25,7 +25,7 @@ function pickAMonth() {
                     mx.value = e.target.value
                 }
             }
-            // --- use this if complaints about initial load ----
+            // --- start with this if initial load is too slow----
             // , option( {value: "none"
             //         , selected: "selected"
             //         , disabled: "disabled"}
@@ -91,12 +91,12 @@ function jobListingLoader() {
         , c => {
             startLoad = Date.now();
 
-
             let selId = c.md.fmUp("searchMonth").value
-                , moDef = gMonthlies.find(mo => mo.hnId === selId);
+                , moDef = gMonthlies.find(mo => mo.hnId === selId)
+                , pgCt = moDef.pgCount; // todo SHIPCHECK
 
             if (moDef.pgCount > 0) {
-                return myRange(moDef.pgCount).map(pgn => {
+                return myRange( pgCt ).map(pgn => {
                     return mkPageLoader(c.md, moDef.hnId, pgn + 1)
                 })
             } else {
@@ -126,24 +126,23 @@ function mkPageLoader(par, hnId, pgNo) {
     )
 }
 
-var PARSE_CHUNK_SIZE = 100
-var PAGE_JOBS_MAX = 1000
-
-function domAthings(dom) {
-    let hnBody = dom.contentDocument.getElementsByTagName('body')[0]
-    return Array.prototype.slice.call(hnBody.querySelectorAll('.athing'))
-}
+var PARSE_CHUNK_SIZE = 100 // todo SHIPCHECK
+var PAGE_JOBS_MAX = 10000 // todo SHIPCHECK limit this during dev if faster laod needed
 
 function jobsCollect(md) {
     if (md.dom.contentDocument) {
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
 
         let chunkSize = PARSE_CHUNK_SIZE
+            // replies all have class "aThing"
+            // but not all replies are job listings
+            // we will deal with that downstream
             , listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'))
             , tempJobs = []
             , pgr = md.fmUp("progress");
 
         if (listing.length > 0) {
+            // our progress meter shows "chunks" being processed, not individual jobs
             pgr.maxN = pgr.maxN + Math.floor(listing.length / PARSE_CHUNK_SIZE)
             parseListings(md, listing, tempJobs, PARSE_CHUNK_SIZE, pgr)
         } else {
@@ -209,14 +208,6 @@ function parseListings(md, listing, tempJobs, chunkSize, progressBar) {
 function frameZap(md) {
     b = md.dom.contentDocument.getElementsByTagName('body')[0];
     b.innerHTML = "";
-}
-
-function jobSpec(dom) {
-    let spec = {hnId: dom.id}
-    for (let n = 0; n < dom.children.length; ++n) {
-        jobSpecExtend(spec, dom.children[n], 0)
-    }
-    return spec
 }
 
 

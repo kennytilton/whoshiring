@@ -58,13 +58,13 @@ function obsKids (slot, md, newv, oldv, c) {
 
 	if (oldv===kUnbound) return; // on awaken all HTML is assembled at once
 
+    var start = pnow();
+
     let pdom = md.dom,
         frag = document.createDocumentFragment();
 
     ast(pdom);
 
-    //clg('redoig kids', md.tag)
-    var start = performance.now();
 
     for (let oldk of oldv)
         if (!find(oldk,newv)) {
@@ -95,7 +95,7 @@ function obsKids (slot, md, newv, oldv, c) {
 
     pdom.innerHTML = null;
     pdom.appendChild( frag);
-    //clg('redid kids', md.tag, performance.now() - start)
+    plaps('redid kids', start)
 
 }
 

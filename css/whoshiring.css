@@ -103,10 +103,22 @@ header .who {
 
 .help {
     margin: 0px;
-    padding-bottom: 6px;
-    background-color: PAPAYAWHIP;
+    padding: 0 24px 6px 0;
+    background-color: #ff6600;
     color: black;
     list-style: none;
+}
+
+.helpli {
+    padding: 6px 18px 9px 6px;
+    margin: 0;
+}
+
+.helpli:nth-child(odd) {
+    background: #ffefd5;
+}
+.helpli:nth-child(even) {
+    background: #e7cda7;
 }
 
 .userAnnotations {

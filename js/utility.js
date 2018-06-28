@@ -132,15 +132,15 @@ function mobileCheck () {
 function pnow() {
     return performance.now();
 }
-function plapsed(tag, start) {
-    //clg('plapsed '+tag, pnow() - start);
+function plaps(tag, start) {
+    // clg('plaps '+tag, pnow() - start);
 }
 
 // --------- help -------------------------
 function helpOff( mx, toggleName, tag='anon') {
-    clg('helpoff doing', toggleName, tag)
     mx.fmUp(toggleName).onOff = false
 }
+
 
 function helpList ( helpItems, toggleName) {
     return div( {
@@ -150,9 +150,20 @@ function helpList ( helpItems, toggleName) {
         }
         ,div({style: "cursor:pointer;text-align: right;margin-right:18px;"
             , onclick: mx => helpOff(mx, toggleName, 'Xchar')}, "X")
-        , ul({ style: "list-style:none; margin-left:0"}
-            , helpItems.map( e=> li({style: "padding:0px;margin: 0 18px 9px 0;"}, e)))
+        , ul({ style: "list-style:none; margin-left:0;padding 6px"}
+            , helpItems.map( e=> li({class: "helpli"}, e)))
 
     )
 }
 
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+window['getParameterByName'] = getParameterByName;
