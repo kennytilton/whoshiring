@@ -79,9 +79,9 @@ function jobSpecExtend(spec, dom, depth) {
                         // , titleSeg.map( function(h) { return h.textContent} ).join(" | "))
                         break
                     }
-                    if (!barCt) {
-                        //clg("DUBIOUS allowed", titleSeg.map( function(h) { return h.textContent} ).join(" | "))
-                    }
+                    // if (!barCt) {
+                    //     clg("DUBIOUS allowed", titleSeg.map( function(h) { return h.textContent} ).join(" | "))
+                    // }
                     spec.OK = true // || spec.company.search("Privacy.com") === 0;
 
                     spec.body.push(n) // first <p> s.b. start of body (some jobs fail this format req)
