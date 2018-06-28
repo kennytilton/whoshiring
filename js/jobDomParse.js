@@ -92,11 +92,13 @@ function jobSpecExtend(spec, dom, depth) {
                     //clg('found job co/depth', spec.company, depth)
 
                     spec.titlesearch = htext;
-                    spec.bodysearch = spec.body.map( function(n) { return n.textContent}).join('*4*2*');
+                    spec.title = titleSeg;
                     spec.onsite = hsmatch(onsiteOK);
                     spec.remote = (hsmatch(remoteOK) && !hsmatch(noremoteOK));
                     spec.visa = (hsmatch(visaOK) && !hsmatch(novisaOK));
                     spec.intern = (hsmatch(internOK) && !hsmatch(nointernOK));
+
+                    // nb: we continue collecting body, so we do not build bodysearch yet
                 } else {
                     barCt += charCount( n.textContent, "|")
                     if ( n.nodeType === 1 && n.nodeName === "A")
@@ -107,6 +109,11 @@ function jobSpecExtend(spec, dom, depth) {
             } else {
                 spec.body.push(n)
             }
+        }
+        if ( spec.OK) {
+
+            spec.bodysearch = spec.body.map( function(n) { return n.textContent}).join('*4*2*');
+
         }
     }
 

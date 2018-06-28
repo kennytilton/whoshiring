@@ -84,14 +84,24 @@ function jobHeader(j) {
             }
             , "&#x2b51")
 
-        // .. and now the job header much as it appears on HN
-        , span({
-            onclick: mx => {
-                let mol = mx.fmUp("showDetails")
-                mol.onOff = !mol.onOff
+        , div(c => j.title.map(n => {
+                if (n.nodeType === 1) { // Normal DOM
+                    if (n.tagName === "A") {
+                        return `<a href=${n.href}>${n.textContent}</a>`
+                    } else {
+                        clg('title punting on tag', n.tagName, n.textContent)
+                        return n.textContent
+                    }
 
-            }
-        }, j.titlesearch))
+                } else if (n.nodeType === 3) { // string content
+                    return "<span>" + n.textContent + "</span>"
+
+                } else {
+                    //clg('UNEXPECTED Node type', n.nodeType, n.nodeName, n.textContent)
+                    return ""
+                }
+            }))
+    )
 }
 
 function jobDetails(j) {

@@ -42,9 +42,9 @@ function controlPanel() {
 window['controlPanel'] = controlPanel;
 
 const jobSorts = [
-    {title: "Creation", keyFn: jobHnIdKey}
-    , {title: "Stars", compFn: jobStarsCompare}
-    , {title: "Company", keyFn: jobCompanyKey}
+    {title: "Creation", keyFn: jobHnIdKey, defaultOrder: -1}
+    , {title: "Stars", compFn: jobStarsCompare, defaultOrder: -1}
+    , {title: "Company", keyFn: jobCompanyKey, defaultOrder: 1}
 ]
 
 function sortBar() {
@@ -63,7 +63,7 @@ function sortBar() {
             }
             , {
                 name: "sortby"
-                , order: cI(1)
+                , order: cI(jobSorts[0].defaultOrder)
                 , selection: cI(jobSorts[0])
                 , sortSpec: cF(c => merge(c.md.selection, {order: c.md.order}))
             }
