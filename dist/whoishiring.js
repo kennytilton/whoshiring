@@ -2100,7 +2100,7 @@ function kfExpand(c, d) {
   debugger;
 }
 ;Matrix.mxWeb = {};
-var mxDom = [], domLogging = !1;
+var mxByDomId = [], domLogging = !1;
 window.domLogging = domLogging;
 function domlog(c) {
   for (var d = [], e = 0; e < arguments.length; ++e) {
@@ -2109,12 +2109,12 @@ function domlog(c) {
   domLogging && console.log("domlog> ", Array.from(d).join(","));
 }
 function dom2mx(c, d) {
-  var e = mxDom[c.id];
+  var e = mxByDomId[c.id];
   if (!e && (void 0 === d || d)) {
     if (c.parentNode) {
       return dom2mx(c.parentNode, !0);
     }
-    throw "dom2mx cannot find mxDom for with dom.sid " + c.sid + ", dom.id " + c.id;
+    throw "dom2mx cannot find mxByDomId with dom.sid " + c.sid + ", dom.id " + c.id;
   }
   return e;
 }
@@ -2218,8 +2218,8 @@ var Tag = function(c, d, e, f) {
   for (var k in e) {
     this.attrKeys.push(k);
   }
-  mxDom[this.id] && (mxDom[this.id] === this ? clg("double load!!!!!") : clgx("WARNING: dup DOM id: ", this.id, e.id, this.name, mxDom[this.id]));
-  mxDom[this.id] = this;
+  mxByDomId[this.id] && (mxByDomId[this.id] === this ? clg("double load!!!!!") : clgx("WARNING: dup DOM id: ", this.id, e.id, this.name, mxByDomId[this.id]));
+  mxByDomId[this.id] = this;
   this.domCache = null;
   Object.defineProperty(this, "dom", {enumerable:!0, get:function() {
     if (null === h.domCache && (h.domCache = document.getElementById(h.id), ast(h.domCache, "Unable to locate DOM for Tag via Tag.id " + h.id), !h.domCache)) {
@@ -2277,8 +2277,22 @@ var isTag = function(c) {
   return c instanceof Tag;
 }, TagAttributesGlobal = new Set("accesskey autofocus checked class cols content contenteditable contextmenu data dir draggable dropzone for hidden href id itemid itemprop itemref itemscope itemtype lang list max name selected spellcheck src style tabindex title translate type value viewBox fill d".split(" ")), TagEvents = new Set("onabort onautocomplete onautocompleteerror onblur oncancel oncanplay oncanplaythrough onchange onclick onclose oncontextmenu oncuechange ondblclick ondrag ondragend ondragenter ondragexit ondragleave ondragover ondragstart ondrop ondurationchange onemptied onended onerror onfocus oninput oninvalid onkeydown onkeypress onkeyup onload onloadeddata onloadedmetadata onloadstart onmousedown onmouseenter onmouseleave onmousemove onmouseout onmouseover onmouseup onmousewheel onpause onplay onplaying onprogress onratechange onreset onresize onscroll onseeked onseeking onselect onshow onsort onstalled onsubmit onsuspend ontimeupdate ontoggle onvolumechange onwaiting".split(" "));
 function tagEventHandler(c, d) {
+  clg("tagevt sees target", c.target, c.target.tagName);
   var e = dom2mx(c.target, !0);
-  e ? tagEventBubble(e, c, d) : clg("tagEventHandler unable to find mx from", dom);
+  if (e) {
+    if ("onclick" === d && "A" === c.target.tagName) {
+      if (e !== mxByDomId[c.target.id]) {
+        clg("not yours");
+      } else {
+        var f = e.callbacks.get(d);
+        f && (f(e, c, d), c.stopPropagation());
+      }
+    } else {
+      tagEventBubble(e, c, d);
+    }
+  } else {
+    clg("tagEventHandler unable to find mx from", dom);
+  }
 }
 function tagEventBubble(c, d, e) {
   if (c) {
