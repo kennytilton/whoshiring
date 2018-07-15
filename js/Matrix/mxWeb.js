@@ -1,50 +1,50 @@
 goog.provide('Matrix.mxWeb');
 goog.require('Matrix.Model');
-var mxDom = []; // here we will link JS "mirror" DOM to actual DOM by their numerical ids
+var mxByDomId = []; // here we will link JS "mirror" DOM to actual DOM by their numerical ids
 
 var domLogging = false;
 
 window['domLogging'] = domLogging;
 
 function domlog(...args) {
-    if ( domLogging)
+    if (domLogging)
         console.log('domlog> ', Array.from(args).join(","));
 }
 
-function dom2mx(dom, mustFind=true) {
+function dom2mx(dom, mustFind = true) {
     //clg('dom2mx dom id',dom.id);
-	let js = mxDom[dom.id];
-	if ( !js && mustFind) {
-	    // clg('trying parent', dom.parentNode)
-	    let parent = dom.parentNode
+    let mx = mxByDomId[dom.id];
+    if (!mx && mustFind) {
+        // clg('trying parent', dom.parentNode)
+        let parent = dom.parentNode
         if (parent)
-            return dom2mx( dom.parentNode, true)
+            return dom2mx(dom.parentNode, true)
         else {
             //debugger;
-            throw `dom2mx cannot find mxDom for with dom.sid ${dom.sid}, dom.id ${dom.id}`
+            throw `dom2mx cannot find mxByDomId with dom.sid ${dom.sid}, dom.id ${dom.id}`
         }
-	}
-	return js;
+    }
+    return mx;
 }
 
-function obsContent (slot, md, newv, oldv, c) {
-	if (oldv===kUnbound) return; // on awaken all HTML is assembled at once
-	// clg(`obsContent of ${md.name || md.id} setting ihtml!!! to ${newv} from ${oldv}`);
-	ast( md.dom, "Tag obs Content");
-    domlog( 'content', newv, oldv);
-	md.dom.innerHTML = newv;
+function obsContent(slot, md, newv, oldv, c) {
+    if (oldv === kUnbound) return; // on awaken all HTML is assembled at once
+    // clg(`obsContent of ${md.name || md.id} setting ihtml!!! to ${newv} from ${oldv}`);
+    ast(md.dom, "Tag obs Content");
+    domlog('content', newv, oldv);
+    md.dom.innerHTML = newv;
 }
 
-function notToBe( mx) {
+function notToBe(mx) {
     if (mx.cleanUp) {
         mx.cleanUp(mx);
     }
 
     mx.state = kDoomed;
 
-    if ( mx.kids ) {
-        for( let k of mx.kids) {
-            notToBe( k);
+    if (mx.kids) {
+        for (let k of mx.kids) {
+            notToBe(k);
         }
     }
     for (let slot in mx.cells) {
@@ -54,9 +54,9 @@ function notToBe( mx) {
     mx.state = kDead;
 }
 
-function obsKids (slot, md, newv, oldv, c) {
+function obsKids(slot, md, newv, oldv, c) {
 
-	if (oldv===kUnbound) return; // on awaken all HTML is assembled at once
+    if (oldv === kUnbound) return; // on awaken all HTML is assembled at once
 
     var start = pnow();
 
@@ -67,86 +67,86 @@ function obsKids (slot, md, newv, oldv, c) {
 
 
     for (let oldk of oldv)
-        if (!find(oldk,newv)) {
+        if (!find(oldk, newv)) {
             // clg('dropping MXW tagged', md.tag);
             notToBe(oldk);
         } // else clg('keeping dom')
 
     for (let newk of newv) {
-        if (find( newk, oldv)) {
+        if (find(newk, oldv)) {
             // clg('moving newk from old to frag', newk.sithId, newk.dom, newk.dom===null);
             if (newk.dom.parentNode !== pdom) {
                 //clg(' doms', dom.parent)
 
                 throw('newk dom parent not = parent');
             }
-            frag.appendChild( newk.dom) //pdom.removeChild(newk.dom));
+            frag.appendChild(newk.dom) //pdom.removeChild(newk.dom));
         } else {
             let incubator = document.createElement('div');
 
             //domlog( 'building new DOM', newk.tag);
 
-            incubator.innerHTML = Tag.toHTML( newk);
+            incubator.innerHTML = Tag.toHTML(newk);
 
-            let newDom = newk.domCache = incubator.removeChild( incubator.firstChild);
-            frag.appendChild( newDom);
+            let newDom = newk.domCache = incubator.removeChild(incubator.firstChild);
+            frag.appendChild(newDom);
         }
     }
 
     pdom.innerHTML = null;
-    pdom.appendChild( frag);
+    pdom.appendChild(frag);
     plaps('redid kids', start)
 
 }
 
-function obsDisabled (slot, md, newv, oldv, c) {
-    if (oldv===kUnbound) return; // on awaken all HTML is assembled at once
-    domlog( 'disabled', newv, oldv);
+function obsDisabled(slot, md, newv, oldv, c) {
+    if (oldv === kUnbound) return; // on awaken all HTML is assembled at once
+    domlog('disabled', newv, oldv);
     md.dom.disabled = !!newv;
 }
 
-function obsHidden (slot, md, newv, oldv, c) {
-    if (oldv===kUnbound) return; // on awaken all HTML is assembled at once
+function obsHidden(slot, md, newv, oldv, c) {
+    if (oldv === kUnbound) return; // on awaken all HTML is assembled at once
 
     if (newv)
-        md.dom.setAttribute('hidden','');
+        md.dom.setAttribute('hidden', '');
     else
         md.dom.removeAttribute('hidden');
 }
 
-function obsClass (slot, md, newv, oldv, c) {
-    if (oldv===kUnbound) return; // on awaken all HTML is assembled at once
-    domlog( 'className', newv, oldv);
-    md.dom.className  = !newv ? "" : (isString( newv) ? newv : newv.join(" "));
+function obsClass(slot, md, newv, oldv, c) {
+    if (oldv === kUnbound) return; // on awaken all HTML is assembled at once
+    domlog('className', newv, oldv);
+    md.dom.className = !newv ? "" : (isString(newv) ? newv : newv.join(" "));
 }
 
 
-function obsStyleProperty (mxprop, md, newv, oldv, c) {
-	if (oldv===kUnbound) return; // on awaken all HTML is assembled at once
+function obsStyleProperty(mxprop, md, newv, oldv, c) {
+    if (oldv === kUnbound) return; // on awaken all HTML is assembled at once
     let cssProp = mxprop.replace('_', '-')
-	//clg( 'attr global', cssProp, newv, oldv);
-	md.tag.dom.style[cssProp] = newv;
+    //clg( 'attr global', cssProp, newv, oldv);
+    md.tag.dom.style[cssProp] = newv;
 }
 
-function obsTagEventHandler (property, md, newv, oldv, c) {
-	if (oldv===kUnbound) return; // on awaken, all HTML is assembled at once
-	//clg(`setting tag ${md.dbg()} style ${property}!!! `+ newv);
+function obsTagEventHandler(property, md, newv, oldv, c) {
+    if (oldv === kUnbound) return; // on awaken, all HTML is assembled at once
+    //clg(`setting tag ${md.dbg()} style ${property}!!! `+ newv);
     // todo this is untested, might need translation of property
 
-	md.dom[property] = newv;
+    md.dom[property] = newv;
 }
 
-var AttrAliases = new Map([['class','className']]);
+var AttrAliases = new Map([['class', 'className']]);
 
-function obsAttrGlobal (property, md, newv, oldv, c) {
-    if (oldv===kUnbound) return; // on awaken all HTML is assembled at once
+function obsAttrGlobal(property, md, newv, oldv, c) {
+    if (oldv === kUnbound) return; // on awaken all HTML is assembled at once
     let trueAttr = AttrAliases.get(property) || property;
-   // clg( 'attr global', property, newv, oldv);
+    // clg( 'attr global', property, newv, oldv);
     md.dom[trueAttr] = newv;
 }
 
-function obsStyleAttr (property, md, newv, oldv, c) {
-    if (oldv===kUnbound) return; // on awaken all HTML is assembled at once
+function obsStyleAttr(property, md, newv, oldv, c) {
+    if (oldv === kUnbound) return; // on awaken all HTML is assembled at once
     let ss = tagStyleString(md);
     md.dom['style'] = ss;
 }
@@ -160,8 +160,9 @@ class TagSession extends Model {
 
         if (!this.routes) this.routes = islots['routes'];
     }
+
     static make(parent, name, islots) {
-        let ts = new TagSession( parent, name, islots);
+        let ts = new TagSession(parent, name, islots);
         // todo this is unfortunate: perhaps we do as another automatic call such as to super, or as Model static
         if (ts.awakenOnInitp) {
             ts.awaken();
@@ -173,10 +174,12 @@ class TagSession extends Model {
             })
         }
     }
+
     static cname() {
         return "TagSession"
     }
-    init () {
+
+    init() {
         if (this.routes) {
             Router(this.routes).init();
         }
@@ -188,94 +191,104 @@ window['TagSession'] = TagSession;
 goog.exportSymbol('mxwebtagsession', TagSession);
 
 class Tag extends Model {
-	constructor(parent, name, attrs, islots) {
+    constructor(parent, name, attrs, islots) {
 
-		let superSlots = Object.assign({}, attrs, islots);
-		delete superSlots.id;
+        let superSlots = Object.assign({}, attrs, islots);
+        delete superSlots.id;
 
-		super( parent, (name || islots.name), superSlots, false);
+        super(parent, (name || islots.name), superSlots, false);
 
-		this.sid = ++sid;
-		// clg('bam tag constructor')
-		// if (!this.tag) this.tag = 'anon';
-		// if (!this.content) this.content = null;
+        this.sid = ++sid;
+        // clg('bam tag constructor')
+        // if (!this.tag) this.tag = 'anon';
+        // if (!this.content) this.content = null;
 
-		if (attrs===undefined) debugger;
+        if (attrs === undefined) debugger;
 
-		if (attrs.id) {
+        if (attrs.id) {
             this.id = attrs.id;
-		} else {
-		    attrs.id = this.sid;
-			this.id = this.sid;
-		}
+        } else {
+            attrs.id = this.sid;
+            this.id = this.sid;
+        }
 
-		// handled in Model now (?) this.slotObservers = [];
-		this.callbacks = new Map;
+        // handled in Model now (?) this.slotObservers = [];
+        this.callbacks = new Map;
         this.attrKeys = [];
-        for ( let k in attrs)
-            this.attrKeys.push( k);
+        for (let k in attrs)
+            this.attrKeys.push(k);
 
-		// --- binding mxDom with dom -----------------
+        // --- binding mxByDomId with dom -----------------
 
-        if (mxDom[this.id]) {
-            if (mxDom[this.id] === this) {
+        if (mxByDomId[this.id]) {
+            if (mxByDomId[this.id] === this) {
                 clg('double load!!!!!')
             } else {
                 clgx('WARNING: dup DOM id: '
-                    , this.id, attrs.id, this.name, mxDom[this.id])
+                    , this.id, attrs.id, this.name, mxByDomId[this.id])
             }
         }
 
-		mxDom[this.id]=this;
+        mxByDomId[this.id] = this;
 
-		this.domCache = null;
-		Object.defineProperty( this, 'dom',
-			{enumerable: true,
-			get: ()=> {
-				if (this.domCache===null) {
-					this.domCache = document.getElementById(this.id);
-					ast(this.domCache, "Unable to locate DOM for Tag via Tag.id " + this.id);
-					if (!this.domCache) {
-					    clg('no dom', name);
-					    throw 'Tag unable to find its DOM';
+        this.domCache = null;
+        Object.defineProperty(this, 'dom',
+            {
+                enumerable: true,
+                get: () => {
+                    if (this.domCache === null) {
+                        this.domCache = document.getElementById(this.id);
+                        ast(this.domCache, "Unable to locate DOM for Tag via Tag.id " + this.id);
+                        if (!this.domCache) {
+                            clg('no dom', name);
+                            throw 'Tag unable to find its DOM';
+                        }
                     }
-				}
-				return this.domCache;}});
+                    return this.domCache;
+                }
+            });
 
-		// todo this is unfortunate: perhaps we do as another automatic call such as to super, or as Model static
-		if (this.awakenOnInitp) {
-			this.awaken();
-		} else {
-			withIntegrity(qAwaken, this, x=> {
-				this.awaken();
-		});
-		}
-	}
-	dbg() { return `tag ${this.tag} nm=${this.name} id=${this.id} `}
-    static cname() { return "Tag"}
-    static isTagKid (k) {
-	    // Tag children can be strings or functions (called with a Cell whos md is the parent) that return Tags
+        // todo this is unfortunate: perhaps we do as another automatic call such as to super, or as Model static
+        if (this.awakenOnInitp) {
+            this.awaken();
+        } else {
+            withIntegrity(qAwaken, this, x => {
+                this.awaken();
+            });
+        }
+    }
+
+    dbg() {
+        return `tag ${this.tag} nm=${this.name} id=${this.id} `
+    }
+
+    static cname() {
+        return "Tag"
+    }
+
+    static isTagKid(k) {
+        // Tag children can be strings or functions (called with a Cell whos md is the parent) that return Tags
         return isString(k) || (k instanceof Function) || (k instanceof Array);
     }
 
     tagToHTML() {
-		let tag = this.tag
-			, others = tagAttrsBuild(this)
-			, s = tagStyleBuild(this)
-			, attrs = `id=${this.id} ${others} ${s}`;
+        let tag = this.tag
+            , others = tagAttrsBuild(this)
+            , s = tagStyleBuild(this)
+            , attrs = `id=${this.id} ${others} ${s}`;
 
-		ast(tag);
+        ast(tag);
         return `<${tag} ${attrs}>${this.content || this.kidsToHTML()}</${tag}>`;
-	}
+    }
 
-    static toHTML (mx) {
+    static toHTML(mx) {
         if (isString(mx)) {
             return mx;
-        } else if ( Array.isArray(mx)) {
+        } else if (Array.isArray(mx)) {
             return mx.reduce(function (cum, chunk) {
                 return cum + Tag.toHTML(chunk)
             }, "");
-        } else if ( typeof mx === "function") {
+        } else if (typeof mx === "function") {
             return mx().tagToHTML();
         } else {
             return mx.tagToHTML();
@@ -283,18 +296,21 @@ class Tag extends Model {
     }
 
     kidsToHTML() {
-	    //clg('making kids HTML for', this.dbg());
-		return this.kids? this.kids.reduce((pv, kid)=>{ return pv + Tag.toHTML( kid);},''):'';
-	}
-	slotObserverResolve(slot) {
+        //clg('making kids HTML for', this.dbg());
+        return this.kids ? this.kids.reduce((pv, kid) => {
+            return pv + Tag.toHTML(kid);
+        }, '') : '';
+    }
 
-		let obs = this.slotObservers[slot];
+    slotObserverResolve(slot) {
 
-		if (!obs) {
-			if (slot === 'content') {
-				obs = obsContent;
-			} else if (slot === 'kids') {
-				obs = obsKids;
+        let obs = this.slotObservers[slot];
+
+        if (!obs) {
+            if (slot === 'content') {
+                obs = obsContent;
+            } else if (slot === 'kids') {
+                obs = obsKids;
             } else if (slot === 'disabled') {
                 obs = obsDisabled;
             } else if (slot === 'hidden') {
@@ -304,21 +320,23 @@ class Tag extends Model {
             } else if (slot === 'style') {
                 obs = obsStyleAttr;
             } else if (TagEvents.has(slot)) {
-				obs = obsTagEventHandler;
-			} else if (TagAttributesGlobal.has(slot)) {
-				obs = obsAttrGlobal;
-			} else {
-				// console.warn(`tag ${this.tag} not resolving observer for ${slot}`);
-				obs = kObserverUnresolved;
-			}
-			this.slotObservers[slot] = obs;
-		}
-		return obs;
-	}
-	fmTag(tag, key) {
-		return this.fmUp(md=> md.tag===tag,{}, key)
-	}
+                obs = obsTagEventHandler;
+            } else if (TagAttributesGlobal.has(slot)) {
+                obs = obsAttrGlobal;
+            } else {
+                // console.warn(`tag ${this.tag} not resolving observer for ${slot}`);
+                obs = kObserverUnresolved;
+            }
+            this.slotObservers[slot] = obs;
+        }
+        return obs;
+    }
+
+    fmTag(tag, key) {
+        return this.fmUp(md => md.tag === tag, {}, key)
+    }
 }
+
 window['Tag'] = Tag;
 
 function tag2html(x) {
@@ -334,37 +352,56 @@ var isTag = x => x instanceof Tag;
 // ---- formerly tags.js ------------------------------------------
 
 /* global Tag TagEvents */
-const TagAttributesGlobal =  new Set(['accesskey','autofocus','checked','class'
-    ,'cols', 'content', 'contenteditable','contextmenu'
-    , 'data','dir','draggable','dropzone','for','hidden','href'
-    ,'id','itemid','itemprop','itemref','itemscope'
-	,'itemtype','lang','list','max','name'
-    ,'selected','spellcheck','src','style'
-    ,'tabindex','title','translate', 'type'
-    ,'value','viewBox','fill','d']);
+const TagAttributesGlobal = new Set(['accesskey', 'autofocus', 'checked', 'class'
+    , 'cols', 'content', 'contenteditable', 'contextmenu'
+    , 'data', 'dir', 'draggable', 'dropzone', 'for', 'hidden', 'href'
+    , 'id', 'itemid', 'itemprop', 'itemref', 'itemscope'
+    , 'itemtype', 'lang', 'list', 'max', 'name'
+    , 'selected', 'spellcheck', 'src', 'style'
+    , 'tabindex', 'title', 'translate', 'type'
+    , 'value', 'viewBox', 'fill', 'd']);
 
-const TagEvents =  new Set(['onabort','onautocomplete','onautocompleteerror','onblur','oncancel'
-	,'oncanplay','oncanplaythrough','onchange','onclick','onclose','oncontextmenu','oncuechange'
-	,'ondblclick','ondrag','ondragend','ondragenter','ondragexit','ondragleave','ondragover'
-	,'ondragstart','ondrop','ondurationchange','onemptied','onended','onerror','onfocus'
-	,'oninput','oninvalid','onkeydown','onkeypress','onkeyup','onload','onloadeddata'
-	,'onloadedmetadata','onloadstart','onmousedown','onmouseenter','onmouseleave','onmousemove'
-	,'onmouseout','onmouseover','onmouseup','onmousewheel','onpause','onplay','onplaying'
-	,'onprogress','onratechange','onreset','onresize','onscroll','onseeked','onseeking'
-	,'onselect','onshow','onsort','onstalled','onsubmit','onsuspend','ontimeupdate','ontoggle'
-	,'onvolumechange','onwaiting']);
+const TagEvents = new Set(['onabort', 'onautocomplete', 'onautocompleteerror', 'onblur', 'oncancel'
+    , 'oncanplay', 'oncanplaythrough', 'onchange', 'onclick', 'onclose', 'oncontextmenu', 'oncuechange'
+    , 'ondblclick', 'ondrag', 'ondragend', 'ondragenter', 'ondragexit', 'ondragleave', 'ondragover'
+    , 'ondragstart', 'ondrop', 'ondurationchange', 'onemptied', 'onended', 'onerror', 'onfocus'
+    , 'oninput', 'oninvalid', 'onkeydown', 'onkeypress', 'onkeyup', 'onload', 'onloadeddata'
+    , 'onloadedmetadata', 'onloadstart', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove'
+    , 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onpause', 'onplay', 'onplaying'
+    , 'onprogress', 'onratechange', 'onreset', 'onresize', 'onscroll', 'onseeked', 'onseeking'
+    , 'onselect', 'onshow', 'onsort', 'onstalled', 'onsubmit', 'onsuspend', 'ontimeupdate', 'ontoggle'
+    , 'onvolumechange', 'onwaiting']);
 
-function tagEventHandler( event, prop ) {
-    let md = dom2mx( event.target, true);
+function tagEventHandler(event, prop) {
+    clg('tagevt sees target', event.target, event.target.tagName)
+    let md = dom2mx(event.target, true);
 
     if (md) {
-        tagEventBubble(md, event, prop)
+        // check for the edge case where we get a click event for an A tag
+        // and do not have a click handler. In this case we consider the click
+        // handled and do not bubble. But if the A tag was a proper mx element
+        // *and* it has a click handler we honor the clear intent to process clicks
+        // further on navigations
+        if (prop === 'onclick' && event.target.tagName === "A") {
+            if (md !== mxByDomId[event.target.id]) {
+                // dom2mx found the md by searching up, so md does not proxy the A dom
+                // and should not be offered the user's navigation click
+                clg('not yours')
+            } else {
+                let cb = md.callbacks.get(prop)
+                if (cb) {
+                    cb(md, event, prop)
+                    event.stopPropagation()
+                }
+            }
+        } else
+            tagEventBubble(md, event, prop)
     } else {
         clg('tagEventHandler unable to find mx from', dom)
     }
 }
 
-function tagEventBubble( md, event, prop) {
+function tagEventBubble(md, event, prop) {
     if (md) {
         //clg('bubble got md', md, md.tag, md.id)
         let cb = md.callbacks.get(prop)
@@ -379,15 +416,15 @@ function tagEventBubble( md, event, prop) {
 }
 
 function tagAttrsBuild(md) {
-	let attrs = '';
-    md.attrKeys.forEach( function (prop) {
-	    if (TagEvents.has(prop)) {
-	        if ( !(md[prop] instanceof Function)) {
+    let attrs = '';
+    md.attrKeys.forEach(function (prop) {
+        if (TagEvents.has(prop)) {
+            if (!(md[prop] instanceof Function)) {
                 clg('bingo event!!!!!!!!!! ' + prop);
                 clg('bingo event handler!!!!!!!!!! ' + md[prop]);
             }
-            ast( md[prop] instanceof Function, 'tagattrsbuild handler not fn');
-            md.callbacks.set( prop, md[prop]);
+            ast(md[prop] instanceof Function, 'tagattrsbuild handler not fn');
+            md.callbacks.set(prop, md[prop]);
             attrs += ` ${prop}="tagEventHandler(event, '${prop}')"`;
         } else {
             switch (prop) {
@@ -408,11 +445,11 @@ function tagAttrsBuild(md) {
                     break;
 
                 case 'style':
-                    attrs += tagStyleBuild( md);
+                    attrs += tagStyleBuild(md);
                     break;
 
                 case 'class':
-                    if ( md[prop]) {
+                    if (md[prop]) {
                         attrs += ` class="${isString(md[prop]) ? md[prop] : md[prop]
                             .filter(c => (c !== null && c !== undefined))
                             .join(' ')}"`;
@@ -423,7 +460,7 @@ function tagAttrsBuild(md) {
 
                     if (md[prop]) {
                         //attrs += ` ${prop}="${md[prop]}"`;
-                         if (TagAttributesGlobal.has(prop)) {
+                        if (TagAttributesGlobal.has(prop)) {
                             // clg('bingo attr global '+prop+'='+md[prop]);
                             attrs += ` ${prop}="${md[prop]}"`;
                         } else clg('unknown attribute prop', prop);
@@ -432,39 +469,39 @@ function tagAttrsBuild(md) {
                 }
             }
         }
-	});
-	//if (md.tag==='input') clg(md.tag + ' attrs ' + attrs);
-	return attrs;
+    });
+    //if (md.tag==='input') clg(md.tag + ' attrs ' + attrs);
+    return attrs;
 }
 
-function tag( tag, attrs, customs, kids) {
-    if ( kids.length === 1 && isString( kids[0])) {
-        if ( attrs.content ) throw( `tag ${tag}has one string child ${kids[0]} but also content ${attrs.content}`);
+function tag(tag, attrs, customs, kids) {
+    if (kids.length === 1 && isString(kids[0])) {
+        if (attrs.content) throw( `tag ${tag}has one string child ${kids[0]} but also content ${attrs.content}`);
         attrs.content = kids[0];
         kids = null;
     }
     if (customs)
-        for ( let k in attrs || {})
-        if (customs.hasOwnProperty( k)) {
-            clg(`WARNING: duplicate key ${k} in tag ${tag}`);
-        }
+        for (let k in attrs || {})
+            if (customs.hasOwnProperty(k)) {
+                clg(`WARNING: duplicate key ${k} in tag ${tag}`);
+            }
     if (attrs)
-        for ( let k in customs || {})
-        if (attrs.hasOwnProperty( k)) {
-            clg(`WARNING: duplicate key ${k} in tag ${tag}`);
-        }
+        for (let k in customs || {})
+            if (attrs.hasOwnProperty(k)) {
+                clg(`WARNING: duplicate key ${k} in tag ${tag}`);
+            }
 
     return function (c) {
         //clg('tag ', typeof par, id, par === null, isModel(par), typeof par ==='undefined', factory.cname());
 
         let cu = customs || {}
             , opts = Object.assign({}, {tag: tag}
-                    , kids ? {kids: cKids( kids)} : null
-                    , cu)
-            , tg = new Tag( c ? c.md : null
-                        , cu.name || tag
-                        , attrs
-                        , opts);
+            , kids ? {kids: cKids(kids)} : null
+            , cu)
+            , tg = new Tag(c ? c.md : null
+            , cu.name || tag
+            , attrs
+            , opts);
         //clg(`tag sees ids ${id} and mdid ${md.id} name ${md.name}`);
         return tg;
     };
@@ -472,13 +509,13 @@ function tag( tag, attrs, customs, kids) {
 
 function genTagEx(tagName) {
     window[tagName] = function () {
-        if ( Tag.isTagKid( arguments[0])) {
-            return tag( tagName, {}, {}, allArgs(arguments));
+        if (Tag.isTagKid(arguments[0])) {
+            return tag(tagName, {}, {}, allArgs(arguments));
         } else {
-            if ( Tag.isTagKid( arguments[1])) {
-                return tag( tagName, arguments[0] || {}, {}, cdrArgs(arguments));
+            if (Tag.isTagKid(arguments[1])) {
+                return tag(tagName, arguments[0] || {}, {}, cdrArgs(arguments));
             } else {
-                return tag( tagName, arguments[0] || {},  arguments[1] || {}, cddrArgs(arguments));
+                return tag(tagName, arguments[0] || {}, arguments[1] || {}, cddrArgs(arguments));
             }
         }
     }
@@ -516,7 +553,7 @@ const tagNames = ['a', 'abbr', 'acronym', 'address', 'applet', 'area', 'article'
     'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title',
     'tr', 'track', 'tt', 'u', 'ul', 'mxwvar', 'video', 'wbr', 'xmp'];
 
-tagNames.map( tg => genTagEx( tg));
+tagNames.map(tg => genTagEx(tg));
 
 
 goog.exportSymbol('a', a);
@@ -679,8 +716,8 @@ class mxCSS extends Model {
         super(null, 'css', superSlots, false);
 
         this.cssProps = [];
-        for ( let k in islots)
-            this.cssProps.push( k);
+        for (let k in islots)
+            this.cssProps.push(k);
 
         clg("cssProps!!!!", this.cssProps);
 
@@ -691,18 +728,22 @@ class mxCSS extends Model {
         withIntegrity(qAwaken, this, x => this.awaken());
     }
 
-    dbg() { return `mxCSS ${this.tag.tag} tagnm=${this.tag.name}`}
+    dbg() {
+        return `mxCSS ${this.tag.tag} tagnm=${this.tag.name}`
+    }
 
-    static cname() { return "mxCSS"}
+    static cname() {
+        return "mxCSS"
+    }
 
     slotObserverResolve(slot) {
         return obsStyleProperty;
     }
 }
 
-function mkCSS( props) {
+function mkCSS(props) {
     return function (tag) {
-        return new mxCSS( tag, props)
+        return new mxCSS(tag, props)
     }
 }
 
@@ -710,15 +751,15 @@ function tagStyleBuild(md) {
     let ss = '',
         style = md.style;
 
-    if ( style instanceof Function) {
+    if (style instanceof Function) {
         //clg(' model style!!!!');
-        style = style( md);
+        style = style(md);
     }
 
-    if ( isString( style)) {
+    if (isString(style)) {
         ss = style;
-    } else if ( style instanceof mxCSS ) {
-        style.cssProps.forEach( function (mxprop) {
+    } else if (style instanceof mxCSS) {
+        style.cssProps.forEach(function (mxprop) {
             let cssProp = mxprop.replace('_', '-')
                 , cssValue = style[mxprop];
             //clg('bildstyle',mxprop, cssProp, cssValue);
@@ -733,22 +774,22 @@ function tagStyleBuild(md) {
         }
     }
 
-    return ss===''? '' : ` style="${ss}"`;
+    return ss === '' ? '' : ` style="${ss}"`;
 }
 
 function tagStyleString(md) {
     let ss = '',
         style = md.style;
 
-    if ( style instanceof Function) {
+    if (style instanceof Function) {
         //clg(' model style!!!!');
-        style = style( md);
+        style = style(md);
     }
 
-    if ( isString( style)) {
+    if (isString(style)) {
         ss = style;
-    } else if ( style instanceof mxCSS ) {
-        style.cssProps.forEach( function (mxprop) {
+    } else if (style instanceof mxCSS) {
+        style.cssProps.forEach(function (mxprop) {
             let cssProp = mxprop.replace('_', '-')
                 , cssValue = style[mxprop];
             //clg('bildstyle',mxprop, cssProp, cssValue);
@@ -773,17 +814,19 @@ class MXStorable extends Model {
     // this constructor can create a new storable (in window.localStorage
     // as well as the matrix), or load a storable into the matrix
 
-    constructor( icslots, force = false, extras = true) {
+    constructor(icslots, force = false, extras = true) {
         let islots = icslots || {},
             netSlots = !extras ? islots :
                 Object.assign(
-                // these first two will be overridden when loading fro localStorage
-                { id: (islots.lsPrefix || "MXSTOR_ANON")  + uuidv4(),
-                    created: Date.now()},
-                islots,
-                // on load from storage, this deleted will be present and thus
-                // not loaded as mutable input cell. ie, no undelete.
-                {deleted: islots.deleted || cI(null)});
+                    // these first two will be overridden when loading fro localStorage
+                    {
+                        id: (islots.lsPrefix || "MXSTOR_ANON") + uuidv4(),
+                        created: Date.now()
+                    },
+                    islots,
+                    // on load from storage, this deleted will be present and thus
+                    // not loaded as mutable input cell. ie, no undelete.
+                    {deleted: islots.deleted || cI(null)});
 
         super(null, null, netSlots, false);
 
@@ -793,22 +836,26 @@ class MXStorable extends Model {
         }
     }
 
-    static storableProperties () { return ["id", "created","deleted"]}
+    static storableProperties() {
+        return ["id", "created", "deleted"]
+    }
 
-    toJSON () {
+    toJSON() {
         // clg('or constructor', this.constructor.storableProperties());
         return this.constructor.storableProperties()
-            .reduce( (j, p) => { j[p] = this[p];
-                return j;}, {});
+            .reduce((j, p) => {
+                j[p] = this[p];
+                return j;
+            }, {});
     }
 
-    static load (klass, id) {
-        let obj = window.localStorage.getObject( id);
+    static load(klass, id) {
+        let obj = window.localStorage.getObject(id);
         //clg('loading', id, obj.deleted);
-        return new klass( obj)
+        return new klass(obj)
     }
 
-    static obsAnyChange ( slot, row, newv, priorv, c) {
+    static obsAnyChange(slot, row, newv, priorv, c) {
         row.store()
     }
 
@@ -817,13 +864,13 @@ class MXStorable extends Model {
         return MXStorable.obsAnyChange
     }
 
-    store () {
+    store() {
         //clg("storing", this.id)
-        MXStorable.storeObject( this.id, this.toJSON());
+        MXStorable.storeObject(this.id, this.toJSON());
     }
 
-    static storeObject ( id, obj) {
-        window.localStorage.setObject( id, obj);
+    static storeObject(id, obj) {
+        window.localStorage.setObject(id, obj);
     }
 
     delete() {
@@ -832,20 +879,20 @@ class MXStorable extends Model {
 
     static countAllItems(prefix) {
         return Object.keys(window.localStorage || {})
-            .filter( k => k.startsWith( prefix))
+            .filter(k => k.startsWith(prefix))
             .length
     }
 
     static loadAllItems(klass, prefix) {
         return Object.keys(window.localStorage || {})
-            .filter( k => k.startsWith( prefix))
-            .map( key => MXStorable.load( klass, key));
+            .filter(k => k.startsWith(prefix))
+            .map(key => MXStorable.load(klass, key));
     }
 
-    static removeAllItems( prefix) {
+    static removeAllItems(prefix) {
         return Object.keys(window.localStorage || {})
-            .filter( k => k.startsWith( prefix))
-            .map( key => window.localStorage.removeItem( key));
+            .filter(k => k.startsWith(prefix))
+            .map(key => window.localStorage.removeItem(key));
     }
 }
 
