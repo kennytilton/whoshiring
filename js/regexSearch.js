@@ -5,7 +5,7 @@ goog.require('Hiring.usernote')
 goog.provide('Hiring.regexSearch')
 
 function mkTitleRgx() {
-    return mkListingRgx('title', "Title Only", 'title')
+    return mkListingRgx('title', "Title Only", 'title') //, ":remote or nyc or nj or phil or princeton")
 }
 
 function mkFullRgx() {

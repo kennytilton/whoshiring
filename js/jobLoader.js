@@ -117,7 +117,7 @@ function mkPageLoader(par, hnId, pgNo) {
                 }
             })
             , style: "display: none"
-            , onload: md => jobsCollect(md)
+            , onload: md => jobsCollect( md, pgNo)
         }
         , {
             jobs: cI(null)
@@ -129,22 +129,18 @@ function mkPageLoader(par, hnId, pgNo) {
 var PARSE_CHUNK_SIZE = 100 // todo SHIPCHECK
 var PAGE_JOBS_MAX = 1000 // todo SHIPCHECK limit this during dev if faster laod needed
 
-function jobsCollect(md) {
+function jobsCollect(md, pgNo) {
     if (md.dom.contentDocument) {
         hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
-
         let chunkSize = PARSE_CHUNK_SIZE
-            // replies all have class "aThing"
-            // but not all replies are job listings
-            // we will deal with that downstream
             , listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'))
             , tempJobs = []
             , pgr = md.fmUp("progress");
 
         if (listing.length > 0) {
-            // our progress meter shows "chunks" being processed, not individual jobs
-            pgr.maxN = pgr.maxN + Math.floor(listing.length / PARSE_CHUNK_SIZE)
-            parseListings(md, listing, tempJobs, PARSE_CHUNK_SIZE, pgr)
+            pgr.maxN = pgr.maxN + Math.floor( listing.length / PARSE_CHUNK_SIZE)
+            parseListings( md, listing, tempJobs, PARSE_CHUNK_SIZE, pgr)
+            //clg("jobs found", md.jobs.length, "page", pgNo)
         } else {
             md.jobs = []
         }
@@ -198,7 +194,7 @@ function parseListings(md, listing, tempJobs, chunkSize, progressBar) {
             }
         } else {
             md.jobs = tempJobs;
-            //clg('page loaded 2', md.pgNo, tempJobs.length, "elapsed=", Date.now() - startLoad)
+            clg('page loaded 2', md.pgNo, tempJobs.length, "elapsed=", Date.now() - startLoad)
             frameZap(md);
         }
     }

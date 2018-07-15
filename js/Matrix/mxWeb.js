@@ -372,7 +372,7 @@ function tagEventBubble( md, event, prop) {
             //clg('hitting cb!!!', md.tag, prop)
             cb(md, event, prop)
             event.stopPropagation()
-        } // else tagEventBubble(md.par, event, prop)
+        } else tagEventBubble(md.par, event, prop)
     } else {
         clg('tagEventBubble topped out', prop, event)
     }

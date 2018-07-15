@@ -2283,7 +2283,7 @@ function tagEventHandler(c, d) {
 function tagEventBubble(c, d, e) {
   if (c) {
     var f = c.callbacks.get(e);
-    f && (f(c, d, e), d.stopPropagation());
+    f ? (f(c, d, e), d.stopPropagation()) : tagEventBubble(c.par, d, e);
   } else {
     clg("tagEventBubble topped out", e, d);
   }
@@ -8567,14 +8567,15 @@ function mkPageLoader(c, d, e) {
   return iframe({src:cF(function(c) {
     return null === d ? "" : void 0 === e ? "files/" + d + "/" + d + ".html" : "files/" + d + "/" + e + ".html";
   }), style:"display: none", onload:function(c) {
-    return jobsCollect(c);
+    return jobsCollect(c, e);
   }}, {jobs:cI(null), pgNo:e});
 }
 var PARSE_CHUNK_SIZE = 100, PAGE_JOBS_MAX = 1000;
-function jobsCollect(c) {
+function jobsCollect(c, d) {
   if (c.dom.contentDocument) {
     hnBody = c.dom.contentDocument.getElementsByTagName("body")[0];
-    var d = Array.prototype.slice.call(hnBody.querySelectorAll(".athing")), e = [], f = c.fmUp("progress");
+    d = Array.prototype.slice.call(hnBody.querySelectorAll(".athing"));
+    var e = [], f = c.fmUp("progress");
     0 < d.length ? (f.maxN += Math.floor(d.length / PARSE_CHUNK_SIZE), parseListings(c, d, e, PARSE_CHUNK_SIZE, f)) : c.jobs = [];
   } else {
     c.jobs = [];
@@ -8599,7 +8600,7 @@ function parseListings(c, d, e, f, g) {
         return k(l + m);
       }) : (c.jobs = e, frameZap(c));
     } else {
-      c.jobs = e, frameZap(c);
+      c.jobs = e, clg("page loaded 2", c.pgNo, e.length, "elapsed=", Date.now() - startLoad), frameZap(c);
     }
   };
   k(0);
@@ -8726,7 +8727,8 @@ function jobHeader(c) {
   }));
 }
 function jobDetails(c) {
-  return div({class:cF(function(c) {
+  return div({onclick:function(c) {
+  }, class:cF(function(c) {
     var d = c.md.fmUp("showDetails").onOff;
     return c.pv === kUnbound ? d ? "slideIn" : "" : d ? "slideIn" : "slideOut";
   }), style:cF(function(c) {

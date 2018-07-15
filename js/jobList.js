@@ -85,28 +85,29 @@ function jobHeader(j) {
             , "&#x2b51")
 
         , div(c => j.title.map(n => {
-                if (n.nodeType === 1) { // Normal DOM
-                    if (n.tagName === "A") {
-                        return `<a href=${n.href}>${n.textContent}</a>`
-                    } else {
-                        clg('title punting on tag', n.tagName, n.textContent)
-                        return n.textContent
-                    }
-
-                } else if (n.nodeType === 3) { // string content
-                    return "<span>" + n.textContent + "</span>"
-
+            if (n.nodeType === 1) { // Normal DOM
+                if (n.tagName === "A") {
+                    return `<a href=${n.href}>${n.textContent}</a>`
                 } else {
-                    //clg('UNEXPECTED Node type', n.nodeType, n.nodeName, n.textContent)
-                    return ""
+                    clg('title punting on tag', n.tagName, n.textContent)
+                    return n.textContent
                 }
-            }))
+
+            } else if (n.nodeType === 3) { // string content
+                return "<span>" + n.textContent + "</span>"
+
+            } else {
+                //clg('UNEXPECTED Node type', n.nodeType, n.nodeName, n.textContent)
+                return ""
+            }
+        }))
     )
 }
 
 function jobDetails(j) {
     return div({
-            class: cF(c => {
+            onclick: mx => {} // just prevent bubbling which would toggle the details closed
+            , class: cF(c => {
                 let show = c.md.fmUp('showDetails').onOff;
                 if (c.pv === kUnbound) {
                     return show ? "slideIn" : ""
