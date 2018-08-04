@@ -8673,7 +8673,7 @@ function sortBar() {
   })));
 }
 function excludedp(c) {
-  UNote.dict[c.hnId].excluded;
+  return UNote.dict[c.hnId].excluded;
 }
 function jobListingControlBar() {
   return div({style:merge(hzFlexWrapCentered, {margin:"12px 0 0 0px", font_size:"1em", padding:"4px", border_style:"groove", border_color:"khaki", border_width:"2px", background:"PAPAYAWHIP", justify_content:"space-between", align_items:"center"})}, div({style:merge(hzFlexWrapCentered, {flex_wrap:"wrap"})}, span({style:"font-size:1em;margin-right:12px", content:cF(function(c) {
