@@ -12,7 +12,6 @@ goog.require('Hiring.regexSearch')
 
 // --- main ---------------------------------------
 
-
 function WhoIsHiring() {
     return div(
         appBanner()
@@ -40,7 +39,7 @@ function appBanner () {
             })
             , div( { class: "headermain"}
                 , span( {class: "askhn"}, "Ask HN:")
-                , span( {class: "who"}, "Who&rsquo;s Hiring?")))
+                , span( {class: "who"}, "Who Is Hiring?")))
         , helpList(appHelpEntry,"appHelpToggle"))
 }
 

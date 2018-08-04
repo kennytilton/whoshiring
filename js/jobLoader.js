@@ -64,6 +64,9 @@ function pickAMonth() {
 
 var startLoad;
 
+// , mkExtraJobLoader('triplebyte')
+
+
 function jobListingLoader() {
     return div({style: "visibility:collapsed;"}
         , {
@@ -71,11 +74,12 @@ function jobListingLoader() {
             , jobs: cF(c => {
                 let parts = c.md.kids.map(k => k.jobs);
                 if (parts.every(p => p !== null)) {
-                    //clg('all jobs resolved!!!!', parts.map( p => p.length))
+                    clg('all jobs resolved!!!!', parts.map( p => p.length))
                     let all = parts.reduce((accum, pj) => {
                         return accum.concat(pj)
                     });
-                    //clg("jobs", all.slice(0, 3).map(j => JSON.stringify(j)));
+                    // clg("jobs", all.slice(0, 3).map(j => JSON.stringify(j)));
+
                     return all;
                 } else {
                     return null
@@ -93,15 +97,18 @@ function jobListingLoader() {
 
             let selId = c.md.fmUp("searchMonth").value
                 , moDef = gMonthlies.find(mo => mo.hnId === selId)
-                , pgCt = moDef.pgCount; // todo SHIPCHECK
+                , pgCt = moDef.pgCount
+                , kids = [];
 
             if (moDef.pgCount > 0) {
-                return myRange( pgCt ).map(pgn => {
-                    return mkPageLoader(c.md, moDef.hnId, pgn + 1)
+                myRange( pgCt ).map(pgn => {
+                    kids.push( mkPageLoader(c.md, moDef.hnId, pgn + 1))
                 })
             } else {
-                return mkPageLoader(c.md, moDef.hnId)
+                kids.push( mkPageLoader(c.md, moDef.hnId))
             }
+            kids.push( mkExtraJobLoader('triplebytefull'))
+            return kids;
         })
 }
 
@@ -126,8 +133,55 @@ function mkPageLoader(par, hnId, pgNo) {
     )
 }
 
+function mkExtraJobLoader(jobName) {
+    return iframe({
+            src: `dist/extras/${jobName}.html`
+            , style: "display: none"
+            , onload: md => extraJobParse(md, jobName)
+        }
+        , {
+            name: jobName + "loader"
+            , jobs : cI(null)
+        }
+    )
+}
+
+function extraJobParse(md, jobName) {
+    md.jobs = null
+    if (md.dom.contentDocument) {
+        hnBody = md.dom.contentDocument.getElementsByTagName('body')[0];
+        let chunkSize = PARSE_CHUNK_SIZE
+            , listing = Array.prototype.slice.call(hnBody.querySelectorAll('.athing'));
+
+        if (listing.length > 0) {
+            listing[0].id = jobName // todo m/b
+            let spec = jobSpec(listing[0])
+
+            if (spec.OK) {
+                let hnId = spec.hnId;
+
+                UNote.dict[hnId] = new UserNotes({hnId: hnId});
+
+                if (!UNote.dict[hnId]) {
+                    //clg('making Unote for hnId!!!!!!', hnId)
+                    UNote.dict[hnId] = new UserNotes({hnId: hnId});
+                }
+                md.jobs = [spec]
+            } else {
+                clg('extra not OK')
+            }
+        } else {
+            clg('no job!!!!!!!!!')
+
+        }
+    } else {
+        clg('no content!!!!!!!!!')
+    }
+}
+
+
 var PARSE_CHUNK_SIZE = 100 // todo SHIPCHECK
-var PAGE_JOBS_MAX = 1000 // todo SHIPCHECK limit this during dev if faster laod needed
+var PAGE_JOBS_MAX = 10 // todo SHIPCHECK limit this during dev if faster laod needed
 
 function jobsCollect(md, pgNo) {
     if (md.dom.contentDocument) {

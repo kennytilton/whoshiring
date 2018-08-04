@@ -14,7 +14,7 @@ function jobList() {
                 //clg('recomputing seljobs!!!!!!!!!!!!!!!!!!!');
                 let rawjobs = c.md.fmUp("jobLoader").jobs
                     , seljobs = jobListFilter(c.md, rawjobs);
-                // clg( 'got seljobs', seljobs.length)
+
                 return seljobs
             })
             , kidValues: cF(c => {
@@ -121,7 +121,13 @@ function jobDetails(j) {
         , userAnnotations(j)
         , div({
                 style: "margin:6px;overflow:auto;"
-                , ondblclick: mx => jumpToHN(j.hnId)
+                , ondblclick: mx => {
+                    if ( j.hnId === "triplebytefull") {
+                        window.open("https://triplebyte.com/a/R1E80IU/d", '_blank');
+                    } else {
+                        jumpToHN(j.hnId)
+                    }
+                }
             }
             // here rather than toggling hidden we avoid even building the hidden
             // structure until the user requests it. Performance advantage merely guessed at.

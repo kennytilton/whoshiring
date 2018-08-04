@@ -91,7 +91,10 @@ function sortBar() {
             })))
     )
 }
-
+function excludedp (j) {
+    //clg('excluded check', j.hnId, typeof j.hnId)
+    UNote.dict[j.hnId].excluded;
+}
 function jobListingControlBar() {
     return div({
             style: merge(hzFlexWrapCentered, {
@@ -123,7 +126,7 @@ function jobListingControlBar() {
                 ,
                 onOff: cI(false)
                 ,
-                excludedCt: cF(c => c.md.fmUp("job-list").selectedJobs.filter(j => UNote.dict[j.hnId].excluded).length)
+                excludedCt: cF(c => c.md.fmUp("job-list").selectedJobs.filter(j => excludedp(j)).length)
             }))
         , resultMax()
         , button({

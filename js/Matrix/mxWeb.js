@@ -373,7 +373,6 @@ const TagEvents = new Set(['onabort', 'onautocomplete', 'onautocompleteerror', '
     , 'onvolumechange', 'onwaiting']);
 
 function tagEventHandler(event, prop) {
-    clg('tagevt sees target', event.target, event.target.tagName)
     let md = dom2mx(event.target, true);
 
     if (md) {

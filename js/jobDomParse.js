@@ -93,10 +93,6 @@ function jobSpecExtend(spec, dom, depth) {
 
                     spec.titlesearch = htext;
                     spec.title = titleSeg;
-                    spec.onsite = hsmatch(onsiteOK);
-                    spec.remote = (hsmatch(remoteOK) && !hsmatch(noremoteOK));
-                    spec.visa = (hsmatch(visaOK) && !hsmatch(novisaOK));
-                    spec.intern = (hsmatch(internOK) && !hsmatch(nointernOK));
 
                     // nb: we continue collecting body, so we do not build bodysearch yet
                 } else {
