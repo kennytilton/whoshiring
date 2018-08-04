@@ -8598,7 +8598,7 @@ function extraJobParse(c, d) {
     clg("no content!!!!!!!!!");
   }
 }
-var PARSE_CHUNK_SIZE = 100, PAGE_JOBS_MAX = 10;
+var PARSE_CHUNK_SIZE = 100, PAGE_JOBS_MAX = 100;
 function jobsCollect(c, d) {
   if (c.dom.contentDocument) {
     hnBody = c.dom.contentDocument.getElementsByTagName("body")[0];
