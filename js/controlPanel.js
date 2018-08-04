@@ -93,7 +93,7 @@ function sortBar() {
 }
 function excludedp (j) {
     //clg('excluded check', j.hnId, typeof j.hnId)
-    UNote.dict[j.hnId].excluded;
+    return UNote.dict[j.hnId].excluded;
 }
 function jobListingControlBar() {
     return div({
