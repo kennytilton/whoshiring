@@ -181,7 +181,7 @@ function extraJobParse(md, jobName) {
 
 
 var PARSE_CHUNK_SIZE = 100 // todo SHIPCHECK
-var PAGE_JOBS_MAX = 10 // todo SHIPCHECK limit this during dev if faster laod needed
+var PAGE_JOBS_MAX = 100 // todo SHIPCHECK limit this during dev if faster laod needed
 
 function jobsCollect(md, pgNo) {
     if (md.dom.contentDocument) {
