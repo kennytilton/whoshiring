@@ -2,10 +2,7 @@
 Welcome to "whoshiring", a browser for Hacker News's monthly Ask HN: Who's Hiring pages. 
 
 ### Implementation
-Whoshiring is built atop the Matrix mxWeb&trade; web application un-framework -- just a thin, pass-through wrapper for HTML, CSS, JS, and AJAX.
-
-### Live (JS) Version
-This is a port to CLJS/re-frame of a live [JS/Matrix version](https://kennytilton.github.io/whoishiring/).
+Whoshiring is built atop the Matrix mxWeb&trade; web application un-framework -- just a thin, pass-through wrapper for HTML, CSS, JS, and AJAX. Here is the [Live version](https://kennytilton.github.io/whoishiring/).
 
 ### Running it yourself
 Easy.
@@ -16,6 +13,14 @@ Now open `whoshiring/index-es6.html` in FireFox. Other browsers reject pulling H
 
 You can now play with the source*, save, and refresh the page back in the browser. That is how I work, FWIW. I am also have on a CLJS/re-frame version where figwheel will hot load changes.
 
+#### * No, you cannot (play with the source)
+
+mxWeb is simple, but only after we have grokked the data flow library Matrix&trade; on which it is built. Matrix is like [MobX](https://github.com/mobxjs/mobx), but goes a bit further. We find the [Binding.scala](https://github.com/ThoughtWorksInc/Binding.scala) data flow library impressive as well.
+
+Matrix is largely undocumented**, though there are an extensive number of sample apps, including this one, TodoMVC, The Flux Challenge, and a simulator of Ivan Sutherland's Micropipelines.
+
+All that said, a few exceptional users have picked up mxWeb after zero to three emails, so it is doable.
+
 #### Staying current
 The app works by scraping saved HN page sources. The files directory has a subdirectory for each HN message ID in which they ask Who's Hiring. That subirectory has multiple HTML files retrieved with the additional query parameter `p=<n>` where `<n>` is 1 to however many pages of answers (job listings) they have. They do about 200 jobs per page, and recently had about 870 jobs all told. Anyway...
 
@@ -25,12 +30,6 @@ cd whoshiring
 ./grab
 ````
 More soon.
-
-#### * No, you cannot (play with the source)
-
-mxWeb is simple, but only after we have grokked the data flow library Matrix&trade; on which it is built. Matrix is like [MobX](https://github.com/mobxjs/mobx), but goes a bit further. We find the [Binding.scala](https://github.com/ThoughtWorksInc/Binding.scala) data flow library impressive as well.
-
-Matrix is largely undocumented**, though there are an extensive number of sample apps, including this one, TodoMVC, The Flux Challenge, and a simulator of Ivan Sutherland's Micropipelines.
 
 ### Going minimal
 To compile the JS into a single file, use the epinymous bash script at the toplevel of the directory:
