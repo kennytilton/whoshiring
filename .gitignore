@@ -3,5 +3,6 @@
 files/temp/**
 files/backup/**
 files/**
+js/closure-library
 js/closure-library/**
 bashbox
